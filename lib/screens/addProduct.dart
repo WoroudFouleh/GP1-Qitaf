@@ -2,9 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'dart:typed_data';
+import 'package:http/http.dart' as http;
+import 'config.dart';
+import 'dart:convert';
+import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:login_page/screens/animition_notification_bar.dart';
 
 class AddProduct extends StatefulWidget {
-  const AddProduct({super.key});
+  final String token;
+  const AddProduct({required this.token, Key? key}) : super(key: key);
 
   @override
   State<AddProduct> createState() => _AddProductState();
@@ -32,6 +38,91 @@ class _AddProductState extends State<AddProduct> {
   final List<String> cities = ['رام الله', 'نابلس', 'الخليل', 'جنين'];
   final List<String> categories = ['محصول', 'منتج غذائي', 'منتج غير غذائي'];
   final List<String> units = ['كيلو', 'لتر', 'علبة'];
+  String _notificationMessage = '';
+  Color _notificationColor = Colors.green;
+  bool _showNotification = false;
+  late String username;
+
+  @override
+  void initState() {
+    super.initState();
+    Map<String, dynamic> jwtDecoderToken = JwtDecoder.decode(widget.token);
+    print(jwtDecoderToken);
+    username = jwtDecoderToken['username'] ?? 'No username';
+  }
+
+  void showNotification(String message,
+      {Color backgroundColor = Colors.green}) {
+    setState(() {
+      _notificationMessage = message;
+      _notificationColor = backgroundColor;
+      _showNotification = true;
+    });
+
+    // Automatically hide the notification after 3 seconds
+    Future.delayed(const Duration(seconds: 3), hideNotification);
+  }
+
+  void hideNotification() {
+    setState(() {
+      _showNotification = false;
+    });
+  }
+
+  void registerProduct() async {
+    try {
+      // Validate the input fields
+      if (_nameController.text.isNotEmpty &&
+          _quantityController.text.isNotEmpty &&
+          _priceController.text.isNotEmpty &&
+          _locationDescriptionController.text.isNotEmpty &&
+          _productDescriptionController.text.isNotEmpty &&
+          _selectedCity != null &&
+          _selectedCategory != null &&
+          _selectedUnit != null) {
+        var reqBody = {
+          'image': _image != null ? base64Encode(_image!) : null,
+          "username": username,
+          "name": _nameController.text,
+          "quantity": _quantityController.text,
+          "price": _priceController.text,
+          "location": _locationDescriptionController.text,
+          "description": _productDescriptionController.text,
+          "city": _selectedCity,
+          "type": _selectedCategory,
+          "quantityType": _selectedUnit,
+        };
+
+        var response = await http.post(
+          Uri.parse(addProduct), // Make sure this URL is correct
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: jsonEncode(reqBody),
+        );
+
+        if (response.statusCode == 201) {
+          var jsonResponse = jsonDecode(response.body);
+          if (jsonResponse['status']) {
+            showNotification('تم إضافة المنتج بنجاح');
+            // Optionally clear fields or navigate away
+          } else {
+            showNotification('حدث خطأ أثناء إضافة المنتج',
+                backgroundColor: Colors.red);
+          }
+        } else {
+          var errorResponse = jsonDecode(response.body);
+          showNotification(
+              'حدث خطأ: ${errorResponse['message'] ?? response.statusCode}',
+              backgroundColor: Colors.red);
+        }
+      } else {
+        showNotification('يرجى ملء جميع الحقول', backgroundColor: Colors.red);
+      }
+    } catch (e) {
+      showNotification('حدث خطأ: $e', backgroundColor: Colors.red);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -202,7 +293,10 @@ class _AddProductState extends State<AddProduct> {
                       textDirection:
                           TextDirection.rtl, // النص من اليمين إلى الشمال
                       decoration: InputDecoration(
-                        labelText: 'الكمية',
+                        label: const Align(
+                          alignment: Alignment.centerRight,
+                          child: Text('الكمية'),
+                        ),
                         labelStyle: const TextStyle(fontSize: 14),
                         hintText: 'ادخل الكمية',
                         hintStyle: const TextStyle(fontSize: 14),
@@ -222,30 +316,6 @@ class _AddProductState extends State<AddProduct> {
               Row(
                 children: [
                   Expanded(
-                    child: DropdownButtonFormField<String>(
-                      value: _selectedPriceUnit,
-                      items: units.map((String unit) {
-                        return DropdownMenuItem<String>(
-                          value: unit,
-                          child: Text(unit),
-                        );
-                      }).toList(),
-                      onChanged: (String? newValue) {
-                        setState(() {
-                          _selectedPriceUnit = newValue;
-                        });
-                      },
-                      decoration: InputDecoration(
-                        labelText: 'الوحدة',
-                        labelStyle: const TextStyle(fontSize: 14),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 10.0),
-                  Expanded(
                     child: TextFormField(
                       controller: _priceController,
                       keyboardType: TextInputType.number,
@@ -253,9 +323,12 @@ class _AddProductState extends State<AddProduct> {
                       textDirection:
                           TextDirection.rtl, // النص من اليمين إلى الشمال
                       decoration: InputDecoration(
-                        labelText: 'السعر',
+                        label: const Align(
+                          alignment: Alignment.centerRight,
+                          child: Text(' السعر بالشيكل'),
+                        ),
                         labelStyle: const TextStyle(fontSize: 14),
-                        hintText: 'ادخل السعر',
+                        hintText: 'أدخل السعر بالشيكل',
                         hintStyle: const TextStyle(fontSize: 14),
                         hintTextDirection:
                             TextDirection.rtl, // اتجاه الـ hint من اليمين
@@ -298,7 +371,10 @@ class _AddProductState extends State<AddProduct> {
                 textAlign: TextAlign.right,
                 textDirection: TextDirection.rtl, // النص من اليمين إلى الشمال
                 decoration: InputDecoration(
-                  labelText: 'وصف الموقع',
+                  label: const Align(
+                    alignment: Alignment.centerRight,
+                    child: Text('وصف الموقع'),
+                  ),
                   labelStyle: const TextStyle(fontSize: 14),
                   hintText: 'ادخل وصف الموقع',
                   hintStyle: const TextStyle(fontSize: 14),
@@ -317,7 +393,10 @@ class _AddProductState extends State<AddProduct> {
                 textAlign: TextAlign.right,
                 textDirection: TextDirection.rtl, // النص من اليمين إلى الشمال
                 decoration: InputDecoration(
-                  labelText: 'وصف المنتج',
+                  label: const Align(
+                    alignment: Alignment.centerRight,
+                    child: Text('وصف المنتج'),
+                  ),
                   labelStyle: const TextStyle(fontSize: 14),
                   hintText: 'ادخل وصف المنتج',
                   hintStyle: const TextStyle(fontSize: 14),
@@ -332,7 +411,7 @@ class _AddProductState extends State<AddProduct> {
 
               ElevatedButton(
                 onPressed: () {
-                  // منطق الإضافة
+                  registerProduct();
                 },
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(
@@ -348,6 +427,16 @@ class _AddProductState extends State<AddProduct> {
                   ),
                 ),
               ),
+              // Notification Bar
+              if (_showNotification)
+                Container(
+                  padding: const EdgeInsets.all(8.0),
+                  color: _notificationColor,
+                  child: Text(
+                    _notificationMessage,
+                    style: const TextStyle(color: Colors.white),
+                  ),
+                ),
             ],
           ),
         ),

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:login_page/screens/custom_drawer.dart';
 
 class OwnerChat extends StatelessWidget {
-  const OwnerChat({super.key});
-
+  final token;
+  const OwnerChat({@required this.token, Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Directionality(

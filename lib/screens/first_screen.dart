@@ -26,10 +26,10 @@ class _HomePageState extends State<HomePage> {
     // Initialize the pages here because widget.token is needed
     _pages = [
       OwnerHome(token: widget.token), // Pass the token correctly without const
-      const OwnerChat(),
-      const OwnerAdd(),
-      const OwnerNotify(),
-      const GoogleMapPage(),
+      OwnerChat(token: widget.token),
+      OwnerAdd(token: widget.token),
+      OwnerNotify(token: widget.token),
+      GoogleMapPage(token: widget.token),
     ];
   }
 

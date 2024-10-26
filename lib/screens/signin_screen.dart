@@ -98,7 +98,7 @@ class _SigninScreenState extends State<SigninScreen> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => OwnerHome(token: myToken),
+                  builder: (context) => HomePage(token: myToken),
                 ),
               );
             } else if (userType == '1') {
@@ -187,6 +187,16 @@ class _SigninScreenState extends State<SigninScreen> {
     return CustomScaffold(
       child: Stack(
         children: [
+          // Container(
+          //   decoration: BoxDecoration(
+          //     image: DecorationImage(
+          //       image:
+          //           AssetImage("assets/images/cover.jpg"), // Path to your image
+          //       fit: BoxFit.cover, // Cover the whole screen
+          //     ),
+          //   ),
+          // ),
+
           Column(
             children: [
               const Expanded(child: SizedBox(height: 10)),
@@ -195,7 +205,7 @@ class _SigninScreenState extends State<SigninScreen> {
                 child: Container(
                   padding: const EdgeInsets.fromLTRB(25.0, 50.0, 25.0, 20.0),
                   decoration: const BoxDecoration(
-                    color: Colors.white,
+                    color: Color.fromARGB(222, 255, 255, 255),
                     borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(40.0),
                       topRight: Radius.circular(40.0),
@@ -231,6 +241,8 @@ class _SigninScreenState extends State<SigninScreen> {
                                 alignment: Alignment.centerRight,
                                 child: Text('اسم المستخدم'),
                               ),
+                              // filled: true,
+                              // fillColor: Color.fromARGB(180, 255, 255, 255),
                               hintText: 'ادخل اسم المستخدم الخاص بك',
                               hintStyle: const TextStyle(
                                 color: Colors.black26,
@@ -266,16 +278,18 @@ class _SigninScreenState extends State<SigninScreen> {
                                 alignment: Alignment.centerRight,
                                 child: Text('كلمة السر'),
                               ),
+                              // filled: true,
+                              // fillColor: Color.fromARGB(180, 255, 255, 255),
                               hintText: 'ادخل كلمة السر الخاصة بك',
                               hintStyle: const TextStyle(color: Colors.black26),
                               border: OutlineInputBorder(
-                                borderSide:
-                                    const BorderSide(color: Colors.black12),
-                                borderRadius: BorderRadius.circular(10),
+                                borderSide: const BorderSide(
+                                    color: Colors.black12, width: 3),
+                                borderRadius: BorderRadius.circular(15),
                               ),
                               enabledBorder: OutlineInputBorder(
-                                borderSide:
-                                    const BorderSide(color: Colors.black12),
+                                borderSide: const BorderSide(
+                                    color: Colors.black12, width: 3),
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               prefixIcon: IconButton(
@@ -308,7 +322,7 @@ class _SigninScreenState extends State<SigninScreen> {
                                       });
                                     },
                                     activeColor:
-                                        const Color.fromARGB(255, 25, 94, 29),
+                                        const Color.fromARGB(255, 12, 40, 14),
                                   ),
                                   const Text(
                                     'ذكّرني',
@@ -374,14 +388,14 @@ class _SigninScreenState extends State<SigninScreen> {
                               },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor:
-                                    const Color.fromARGB(255, 17, 118, 21),
+                                    const Color.fromARGB(255, 26, 83, 25),
                                 foregroundColor: Colors.white,
                                 padding:
                                     const EdgeInsets.symmetric(vertical: 18.0),
                                 textStyle: const TextStyle(
-                                  fontSize: 18.0,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                                    fontSize: 18.0,
+                                    fontWeight: FontWeight.bold,
+                                    fontFamily: 'CustomArabicFont'),
                               ),
                               child: const Text('تسجيل الدخول'),
                             ),

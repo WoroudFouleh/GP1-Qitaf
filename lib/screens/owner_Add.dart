@@ -63,7 +63,7 @@ class _OwnerAddState extends State<OwnerAdd> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const AddLand()),
+                            builder: (context) => AddLand(token: widget.token)),
                       );
                     },
                     style: ElevatedButton.styleFrom(
@@ -104,7 +104,8 @@ class _OwnerAddState extends State<OwnerAdd> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const AddProduct()),
+                            builder: (context) =>
+                                AddProduct(token: widget.token)),
                       );
                     },
                     style: ElevatedButton.styleFrom(

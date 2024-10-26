@@ -3,9 +3,15 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart'; // لإضافة مكتبة تنسيق التواريخ
+import 'package:http/http.dart' as http;
+import 'config.dart';
+import 'dart:convert';
+import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:login_page/screens/animition_notification_bar.dart';
 
 class AddLand extends StatefulWidget {
-  const AddLand({super.key});
+  final String token;
+  const AddLand({required this.token, Key? key}) : super(key: key);
 
   @override
   State<AddLand> createState() => _AddLandState();
@@ -41,7 +47,7 @@ class _AddLandState extends State<AddLand> {
       TextEditingController(); // إضافة حقل لأجرة العامل بالساعة
   final TextEditingController _workersCountController =
       TextEditingController(); // إضافة حقل لعدد العمال
-
+  final TextEditingController _landNameController = TextEditingController();
   // إنشاء مفتاح للنموذج
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -50,6 +56,105 @@ class _AddLandState extends State<AddLand> {
   DateTime? _endDate;
   TimeOfDay? _startTime;
   TimeOfDay? _endTime;
+
+  String _notificationMessage = '';
+  Color _notificationColor = Colors.green;
+  bool _showNotification = false;
+  late String username;
+
+  @override
+  void initState() {
+    super.initState();
+    Map<String, dynamic> jwtDecoderToken = JwtDecoder.decode(widget.token);
+    print(jwtDecoderToken);
+    username = jwtDecoderToken['username'] ?? 'No username';
+  }
+
+  void showNotification(String message,
+      {Color backgroundColor = Colors.green}) {
+    setState(() {
+      _notificationMessage = message;
+      _notificationColor = backgroundColor;
+      _showNotification = true;
+    });
+
+    // Automatically hide the notification after 3 seconds
+    Future.delayed(const Duration(seconds: 3), hideNotification);
+  }
+
+  void hideNotification() {
+    setState(() {
+      _showNotification = false;
+    });
+  }
+
+  void registerLand() async {
+    try {
+      // Validate the input fields
+      if (_landNameController.text.isNotEmpty &&
+          _landAreaController.text.isNotEmpty &&
+          _workerRateController.text.isNotEmpty &&
+          _workersCountController.text.isNotEmpty &&
+          _cropNameController.text.isNotEmpty &&
+          selectedCity != null &&
+          _startDate != null &&
+          _endDate != null &&
+          _startTime != null &&
+          _endTime != null) {
+        // Format start and end dates and times
+        String formattedStartDate = _startDate!.toIso8601String();
+        String formattedEndDate = _endDate!.toIso8601String();
+        String formattedStartTime = _startTime!.format(context);
+        String formattedEndTime = _endTime!.format(context);
+
+        // Create request body
+        var reqBody = {
+          'image': _image != null ? base64Encode(_image!) : null,
+          "username": username,
+          "landName": _landNameController.text,
+          "cropType": _cropNameController.text,
+          "workerWages": _workerRateController.text,
+          "landSpace": _landAreaController.text,
+          "numOfWorkers": _workersCountController.text,
+          "city": selectedCity,
+          "location": _streetController.text,
+          "startDate": formattedStartDate,
+          "endDate": formattedEndDate,
+          "startTime": formattedStartTime,
+          "endTime": formattedEndTime,
+        };
+
+        var response = await http.post(
+          Uri.parse(addLand), // Ensure this URL matches your backend route
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: jsonEncode(reqBody),
+        );
+
+        if (response.statusCode == 201) {
+          var jsonResponse = jsonDecode(response.body);
+          if (jsonResponse['status']) {
+            showNotification('تم إضافة الأرض بنجاح');
+            // Optionally clear fields or navigate away
+          } else {
+            showNotification('حدث خطأ أثناء إضافة الأرض',
+                backgroundColor: Colors.red);
+          }
+        } else {
+          var errorResponse = jsonDecode(response.body);
+          showNotification(
+              'حدث خطأ: ${errorResponse['message'] ?? response.statusCode}',
+              backgroundColor: Colors.red);
+        }
+      } else {
+        showNotification('يرجى ملء جميع الحقول', backgroundColor: Colors.red);
+      }
+    } catch (e) {
+      showNotification('حدث خطأ: $e', backgroundColor: Colors.red);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -242,7 +347,7 @@ class _AddLandState extends State<AddLand> {
                     SizedBox(
                       width: 180, // عرض الحقل لاسم الأرض
                       child: TextFormField(
-                        controller: _cropNameController, // الربط مع المتغير
+                        controller: _landNameController, // الربط مع المتغير
                         textAlign:
                             TextAlign.right, // محاذاة النص داخل الحقل لليمين
                         validator: (value) {
@@ -553,6 +658,7 @@ class _AddLandState extends State<AddLand> {
                     // التحقق من صحة النموذج
                     if (_formKey.currentState!.validate()) {
                       // هنا يمكنك إضافة منطق الإضافة
+                      registerLand();
                     }
                   },
                   style: ElevatedButton.styleFrom(

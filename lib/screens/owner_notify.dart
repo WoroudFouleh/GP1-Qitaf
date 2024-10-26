@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:login_page/screens/custom_drawer.dart';
 
 class OwnerNotify extends StatefulWidget {
-  const OwnerNotify({super.key});
+  final token;
+  const OwnerNotify({@required this.token, Key? key}) : super(key: key);
 
   @override
   State<OwnerNotify> createState() => _OwnerNotifyState();
