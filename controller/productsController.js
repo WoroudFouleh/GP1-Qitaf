@@ -40,3 +40,30 @@ exports.addProduct = async (req, res, next) => {
         next(err);  
     }
 };
+exports.getProducts1 = async (req, res, next) => {
+    try {
+        const products = await Product.find({ type: "محصول" });
+        res.status(200).json({ status: true, products });
+    } catch (err) {
+        console.log("---> err -->", err);
+        next(err);  
+    }
+};
+exports.getProducts2 = async (req, res, next) => {
+    try {
+        const products = await Product.find({ type: "منتج غذائي" });
+        res.status(200).json({ status: true, products });
+    } catch (err) {
+        console.log("---> err -->", err);
+        next(err);  
+    }
+};
+exports.getProducts3 = async (req, res, next) => {
+    try {
+        const products = await Product.find({ type: "منتج غير غذائي" });
+        res.status(200).json({ status: true, products });
+    } catch (err) {
+        console.log("---> err -->", err);
+        next(err);  
+    }
+};
