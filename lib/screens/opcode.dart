@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:login_page/screens/NewPass.dart';
-import 'package:login_page/screens/signin_screen.dart';
+import 'package:login_page/Auth/signin_screen.dart';
 import 'package:login_page/widgets/custom_scaffold.dart';
 
 import 'package:http/http.dart' as http;

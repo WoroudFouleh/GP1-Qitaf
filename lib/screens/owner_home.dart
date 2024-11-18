@@ -119,7 +119,7 @@ class _OwnerHomeState extends State<OwnerHome> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const ProductsPage(),
+                        builder: (context) => ProductsPage(token: widget.token),
                       ),
                     );
                   },
@@ -162,7 +162,8 @@ class _OwnerHomeState extends State<OwnerHome> {
             borderRadius: BorderRadius.circular(20),
             boxShadow: [
               BoxShadow(
-                color: Colors.grey.withOpacity(0.2),
+                color:
+                    const Color.fromARGB(255, 158, 158, 158).withOpacity(0.6),
                 spreadRadius: 2,
                 blurRadius: 5,
                 offset: const Offset(0, 3),

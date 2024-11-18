@@ -29,7 +29,7 @@ class _HomePageState extends State<HomePage> {
       OwnerChat(token: widget.token),
       OwnerAdd(token: widget.token),
       OwnerNotify(token: widget.token),
-      GoogleMapPage(token: widget.token),
+      //GoogleMapPage(token: widget.token),
     ];
   }
 

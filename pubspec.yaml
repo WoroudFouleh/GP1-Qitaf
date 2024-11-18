@@ -30,6 +30,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_vector_icons: 2.0.0
     
   # flutter_bcrypt: ^1.0.8  # Use the latest version 
   # crypt: ^4.3.1
@@ -52,6 +53,7 @@ dependencies:
   intl: ^0.17.0
   location: ^5.0.3
   flutter_polyline_points: ^1.0.0
+  flutter_rating_bar: ^4.0.1
 
 dev_dependencies:
   flutter_test:
@@ -61,6 +63,7 @@ dev_dependencies:
   
   # cupertino_icons: ^1.0.2
   curved_navigation_bar: ^1.0.3
+  
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is

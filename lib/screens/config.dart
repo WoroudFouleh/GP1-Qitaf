@@ -1,4 +1,4 @@
-final url = 'http://192.168.88.15:3000/';
+final url = 'http://192.168.88.10:3000/';
 final registration = url + "api/users/register";
 final login = url + "api/users/login";
 final forgotPass = url + "api/users/forgotPass";
@@ -8,3 +8,9 @@ final updateUser = url + "api/users/updateUser";
 final verifyPassword = url + "api/users/verifyPassword";
 final addProduct = url + "api/products/addProduct";
 final addLand = url + "api/lands/addLand";
+final getProducts1 = url + "api/products/getProducts1"; //محصول
+final getProducts2 = url + "api/products/getProducts2"; //غذائي
+final getProducts3 = url + "api/products/getProducts3"; //غير غذائي
+final addToCart = url + "api/carts/addItemToCart";
+final getUserCart = url + "api/carts/getUserCart";
+final deleteItemFromCart = url + "api/carts/deleteItemFromCart";

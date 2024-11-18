@@ -2,9 +2,10 @@ import 'dart:convert'; // For base64 decoding
 import 'package:flutter/material.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:login_page/screens/owner_profile.dart';
+import 'package:login_page/screens/CartPage.dart';
 
 class CustomDrawer extends StatefulWidget {
-  final String token;
+  final token;
   const CustomDrawer({required this.token, Key? key}) : super(key: key);
 
   @override
@@ -88,12 +89,20 @@ class _CustomDrawerState extends State<CustomDrawer> {
               child: Text("الطلبات"),
             ),
           ),
-          const ListTile(
+          ListTile(
             trailing: Icon(Icons.add_shopping_cart),
             title: Align(
               alignment: Alignment.centerRight,
               child: Text("عربة التسوق"),
             ),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => CartPage(
+                        token: widget.token)), // التنقل إلى صفحة عربة التسوق
+              );
+            },
           ),
           const ListTile(
             trailing: Icon(Icons.card_giftcard),

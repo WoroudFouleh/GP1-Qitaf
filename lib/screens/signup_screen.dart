@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:login_page/screens/nextsign.dart';
-import 'package:login_page/screens/signin_screen.dart';
+import 'package:login_page/Auth/signin_screen.dart';
 import 'package:login_page/widgets/custom_scaffold.dart';
 
 class SignupScreen extends StatefulWidget {
