@@ -8,6 +8,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert'; // To handle JSON decoding
 import 'config.dart';
 import 'package:login_page/screens/itemPage.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 
 class ProductsPage extends StatefulWidget {
   final String token;
@@ -22,11 +23,23 @@ class _ProductsPageState extends State<ProductsPage> {
   List<dynamic> products2 = []; // List to hold the products منتج غذائي
   List<dynamic> products3 = []; // List to hold the products منتج غير غذائي
   int typee = 1;
+  late String username = "";
+  @override
+  void initState() {
+    super.initState();
+    Map<String, dynamic> jwtDecoderToken = JwtDecoder.decode(widget.token);
+    print(jwtDecoderToken);
+    username = jwtDecoderToken['username'] ?? 'No username';
+    fetchProducts(); // Call the fetch function when the page is loaded
+    fetchProducts2();
+    fetchProducts3();
+  }
 
   // Fetch products from the backend
   void fetchProducts() async {
+    print("sent username: $username");
     final response = await http.get(
-      Uri.parse(getProducts1),
+      Uri.parse('$getProducts1/$username'),
       headers: {
         'Content-Type': 'application/json',
       },
@@ -49,7 +62,7 @@ class _ProductsPageState extends State<ProductsPage> {
   ////////lkj[ y`hzd]
   void fetchProducts3() async {
     final response = await http.get(
-      Uri.parse(getProducts2),
+      Uri.parse('$getProducts2/$username'),
       headers: {
         'Content-Type': 'application/json',
       },
@@ -72,7 +85,7 @@ class _ProductsPageState extends State<ProductsPage> {
   ////////منتج غير غذائي
   void fetchProducts2() async {
     final response = await http.get(
-      Uri.parse(getProducts3),
+      Uri.parse('$getProducts3/$username'),
       headers: {
         'Content-Type': 'application/json',
       },
@@ -93,14 +106,6 @@ class _ProductsPageState extends State<ProductsPage> {
   }
 
   @override
-  void initState() {
-    super.initState();
-    fetchProducts(); // Call the fetch function when the page is loaded
-    fetchProducts2();
-    fetchProducts3();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Directionality(
       textDirection: TextDirection.rtl,
@@ -117,6 +122,7 @@ class _ProductsPageState extends State<ProductsPage> {
               color: Color(0xFF556B2F),
               fontWeight: FontWeight.bold,
               fontSize: 20,
+              fontFamily: 'CustomArabicFont',
             ),
             elevation: 0,
             title: const Align(
@@ -136,7 +142,10 @@ class _ProductsPageState extends State<ProductsPage> {
               indicatorColor: Color(0xFF556B2F),
               labelColor: Color(0xFF556B2F),
               unselectedLabelColor: Colors.grey,
-              labelStyle: TextStyle(fontWeight: FontWeight.bold),
+              labelStyle: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontFamily: 'CustomArabicFont',
+              ),
             ),
           ),
           endDrawer: CustomDrawer(token: widget.token),
@@ -229,9 +238,9 @@ class _ProductsPageState extends State<ProductsPage> {
                                 ),
                               ],
                             ),
-                            child: Column(
+                            child: const Column(
                               children: [
-                                const SizedBox(height: 10),
+                                SizedBox(height: 10),
                                 DealWidget(),
                               ],
                             ),
@@ -294,7 +303,14 @@ class _ProductsPageState extends State<ProductsPage> {
                                           quantityAvailable:
                                               product['quantity'],
                                           token: widget.token,
-                                          productId: product['_id']),
+                                          productId: product['_id'],
+                                          productRate: (product['rate'] as num)
+                                              .toDouble(),
+                                          username: product['username'],
+                                          preparationTime:
+                                              product['preparationTime'],
+                                          preparationUnit:
+                                              product['preparationTimeUnit']),
                                     ),
                                   );
                                 },
@@ -354,9 +370,9 @@ class _ProductsPageState extends State<ProductsPage> {
                                 ),
                               ],
                             ),
-                            child: Column(
+                            child: const Column(
                               children: [
-                                const SizedBox(height: 10),
+                                SizedBox(height: 10),
                                 DealWidget(),
                               ],
                             ),
@@ -420,7 +436,14 @@ class _ProductsPageState extends State<ProductsPage> {
                                           quantityAvailable:
                                               product2['quantity'],
                                           token: widget.token,
-                                          productId: product2['_id']),
+                                          productId: product2['_id'],
+                                          productRate: (product2['rate'] as num)
+                                              .toDouble(),
+                                          username: product2['username'],
+                                          preparationTime:
+                                              product2['preparationTime'],
+                                          preparationUnit:
+                                              product2['preparationTimeUnit']),
                                     ),
                                   );
                                 },
@@ -481,9 +504,9 @@ class _ProductsPageState extends State<ProductsPage> {
                                 ),
                               ],
                             ),
-                            child: Column(
+                            child: const Column(
                               children: [
-                                const SizedBox(height: 10),
+                                SizedBox(height: 10),
                                 DealWidget(),
                               ],
                             ),
@@ -547,7 +570,14 @@ class _ProductsPageState extends State<ProductsPage> {
                                           quantityAvailable:
                                               product3['quantity'],
                                           token: widget.token,
-                                          productId: product3['_id']),
+                                          productId: product3['_id'],
+                                          productRate: (product3['rate'] as num)
+                                              .toDouble(),
+                                          username: product3['username'],
+                                          preparationTime:
+                                              product3['preparationTime'],
+                                          preparationUnit:
+                                              product3['preparationTimeUnit']),
                                     ),
                                   );
                                 },

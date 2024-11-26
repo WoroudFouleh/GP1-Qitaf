@@ -87,7 +87,7 @@ class _CartItemSamplesState extends State<CartItemSamples> {
                 groupValue: selectedRadioValue, // Currently selected value
                 onChanged: (value) {
                   setState(() {
-                    selectedRadioValue = value as String?;
+                    selectedRadioValue = value;
                   });
                 },
               ),
@@ -133,7 +133,7 @@ class _CartItemSamplesState extends State<CartItemSamples> {
                 Row(
                   children: [
                     Text(
-                      "${widget.quantityType}", // Display quantity type
+                      widget.quantityType, // Display quantity type
                       style: const TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,

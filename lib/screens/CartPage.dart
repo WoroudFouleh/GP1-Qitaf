@@ -38,7 +38,7 @@ class _CartPageState extends State<CartPage> {
     try {
       final response = await http.get(
         Uri.parse(
-            '$getUserCart/${username}'), // Send the URL without the username
+            '$getUserCart/$username'), // Send the URL without the username
         headers: {'Content-Type': 'application/json'},
         // Send the username in the body
       );
@@ -79,7 +79,7 @@ class _CartPageState extends State<CartPage> {
     return Scaffold(
       body: ListView(
         children: [
-          CartAppBar(),
+          const CartAppBar(),
           Container(
             padding: const EdgeInsets.only(top: 10),
             decoration: const BoxDecoration(
@@ -88,11 +88,36 @@ class _CartPageState extends State<CartPage> {
             child: Column(
               children: [
                 items.isEmpty
-                    ? const Center(
-                        child: Text(
-                          "No items in the cart.",
-                          style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.bold),
+                    ? Center(
+                        child: Container(
+                          margin: const EdgeInsets.all(
+                              20), // Add margin for spacing
+                          padding: const EdgeInsets.all(
+                              20), // Padding inside the container
+                          decoration: BoxDecoration(
+                            color: Colors.white, // Background color
+                            borderRadius:
+                                BorderRadius.circular(20), // Rounded borders
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.5),
+                                blurRadius: 5,
+                                spreadRadius: 2,
+                                offset:
+                                    const Offset(0, 3), // Add a shadow effect
+                              ),
+                            ],
+                          ),
+                          child: const Text(
+                            "عربة التسوق فارغة",
+                            textAlign: TextAlign.right, // Center the text
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Color.fromARGB(
+                                  255, 240, 21, 21), // Text color
+                            ),
+                          ),
                         ),
                       )
                     : ListView.builder(
@@ -283,7 +308,11 @@ class _CartPageState extends State<CartPage> {
                     ],
                   ),
                 ),
-                OrderWidget(),
+                OrderWidget(
+                  items: items, // Pass the list of items
+                  token: widget.token, // Pass the token
+                  totalPrice: calculateGrandTotal(),
+                ),
               ],
             ),
           ),

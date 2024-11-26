@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:login_page/screens/NewPass.dart';
-import 'package:login_page/screens/forget_password_screen.dart';
-import 'package:login_page/screens/NewPass.dart'; // استدعاء الصفحة الجديدة
+// استدعاء الصفحة الجديدة
 import 'package:login_page/widgets/custom_scaffold.dart';
 
 class Changepass extends StatefulWidget {

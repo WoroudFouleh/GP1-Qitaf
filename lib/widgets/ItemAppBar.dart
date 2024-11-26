@@ -7,8 +7,8 @@ class ItemAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Color.fromARGB(255, 21, 80, 13), // لون الأرضية زيتي
-      padding: EdgeInsets.symmetric(vertical: 20, horizontal: 25),
+      color: const Color.fromARGB(255, 21, 80, 13), // لون الأرضية زيتي
+      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 25),
       child: Row(
         children: [
           // السهم على اليسار
@@ -16,15 +16,15 @@ class ItemAppBar extends StatelessWidget {
             onTap: () {
               Navigator.pop(context);
             },
-            child: Icon(
+            child: const Icon(
               Icons.arrow_back,
               size: 30,
               color: Colors.white, // لون السهم أبيض
             ),
           ),
-          Spacer(), // Push the text to the right
+          const Spacer(), // Push the text to the right
           // النص
-          Padding(
+          const Padding(
             padding: EdgeInsets.only(right: 20),
             child: Text(
               "المنتجات",
@@ -36,7 +36,7 @@ class ItemAppBar extends StatelessWidget {
             ),
           ),
           // أيقونة سلة المشتريات
-          Icon(
+          const Icon(
             CupertinoIcons.cart,
             color: Colors.white, // لون الأيقونة أبيض
           ),

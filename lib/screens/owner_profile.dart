@@ -141,6 +141,7 @@ class _OwnerProfileState extends State<OwnerProfile> {
               color: Color.fromARGB(255, 11, 130, 27),
               fontWeight: FontWeight.bold,
               fontSize: 20,
+              fontFamily: 'CustomArabicFont',
             ),
             elevation: 0,
             title: const Align(

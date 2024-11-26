@@ -37,8 +37,7 @@ class _Changepass2State extends State<Changepass2> {
     // Make a request to reset the password
     try {
       var response = await http.patch(
-        Uri.parse(
-            '$updatePassword/${username}'), // Replace with your backend URL
+        Uri.parse('$updatePassword/$username'), // Replace with your backend URL
         headers: {"Content-Type": "application/json"},
         body: jsonEncode({
           "password": _passwordController.text,

@@ -1,8 +1,14 @@
 import 'dart:convert'; // For base64 decoding
 import 'package:flutter/material.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:login_page/screens/CustomerWork.dart';
+import 'package:login_page/screens/MyBooking.dart';
+import 'package:login_page/screens/OwnerBooking.dart';
+import 'package:login_page/screens/OwnerWorking.dart';
+import 'package:login_page/screens/ProfilePage.dart';
 import 'package:login_page/screens/owner_profile.dart';
 import 'package:login_page/screens/CartPage.dart';
+import 'package:login_page/screens/previousOrders.dart';
 
 class CustomDrawer extends StatefulWidget {
   final token;
@@ -78,20 +84,47 @@ class _CustomDrawerState extends State<CustomDrawer> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => OwnerProfile(token: widget.token)),
+                    builder: (context) => ProfilePage(
+                          token: widget.token,
+                        )),
               );
             },
           ),
-          const ListTile(
+          ListTile(
             trailing: Icon(Icons.add_card),
             title: Align(
               alignment: Alignment.centerRight,
-              child: Text("الطلبات"),
+              child: Text("طلبات الحجز"),
             ),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => MyBookingPage(
+                    token: widget.token,
+                  ),
+                ),
+              );
+            },
           ),
           ListTile(
-            trailing: Icon(Icons.add_shopping_cart),
-            title: Align(
+            trailing: const Icon(Icons.work),
+            title: const Align(
+              alignment: Alignment.centerRight,
+              child: Text("طلبات العمل"),
+            ),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => CustomerWorkPage(token: widget.token),
+                ),
+              );
+            },
+          ),
+          ListTile(
+            trailing: const Icon(Icons.add_shopping_cart),
+            title: const Align(
               alignment: Alignment.centerRight,
               child: Text("عربة التسوق"),
             ),
@@ -104,28 +137,35 @@ class _CustomDrawerState extends State<CustomDrawer> {
               );
             },
           ),
-          const ListTile(
-            trailing: Icon(Icons.card_giftcard),
-            title: Align(
+          ListTile(
+            trailing: const Icon(Icons.card_giftcard),
+            title: const Align(
               alignment: Alignment.centerRight,
               child: Text("الطلبات السابقة"),
             ),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => Previousorders(token: widget.token)),
+              );
+            },
           ),
           const SizedBox(height: 28.0),
-          const ListTile(
-            trailing: Icon(Icons.post_add),
-            title: Align(
-              alignment: Alignment.centerRight,
-              child: Text(" منشوراتي"),
-            ),
-          ),
-          const ListTile(
-            trailing: Icon(Icons.work),
-            title: Align(
-              alignment: Alignment.centerRight,
-              child: Text("طلبات العمل"),
-            ),
-          ),
+          ListTile(
+              trailing: Icon(Icons.work),
+              title: Align(
+                alignment: Alignment.centerRight,
+                child: Text("طلبات عمل العمال"),
+              ),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => OwnerWorkingPage(token: widget.token),
+                  ),
+                );
+              }),
           const ListTile(
             trailing: Icon(Icons.money),
             title: Align(
@@ -133,12 +173,22 @@ class _CustomDrawerState extends State<CustomDrawer> {
               child: Text("طلبات شراء الزبائن"),
             ),
           ),
-          const ListTile(
+          ListTile(
             trailing: Icon(Icons.book),
             title: Align(
               alignment: Alignment.centerRight,
               child: Text("طلبات حجز الزبائن"),
             ),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => OwnerBookingPage(
+                    token: widget.token,
+                  ),
+                ),
+              );
+            },
           ),
           const SizedBox(height: 28.0),
           const ListTile(

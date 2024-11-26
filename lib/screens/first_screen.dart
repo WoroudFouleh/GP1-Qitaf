@@ -19,6 +19,7 @@ class _HomePageState extends State<HomePage> {
   int _pageIndex = 0;
   late List<Widget> _pages;
   // إضافة جميع الصفحات التي سيتم عرضها في شريط التنقل
+  @override
   void initState() {
     super.initState();
     Map<String, dynamic> jwtDecoderToken = JwtDecoder.decode(widget.token);

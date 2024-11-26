@@ -113,9 +113,9 @@ class _AddLandState extends State<AddLand> {
           "username": username,
           "landName": _landNameController.text,
           "cropType": _cropNameController.text,
-          "workerWages": _workerRateController.text,
-          "landSpace": _landAreaController.text,
-          "numOfWorkers": _workersCountController.text,
+          "workerWages": int.tryParse(_workerRateController.text),
+          "landSpace": int.tryParse(_landAreaController.text),
+          "numOfWorkers": int.tryParse(_workersCountController.text),
           "city": selectedCity,
           "location": _streetController.text,
           "startDate": formattedStartDate,
@@ -136,6 +136,7 @@ class _AddLandState extends State<AddLand> {
           var jsonResponse = jsonDecode(response.body);
           if (jsonResponse['status']) {
             showNotification('تم إضافة الأرض بنجاح');
+            updatePostCount();
             // Optionally clear fields or navigate away
           } else {
             showNotification('حدث خطأ أثناء إضافة الأرض',
@@ -155,6 +156,30 @@ class _AddLandState extends State<AddLand> {
     }
   }
 
+  void updatePostCount() async {
+    try {
+      final response = await http.post(
+        Uri.parse(
+            '$updatePostNumber/$username'), // Send the URL without the username
+        headers: {'Content-Type': 'application/json'},
+        // Send the username in the body
+      );
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        if (data['status'] == true) {
+          print("posts count updated  successfully");
+        } else {
+          print("Error updating posts");
+        }
+      } else {
+        print("Error updating posts ");
+      }
+    } catch (e) {
+      print("An error occurred: $e");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -166,7 +191,8 @@ class _AddLandState extends State<AddLand> {
         titleTextStyle: const TextStyle(
           color: Color.fromARGB(255, 11, 110, 29), // لون العنوان
           fontWeight: FontWeight.bold, // جعل العنوان غامق
-          fontSize: 20, // حجم الخط
+          fontSize: 20,
+          fontFamily: 'CustomArabicFont', // حجم الخط
         ),
         title: const Align(
           alignment: Alignment.centerRight,
@@ -538,7 +564,7 @@ class _AddLandState extends State<AddLand> {
                                 pickedDate.isBefore(_startDate!)) {
                               // إذا كان تاريخ الانتهاء قبل تاريخ البدء
                               ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
+                                const SnackBar(
                                     content: Text(
                                         "تاريخ الانتهاء لا يمكن أن يكون قبل تاريخ البدء!")),
                               );
@@ -552,9 +578,9 @@ class _AddLandState extends State<AddLand> {
                         _endDate == null
                             ? 'حدد تاريخ الانتهاء'
                             : DateFormat('yyyy-MM-dd').format(_endDate!),
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontSize: 18,
-                            color: const Color.fromARGB(
+                            color: Color.fromARGB(
                                 255, 22, 124, 15)), // تكبير الخط وتغيير اللون
                       ),
                     ),
@@ -576,9 +602,9 @@ class _AddLandState extends State<AddLand> {
                         _startDate == null
                             ? 'حدد تاريخ البدء'
                             : DateFormat('yyyy-MM-dd').format(_startDate!),
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontSize: 18,
-                            color: const Color.fromARGB(
+                            color: Color.fromARGB(
                                 255, 26, 115, 12)), // تكبير الخط وتغيير اللون
                       ),
                     ),
@@ -605,7 +631,7 @@ class _AddLandState extends State<AddLand> {
                                             _startTime!.minute))) {
                               // إذا كان وقت الانتهاء قبل وقت البدء
                               ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
+                                const SnackBar(
                                     content: Text(
                                         "وقت الانتهاء لا يمكن أن يكون قبل وقت البدء!")),
                               );
@@ -619,9 +645,9 @@ class _AddLandState extends State<AddLand> {
                         _endTime == null
                             ? 'حدد وقت الانتهاء'
                             : _endTime!.format(context),
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontSize: 18,
-                            color: const Color.fromARGB(
+                            color: Color.fromARGB(
                                 255, 14, 112, 16)), // تكبير الخط وتغيير اللون
                       ),
                     ),
@@ -641,9 +667,9 @@ class _AddLandState extends State<AddLand> {
                         _startTime == null
                             ? 'حدد وقت البدء'
                             : _startTime!.format(context),
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontSize: 18,
-                            color: const Color.fromARGB(
+                            color: Color.fromARGB(
                                 255, 7, 104, 23)), // تكبير الخط وتغيير اللون
                       ),
                     ),

@@ -37,6 +37,7 @@ class _SigninScreenState extends State<SigninScreen> {
   Color _notificationColor = Colors.green;
   bool _showNotification = false;
 
+  @override
   void initState() {
     super.initState();
     initSharedPref();
@@ -46,6 +47,7 @@ class _SigninScreenState extends State<SigninScreen> {
     prefs = await SharedPreferences.getInstance();
   }
 
+  @override
   void dispose() {
     _usernameController.dispose();
     _passController.dispose();

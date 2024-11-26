@@ -9,7 +9,7 @@ class DealWidget extends StatelessWidget {
       scrollDirection: Axis.horizontal,
       child: Row(
         children: [
-          for (int i = 1; i <= 4; i++)
+          for (int i = 1; i <= 3; i++)
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
               child: Container(

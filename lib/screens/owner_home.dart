@@ -32,6 +32,7 @@ class _OwnerHomeState extends State<OwnerHome> {
             color: Color.fromARGB(255, 11, 130, 27),
             fontWeight: FontWeight.bold,
             fontSize: 20,
+            fontFamily: 'CustomArabicFont',
           ),
           elevation: 0,
           title: const Align(
@@ -70,16 +71,13 @@ class _OwnerHomeState extends State<OwnerHome> {
                     width: double.infinity,
                     child: AnotherCarousel(
                       images: const [
-                        AssetImage("assets/images/p1.jpg"),
-                        AssetImage("assets/images/p3.jpg"),
-                        AssetImage("assets/images/q1.jpg"),
-                        AssetImage("assets/images/q2.jpg"),
-                        AssetImage("assets/images/q3.jpg"),
-                        AssetImage("assets/images/q4.jpg"),
-                        AssetImage("assets/images/q5.jpg"),
-                        AssetImage("assets/images/q8.jpg"),
+                        AssetImage("assets/images/1.jpg"),
+                        AssetImage("assets/images/2.jpg"),
+                        AssetImage("assets/images/3.jpg"),
+                        AssetImage("assets/images/4.jpg"),
+                        AssetImage("assets/images/5.jpg"),
                       ],
-                      dotSize: 6,
+                      dotSize: 3,
                       indicatorBgPadding: 5.0,
                     ),
                   ),
@@ -101,12 +99,12 @@ class _OwnerHomeState extends State<OwnerHome> {
                 buildCustomListItem(
                   'قطف أراضي زراعية',
                   'فرص عمل بقطف أراضي زراعية',
-                  'https://i.pinimg.com/564x/97/29/4e/97294e473be6477598edccd2d417f702.jpg',
+                  const AssetImage('assets/images/lands.jpg'),
                   () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const QatafPage(),
+                        builder: (context) => QatafPage(token: widget.token),
                       ),
                     );
                   },
@@ -114,7 +112,7 @@ class _OwnerHomeState extends State<OwnerHome> {
                 buildCustomListItem(
                   'منتجات زراعية',
                   'شراء منتجات زراعية بأنواعها',
-                  'https://i.pinimg.com/564x/a9/50/a0/a950a06ec32eb6507f50352339a29465.jpg',
+                  const AssetImage('assets/images/products1.jpg'),
                   () {
                     Navigator.push(
                       context,
@@ -127,12 +125,13 @@ class _OwnerHomeState extends State<OwnerHome> {
                 buildCustomListItem(
                   'خطوط إنتاج',
                   'عرض خطوط الانتاج المتاحة',
-                  'https://i.pinimg.com/564x/4e/83/5c/4e835c3d3fc1f71dd672570782506666.jpg',
+                  const AssetImage('assets/images/lines.jpg'),
                   () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const ProductionLinesPage(),
+                        builder: (context) =>
+                            ProductionLinesPage(token: widget.token),
                       ),
                     );
                   },
@@ -148,11 +147,11 @@ class _OwnerHomeState extends State<OwnerHome> {
   Widget buildCustomListItem(
     String title,
     String subtitle,
-    String imageUrl,
-    VoidCallback onTap, // إضافة onTap هنا لتمرير الدالة
+    AssetImage imageAsset, // تحديث هنا لقبول AssetImage
+    VoidCallback onTap,
   ) {
     return GestureDetector(
-      onTap: onTap, // ربط التنقل عند الضغط على العنصر
+      onTap: onTap,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
         child: Container(
@@ -174,8 +173,8 @@ class _OwnerHomeState extends State<OwnerHome> {
             children: [
               // صورة دائرية على اليمين
               ClipOval(
-                child: Image.network(
-                  imageUrl,
+                child: Image(
+                  image: imageAsset,
                   height: 90,
                   width: 90, // عرض ثابت للصورة لتجنب overflow
                   fit: BoxFit.cover,
@@ -210,7 +209,6 @@ class _OwnerHomeState extends State<OwnerHome> {
                   ),
                 ),
               ),
-              // السهم في اليسار ولونه أخضر واتجاهه لليمين
               const Padding(
                 padding: EdgeInsets.only(left: 16.0),
                 child: Icon(

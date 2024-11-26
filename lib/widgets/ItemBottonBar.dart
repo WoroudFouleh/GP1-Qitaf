@@ -69,7 +69,7 @@ class ItemBottonBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 70,
-      padding: EdgeInsets.symmetric(horizontal: 20),
+      padding: const EdgeInsets.symmetric(horizontal: 20),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(10),
@@ -78,7 +78,7 @@ class ItemBottonBar extends StatelessWidget {
             color: Colors.grey.withOpacity(0.5),
             spreadRadius: 3,
             blurRadius: 10,
-            offset: Offset(0, 3),
+            offset: const Offset(0, 3),
           ),
         ],
       ),
@@ -89,23 +89,23 @@ class ItemBottonBar extends StatelessWidget {
           ElevatedButton.icon(
             onPressed: addItemToCart,
             style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.all(
-                Color.fromARGB(255, 21, 80, 13), // لون كبسة زيتي
+              backgroundColor: WidgetStateProperty.all(
+                const Color.fromARGB(255, 21, 80, 13), // لون كبسة زيتي
               ),
-              padding: MaterialStateProperty.all(
-                EdgeInsets.symmetric(vertical: 13, horizontal: 15),
+              padding: WidgetStateProperty.all(
+                const EdgeInsets.symmetric(vertical: 13, horizontal: 15),
               ),
-              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+              shape: WidgetStateProperty.all<RoundedRectangleBorder>(
                 RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20),
                 ),
               ),
             ),
-            icon: Icon(
+            icon: const Icon(
               CupertinoIcons.cart_badge_plus,
               color: Colors.white, // لون الأيقونة أبيض
             ),
-            label: Text(
+            label: const Text(
               "إضافة إلى سلة المشتريات",
               style: TextStyle(
                 fontSize: 16,
@@ -120,32 +120,32 @@ class ItemBottonBar extends StatelessWidget {
               // Weight text
               Text(
                 quantityType, // نص الوزن
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 18, // حجم الخط أقل من السعر
                   color: Color(0xFF7C7C7C), // لون أقل شدة
                 ),
               ),
-              SizedBox(width: 5), // إضافة مسافة بين السلاش و"كغم"
-              Text(
+              const SizedBox(width: 5), // إضافة مسافة بين السلاش و"كغم"
+              const Text(
                 "/", // السلاش
                 style: TextStyle(
                   fontSize: 18, // حجم الخط للسلاش
                   color: Color(0xFF7C7C7C), // لون أقل شدة
                 ),
               ),
-              SizedBox(width: 5), // إضافة مسافة بين السلاش والرقم
+              const SizedBox(width: 5), // إضافة مسافة بين السلاش والرقم
               // Price
               Text(
                 productPrice.toString(), // الرقم فقط
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 25,
                   fontWeight: FontWeight.bold,
                   color: Color.fromARGB(255, 21, 80, 13), // لون الرقم زيتي
                 ),
               ),
-              SizedBox(width: 5), // إضافة مسافة بين الرقم والعملة
+              const SizedBox(width: 5), // إضافة مسافة بين الرقم والعملة
               // Currency
-              Text(
+              const Text(
                 "₪", // العملة
                 style: TextStyle(
                   fontSize: 20, // حجم الخط للعملة

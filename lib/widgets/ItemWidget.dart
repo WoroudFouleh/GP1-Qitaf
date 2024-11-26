@@ -129,7 +129,7 @@ class ItemWidget extends StatelessWidget {
                       const SizedBox(width: 5),
                       Text(
                         quantityType.toString(), // Unit for weight
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 16,
                           color: Color(0xFF7C7C7C),
                         ),

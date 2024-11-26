@@ -31,6 +31,9 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_vector_icons: 2.0.0
+  
+  
+
     
   # flutter_bcrypt: ^1.0.8  # Use the latest version 
   # crypt: ^4.3.1

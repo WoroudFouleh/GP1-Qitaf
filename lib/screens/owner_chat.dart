@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:login_page/screens/custom_drawer.dart';
 
 class OwnerChat extends StatelessWidget {
   final token;

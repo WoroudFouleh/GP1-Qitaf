@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:login_page/screens/addItem.dart';
 import 'package:login_page/screens/addLand.dart';
 import 'package:login_page/screens/addProduct.dart';
+import 'package:login_page/screens/addProductionLine.dart';
 import 'package:login_page/screens/custom_drawer.dart';
 
 class OwnerAdd extends StatefulWidget {
@@ -24,7 +24,8 @@ class _OwnerAddState extends State<OwnerAdd> {
         titleTextStyle: const TextStyle(
           color: Color.fromARGB(255, 14, 121, 23), // لون العنوان
           fontWeight: FontWeight.bold, // جعل العنوان غامق
-          fontSize: 24, // تكبير حجم الخط
+          fontSize: 24,
+          fontFamily: 'CustomArabicFont', // تكبير حجم الخط
         ),
         title: const Align(
           alignment: Alignment.centerRight,
@@ -34,7 +35,9 @@ class _OwnerAddState extends State<OwnerAdd> {
           ),
         ),
       ),
-      //endDrawer: const CustomDrawer(token: token,), // استخدام الـ CustomDrawer هنا
+      endDrawer: CustomDrawer(
+        token: widget.token,
+      ), // استخدام الـ CustomDrawer هنا
 
       body: Stack(
         children: [
@@ -139,39 +142,38 @@ class _OwnerAddState extends State<OwnerAdd> {
                 const SizedBox(height: 15.0), // تقليل المسافة بين الأزرار
                 // الزر الثالث
                 SizedBox(
-                  width: 300, // تحديد عرض ثابت لكل الأزرار
-                  height: 60, // تحديد ارتفاع ثابت للأزرار لجعلها مستطيلة
+                  width: 300,
+                  height: 60,
                   child: ElevatedButton(
                     onPressed: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const AddItem()),
+                            builder: (context) =>
+                                AddProductionLine(token: widget.token)),
                       );
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white, // لون الخلفية الأبيض
+                      backgroundColor: Colors.white,
                       shape: RoundedRectangleBorder(
-                        borderRadius:
-                            BorderRadius.circular(10), // زوايا مستديرة
+                        borderRadius: BorderRadius.circular(10),
                       ),
                     ),
                     child: const Row(
-                      mainAxisAlignment:
-                          MainAxisAlignment.center, // محاذاة الوسط
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
                           'إضافة خط انتاج',
                           style: TextStyle(
-                            fontSize: 20, // حجم النص في الأزرار
-                            fontWeight: FontWeight.bold, // جعل النص غامق
-                            color: Colors.green, // لون النص أخضر
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.green,
                           ),
                         ),
-                        SizedBox(width: 10), // مسافة بين النص والأيقونة
+                        SizedBox(width: 10),
                         Icon(
-                          Icons.factory, // أيقونة تدل على خط إنتاج
-                          color: Colors.green, // لون الأيقونة أخضر
+                          Icons.factory,
+                          color: Colors.green,
                         ),
                       ],
                     ),

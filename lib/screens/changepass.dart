@@ -63,9 +63,9 @@ class _ChangepassState extends State<Changepass> {
     } else {
       // Show a notification that the password is incorrect
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: const Text('كلمة السر الحالية غير صحيحة'),
-          duration: const Duration(seconds: 2),
+        const SnackBar(
+          content: Text('كلمة السر الحالية غير صحيحة'),
+          duration: Duration(seconds: 2),
         ),
       );
     }

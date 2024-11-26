@@ -5,35 +5,47 @@ import 'dart:convert';
 
 class Profile2 extends StatelessWidget {
   final token;
+  final String firstName;
+  final String lastName;
+  final String email;
+  final String code;
+  final String phoneNum;
+  final String? image;
+  final String city;
+  final String street;
+  final int postsCount;
   //final userData;
 
-  const Profile2({required this.token, Key? key}) : super(key: key);
-  Map<String, dynamic> decodeToken(String token) {
-    try {
-      final jwtDecoderToken = JwtDecoder.decode(token);
-      return jwtDecoderToken;
-    } catch (e) {
-      print('Error decoding token: $e');
-      return {};
-    }
-  }
+  const Profile2(
+      {required this.token,
+      required this.firstName,
+      required this.lastName,
+      required this.email,
+      required this.phoneNum,
+      required this.code,
+      required this.image,
+      required this.city,
+      required this.street,
+      required this.postsCount,
+      Key? key})
+      : super(key: key);
 
   // Decode the token using jwt_decoder and extract necessary fields
   //Map<String, dynamic> jwtDecoderToken = JwtDecoder.decode(widget.token);
 
   @override
   Widget build(BuildContext context) {
-    final userData = decodeToken(token);
+    //final userData = decodeToken(token);
 
     // Extract name, email, and phone
-    final firstName = userData['firstName'] ?? 'Unknown Name';
-    final lastName = userData['lastName'] ?? 'Unknown Name';
-    final profileImage = userData['profilePhoto'];
-    final email = userData['email'] ?? 'Unknown Email';
-    final phoneCode = userData['phoneCode'] ?? 'Unknown Phone';
-    final phoneNumber = userData['phoneNumber'] ?? 'Unknown Phone';
-    final city = userData['city'] ?? 'Unknown city';
-    final street = userData['street'] ?? 'Unknown street';
+    // final firstName = userData['firstName'] ?? 'Unknown Name';
+    // final lastName = userData['lastName'] ?? 'Unknown Name';
+    // final profileImage = userData['profilePhoto'];
+    // final email = userData['email'] ?? 'Unknown Email';
+    // final phoneCode = userData['phoneCode'] ?? 'Unknown Phone';
+    // final phoneNumber = userData['phoneNumber'] ?? 'Unknown Phone';
+    // final city = userData['city'] ?? 'Unknown city';
+    // final street = userData['street'] ?? 'Unknown street';
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     int rating = 1; // Example rating, adjust dynamically based on your data
@@ -42,7 +54,7 @@ class Profile2 extends StatelessWidget {
       fit: StackFit.expand,
       children: [
         Container(
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             gradient: LinearGradient(
               colors: [
                 Color.fromRGBO(150, 230, 150, 0.5),
@@ -56,7 +68,7 @@ class Profile2 extends StatelessWidget {
         Scaffold(
           backgroundColor: Colors.transparent,
           body: SingleChildScrollView(
-            physics: BouncingScrollPhysics(),
+            physics: const BouncingScrollPhysics(),
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 73),
               child: Column(
@@ -65,17 +77,17 @@ class Profile2 extends StatelessWidget {
                     onTap: () {
                       Navigator.pop(context);
                     },
-                    child: Icon(
+                    child: const Icon(
                       Icons.arrow_back,
                       size: 30,
                       color: Colors.white, // لون السهم أبيض
                     ),
                   ),
                   //Spacer(), // Push the text to the right
-                  SizedBox(
+                  const SizedBox(
                     height: 20,
                   ),
-                  Text(
+                  const Text(
                     'صفحة\nالمالك الشخصية',
                     textAlign: TextAlign.center,
                     style: TextStyle(
@@ -83,10 +95,10 @@ class Profile2 extends StatelessWidget {
                       fontSize: 34,
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 22,
                   ),
-                  Container(
+                  SizedBox(
                     height: height * 0.43,
                     child: LayoutBuilder(
                       builder: (context, constraints) {
@@ -109,17 +121,17 @@ class Profile2 extends StatelessWidget {
                                 ),
                                 child: Column(
                                   children: [
-                                    SizedBox(
+                                    const SizedBox(
                                       height: 80,
                                     ),
                                     Text(
                                       '$firstName $lastName',
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         color: Color.fromRGBO(52, 121, 40, 1),
                                         fontSize: 30,
                                       ),
                                     ),
-                                    SizedBox(
+                                    const SizedBox(
                                       height: 5,
                                     ),
                                     Row(
@@ -136,8 +148,8 @@ class Profile2 extends StatelessWidget {
                                               ),
                                             ),
                                             Text(
-                                              '10',
-                                              style: TextStyle(
+                                              postsCount.toString(),
+                                              style: const TextStyle(
                                                 color: Color.fromRGBO(
                                                     52, 121, 40, 1),
                                                 fontSize: 20,
@@ -163,25 +175,17 @@ class Profile2 extends StatelessWidget {
                                         Column(
                                           children: [
                                             Text(
-                                              'التقييم',
+                                              'دردشة مع المالك',
                                               style: TextStyle(
                                                 color: Colors.grey[700],
                                                 fontSize: 20,
                                               ),
                                             ),
-                                            // Replace the number with stars
-                                            Row(
-                                              children: List.generate(
-                                                5, // Total stars
-                                                (index) => Icon(
-                                                  index < rating
-                                                      ? Icons.star
-                                                      : Icons.star_border,
-                                                  color: Color.fromRGBO(
-                                                      52, 121, 40, 1),
-                                                  size: 20,
-                                                ),
-                                              ),
+                                            const Icon(
+                                              AntDesign.message1, // Chat icon
+                                              color: Color.fromRGBO(
+                                                  52, 121, 40, 1),
+                                              size: 25,
                                             ),
                                           ],
                                         ),
@@ -206,9 +210,9 @@ class Profile2 extends StatelessWidget {
                               right: 0,
                               child: Center(
                                 child: ClipOval(
-                                  child: profileImage != null
+                                  child: image != null
                                       ? Image.memory(
-                                          base64Decode(profileImage!),
+                                          base64Decode(image!),
                                           fit: BoxFit.cover,
                                           width: 150.0,
                                           height: 150.0,
@@ -223,7 +227,7 @@ class Profile2 extends StatelessWidget {
                       },
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 30,
                   ),
                   Container(
@@ -237,26 +241,26 @@ class Profile2 extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(horizontal: 15),
                       child: Column(
                         children: [
-                          SizedBox(
+                          const SizedBox(
                             height: 20,
                           ),
-                          Text(
+                          const Text(
                             'معلومات المالك',
                             style: TextStyle(
                               color: Color.fromRGBO(52, 121, 40, 1),
                               fontSize: 27,
                             ),
                           ),
-                          Divider(
+                          const Divider(
                             thickness: 2.5,
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 20,
                           ),
                           Row(
                             children: [
                               Icon(AntDesign.mail, color: Colors.grey[700]),
-                              SizedBox(width: 10),
+                              const SizedBox(width: 10),
                               Expanded(
                                 child: Text(
                                   email,
@@ -268,19 +272,19 @@ class Profile2 extends StatelessWidget {
                               ),
                             ],
                           ),
-                          Divider(
+                          const Divider(
                             thickness: 1.5,
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 20,
                           ),
                           Row(
                             children: [
                               Icon(AntDesign.phone, color: Colors.grey[700]),
-                              SizedBox(width: 10),
+                              const SizedBox(width: 10),
                               Expanded(
                                 child: Text(
-                                  ' $phoneCode $phoneNumber ',
+                                  ' $code $phoneNum ',
                                   style: TextStyle(
                                     fontSize: 20,
                                     color: Colors.grey[700],
@@ -289,17 +293,17 @@ class Profile2 extends StatelessWidget {
                               ),
                             ],
                           ),
-                          Divider(
+                          const Divider(
                             thickness: 1.5,
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 20,
                           ),
                           Row(
                             children: [
                               Icon(AntDesign.enviromento,
                                   color: Colors.grey[700]),
-                              SizedBox(width: 10),
+                              const SizedBox(width: 10),
                               Expanded(
                                 child: Text(
                                   '$city , $street',

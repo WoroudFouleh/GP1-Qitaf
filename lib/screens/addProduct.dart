@@ -29,15 +29,18 @@ class _AddProductState extends State<AddProduct> {
       TextEditingController(); // حقل لوصف المنتج
   final TextEditingController _ingredientsController =
       TextEditingController(); // حقل للمكونات
-
+  final TextEditingController _preparationTime =
+      TextEditingController(); // حقل للمكونات
   String? _selectedCity;
   String? _selectedCategory;
   String? _selectedUnit;
   String? _selectedPriceUnit;
+  String? _selectedTimeUnit;
 
   final List<String> cities = ['رام الله', 'نابلس', 'الخليل', 'جنين'];
   final List<String> categories = ['محصول', 'منتج غذائي', 'منتج غير غذائي'];
   final List<String> units = ['كيلو', 'لتر', 'علبة'];
+  final List<String> timeUnits = ['دقائق', 'ساعات', 'أيام'];
   String _notificationMessage = '';
   Color _notificationColor = Colors.green;
   bool _showNotification = false;
@@ -84,13 +87,15 @@ class _AddProductState extends State<AddProduct> {
           'image': _image != null ? base64Encode(_image!) : null,
           "username": username,
           "name": _nameController.text,
-          "quantity": _quantityController.text,
-          "price": _priceController.text,
+          "quantity": int.tryParse(_quantityController.text),
+          "price": int.tryParse(_priceController.text),
           "location": _locationDescriptionController.text,
           "description": _productDescriptionController.text,
           "city": _selectedCity,
           "type": _selectedCategory,
           "quantityType": _selectedUnit,
+          "preparationTime": _preparationTime.text,
+          "preparationTimeUnit": _selectedTimeUnit
         };
 
         var response = await http.post(
@@ -105,6 +110,7 @@ class _AddProductState extends State<AddProduct> {
           var jsonResponse = jsonDecode(response.body);
           if (jsonResponse['status']) {
             showNotification('تم إضافة المنتج بنجاح');
+            updatePostCount();
             // Optionally clear fields or navigate away
           } else {
             showNotification('حدث خطأ أثناء إضافة المنتج',
@@ -121,6 +127,30 @@ class _AddProductState extends State<AddProduct> {
       }
     } catch (e) {
       showNotification('حدث خطأ: $e', backgroundColor: Colors.red);
+    }
+  }
+
+  void updatePostCount() async {
+    try {
+      final response = await http.post(
+        Uri.parse(
+            '$updatePostNumber/$username'), // Send the URL without the username
+        headers: {'Content-Type': 'application/json'},
+        // Send the username in the body
+      );
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        if (data['status'] == true) {
+          print("posts count updated  successfully");
+        } else {
+          print("Error updating posts");
+        }
+      } else {
+        print("Error updating posts ");
+      }
+    } catch (e) {
+      print("An error occurred: $e");
     }
   }
 
@@ -146,7 +176,8 @@ class _AddProductState extends State<AddProduct> {
         titleTextStyle: const TextStyle(
           color: Color.fromARGB(255, 11, 110, 29), // لون العنوان
           fontWeight: FontWeight.bold, // جعل العنوان غامق
-          fontSize: 20, // حجم الخط
+          fontSize: 20,
+          fontFamily: 'CustomArabicFont', // حجم الخط
         ),
         title: const Align(
           alignment: Alignment.centerRight,
@@ -364,7 +395,57 @@ class _AddProductState extends State<AddProduct> {
                 ),
               ),
               const SizedBox(height: 25.0),
-
+              Row(
+                children: [
+                  Expanded(
+                    child: DropdownButtonFormField<String>(
+                      value: _selectedTimeUnit,
+                      items: timeUnits.map((String timeUnit) {
+                        return DropdownMenuItem<String>(
+                          value: timeUnit,
+                          child: Text(timeUnit),
+                        );
+                      }).toList(),
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          _selectedTimeUnit = newValue;
+                        });
+                      },
+                      decoration: InputDecoration(
+                        labelText: 'وحدة الزمن ',
+                        labelStyle: const TextStyle(fontSize: 14),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 10.0),
+                  Expanded(
+                    child: TextFormField(
+                      controller: _preparationTime,
+                      textAlign: TextAlign.right,
+                      textDirection:
+                          TextDirection.rtl, // النص من اليمين إلى الشمال
+                      decoration: InputDecoration(
+                        label: const Align(
+                          alignment: Alignment.centerRight,
+                          child: Text('مدة تحضير الطلب'),
+                        ),
+                        labelStyle: const TextStyle(fontSize: 14),
+                        hintText: 'ادخل المدة اللازمة لجهوزية الطلب',
+                        hintStyle: const TextStyle(fontSize: 14),
+                        hintTextDirection:
+                            TextDirection.rtl, // اتجاه الـ hint من اليمين
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 25.0),
               // وصف موقع المنتج
               TextFormField(
                 controller: _locationDescriptionController,

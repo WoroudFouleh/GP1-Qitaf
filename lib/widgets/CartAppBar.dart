@@ -8,12 +8,12 @@ class CartPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PreferredSize(
+      appBar: const PreferredSize(
         preferredSize: Size.fromHeight(80),
-        child: const CartAppBar(),
+        child: CartAppBar(),
       ),
       endDrawer: CustomDrawer(token: token), // إضافة CustomDrawer هنا
-      body: Center(
+      body: const Center(
         child: Text(
           'محتويات عربة التسوق',
           style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
@@ -30,7 +30,7 @@ class CartAppBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       color: Colors.white,
-      padding: EdgeInsets.symmetric(vertical: 20, horizontal: 25),
+      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 25),
       child: Row(
         mainAxisAlignment:
             MainAxisAlignment.spaceBetween, // النص على اليمين والسهم على الشمال
@@ -39,13 +39,13 @@ class CartAppBar extends StatelessWidget {
             onTap: () {
               Navigator.pop(context);
             },
-            child: Icon(
+            child: const Icon(
               Icons.arrow_back, // سهم يتجه لليمين ليكون ع الشمال
               size: 30,
               color: Color(0xFF556B2F), // لون زيتي
             ),
           ),
-          Row(
+          const Row(
             children: [
               Text(
                 "عربة التسوّق",

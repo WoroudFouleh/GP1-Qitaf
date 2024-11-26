@@ -1,22 +1,28 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:login_page/screens/config.dart';
 import 'package:login_page/screens/profile2.dart';
 import 'package:login_page/widgets/ItemAppBar.dart';
 import 'package:login_page/widgets/ItemBottonBar.dart';
 import 'dart:convert';
 import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:http/http.dart' as http;
 
 class ItemPage extends StatefulWidget {
   final String productName;
   final String productDescription;
-  final String? profilePhotoBase64;
+  final String profilePhotoBase64;
   final int productPrice;
   final String quantityType;
   final int type;
+  final double productRate;
   final quantityAvailable;
   final String token;
   final String productId;
+  final String username;
+  final String preparationTime;
+  final String preparationUnit;
 
   const ItemPage(
       {Key? key,
@@ -28,7 +34,11 @@ class ItemPage extends StatefulWidget {
       required this.type,
       required this.quantityAvailable,
       required this.token,
-      required this.productId})
+      required this.productRate,
+      required this.productId,
+      required this.username,
+      required this.preparationTime,
+      required this.preparationUnit})
       : super(key: key);
 
   @override
@@ -39,19 +49,61 @@ class _ItemPageState extends State<ItemPage> {
   int quantity = 1; // Current quantity
   bool isFavorite = false; // Favorite icon state
   bool isLimitExceeded = false; // To track if quantity limit is exceeded
-  late String firstName;
-  late String lastName;
-  String? userProfileImage;
+  late String firstName = "";
+  late String lastName = "";
+  String userProfileImage = "";
 
+  late String phoneNum = "";
+  late String code = "";
+  late String email = "";
+  late String city = "";
+  late String location = "";
+  late int postsCount = 0;
   @override
   void initState() {
     super.initState();
-    Map<String, dynamic> jwtDecoderToken = JwtDecoder.decode(widget.token);
-    print(jwtDecoderToken);
-    firstName = jwtDecoderToken['firstName'] ?? 'No First Name';
-    lastName = jwtDecoderToken['lastName'] ?? 'No Last Name';
-    userProfileImage = jwtDecoderToken[
-        'profilePhoto']; // Decode token when the widget is initialized
+    print("productRate: ${widget.productRate}");
+
+    fetchUser();
+  }
+
+  void fetchUser() async {
+    print("Sending username: ${widget.username}");
+
+    try {
+      final response = await http.get(
+        Uri.parse(
+            '$getUser/${widget.username}'), // Send the URL without the username
+        headers: {'Content-Type': 'application/json'},
+        // Send the username in the body
+      );
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        if (data['status'] == true) {
+          final userInfo = data['data'];
+          print("User info: $userInfo"); // Assuming the user info is in 'data'
+          setState(() {
+            firstName = userInfo['firstName']; // Extract first name
+            lastName = userInfo['lastName']; // Extract last name
+            userProfileImage = userInfo['profilePhoto'];
+            // Extract profile photo URL
+            phoneNum = userInfo['phoneNumber'];
+            email = userInfo['email'];
+            code = userInfo['phoneCode'];
+            city = userInfo['city'];
+            location = userInfo['street'];
+            postsCount = userInfo['postNumber'];
+          });
+        } else {
+          print("Error fetching items: ${data['message']}");
+        }
+      } else {
+        print("Failed to load items: ${response.statusCode}");
+      }
+    } catch (e) {
+      print("An error occurred: $e");
+    }
   }
 
   String _getDefaultImage() {
@@ -67,28 +119,22 @@ class _ItemPageState extends State<ItemPage> {
     }
   }
 
+  @override
   Widget build(BuildContext context) {
+    // double ratee = widget.productRate.toDouble();
     return Scaffold(
       backgroundColor: Colors.white,
       body: ListView(
         children: [
-          ItemAppBar(),
+          const ItemAppBar(),
           Padding(
-            padding: EdgeInsets.all(16),
-            child: widget.profilePhotoBase64 != null
-                ? Image.memory(
-                    base64Decode(widget.profilePhotoBase64!),
-                    height: 300,
-                    width: double.infinity,
-                    fit: BoxFit.fill,
-                  )
-                : Image.asset(
-                    _getDefaultImage(),
-                    height: 300,
-                    width: double.infinity,
-                    fit: BoxFit.fill,
-                  ),
-          ),
+              padding: const EdgeInsets.all(16),
+              child: Image.memory(
+                base64Decode(widget.profilePhotoBase64),
+                height: 300,
+                width: double.infinity,
+                fit: BoxFit.fill,
+              )),
           Container(
             width: double.infinity,
             decoration: BoxDecoration(
@@ -98,17 +144,17 @@ class _ItemPageState extends State<ItemPage> {
                   color: const Color.fromARGB(255, 23, 57, 28).withOpacity(0.5),
                   spreadRadius: 5,
                   blurRadius: 10,
-                  offset: Offset(0, 3),
+                  offset: const Offset(0, 3),
                 ),
               ],
               borderRadius: BorderRadius.circular(15),
             ),
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20),
+              padding: const EdgeInsets.symmetric(horizontal: 15),
               child: Column(
                 children: [
                   Padding(
-                    padding: EdgeInsets.only(left: 15, top: 30, bottom: 20),
+                    padding: const EdgeInsets.only(top: 30, bottom: 20),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -118,8 +164,17 @@ class _ItemPageState extends State<ItemPage> {
                               context,
                               MaterialPageRoute(
                                 builder: (context) => Profile2(
-                                    token: widget
-                                        .token), // Navigate to profile page
+                                  token: widget.token,
+                                  phoneNum: phoneNum,
+                                  code: code,
+                                  city: city,
+                                  street: location,
+                                  firstName: firstName,
+                                  lastName: lastName,
+                                  image: userProfileImage,
+                                  email: email,
+                                  postsCount: postsCount,
+                                ), // Navigate to profile page
                               ),
                             );
                           },
@@ -128,22 +183,26 @@ class _ItemPageState extends State<ItemPage> {
                               Text(
                                 '$firstName $lastName',
                                 textAlign: TextAlign.right,
-                                style: TextStyle(
+                                style: const TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              SizedBox(width: 14),
+                              const SizedBox(width: 10),
                               ClipOval(
-                                child: userProfileImage != null
-                                    ? Image.memory(
-                                        base64Decode(userProfileImage!),
-                                        fit: BoxFit.cover,
-                                        width: 50.0,
-                                        height: 50.0,
-                                      )
-                                    : Image.asset('assets/images/profile.png'),
-                              ),
+                                  child: Image.memory(
+                                base64Decode(userProfileImage),
+                                fit: BoxFit.cover,
+                                width: 40.0,
+                                height: 40.0,
+                              )
+                                  // : Image.asset(
+                                  //     'assets/images/profile.png',
+                                  //     fit: BoxFit.cover,
+                                  //     width: 50.0,
+                                  //     height: 50.0,
+                                  //   ),
+                                  ),
                             ],
                           ),
                         ),
@@ -158,7 +217,7 @@ class _ItemPageState extends State<ItemPage> {
                                 color: isFavorite
                                     ? Colors.redAccent.withOpacity(0.8)
                                     : Colors.grey.withOpacity(0.5),
-                                offset: Offset(0, 0),
+                                offset: const Offset(0, 0),
                               ),
                             ],
                           ),
@@ -171,15 +230,15 @@ class _ItemPageState extends State<ItemPage> {
                         Text(
                           widget.productName,
                           style: TextStyle(
-                            fontSize: 28,
+                            fontSize: 23,
                             fontWeight: FontWeight.bold,
-                            color: Color.fromARGB(255, 21, 80, 13),
+                            color: const Color.fromARGB(255, 21, 80, 13),
                             shadows: [
                               Shadow(
                                 blurRadius: 5.0,
                                 color: const Color.fromARGB(255, 23, 53, 36)
                                     .withOpacity(0.5),
-                                offset: Offset(1, 2),
+                                offset: const Offset(1, 2),
                               ),
                             ],
                           ),
@@ -188,7 +247,7 @@ class _ItemPageState extends State<ItemPage> {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(top: 5, bottom: 10),
+                    padding: const EdgeInsets.only(top: 5, bottom: 10),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -197,7 +256,7 @@ class _ItemPageState extends State<ItemPage> {
                           children: [
                             // Minus button
                             Container(
-                              padding: EdgeInsets.all(5),
+                              padding: const EdgeInsets.all(5),
                               decoration: BoxDecoration(
                                 color: Colors.white,
                                 borderRadius: BorderRadius.circular(20),
@@ -206,13 +265,14 @@ class _ItemPageState extends State<ItemPage> {
                                     color: Colors.grey.withOpacity(0.5),
                                     spreadRadius: 3,
                                     blurRadius: 10,
-                                    offset: Offset(0, 3),
+                                    offset: const Offset(0, 3),
                                   ),
                                 ],
                               ),
                               child: IconButton(
-                                icon: Icon(CupertinoIcons.minus, size: 20),
-                                color: Color.fromARGB(255, 21, 80, 13),
+                                icon:
+                                    const Icon(CupertinoIcons.minus, size: 20),
+                                color: const Color.fromARGB(255, 21, 80, 13),
                                 onPressed: () {
                                   setState(() {
                                     if (quantity > 1) {
@@ -225,8 +285,9 @@ class _ItemPageState extends State<ItemPage> {
                             ),
                             // Quantity display with dynamic color
                             Container(
-                              margin: EdgeInsets.symmetric(horizontal: 10),
-                              padding: EdgeInsets.symmetric(
+                              margin:
+                                  const EdgeInsets.symmetric(horizontal: 10),
+                              padding: const EdgeInsets.symmetric(
                                   horizontal: 12, vertical: 8),
                               decoration: BoxDecoration(
                                 color: isLimitExceeded
@@ -247,13 +308,13 @@ class _ItemPageState extends State<ItemPage> {
                                   fontWeight: FontWeight.bold,
                                   color: isLimitExceeded
                                       ? Colors.red
-                                      : Color(0xFF475269),
+                                      : const Color(0xFF475269),
                                 ),
                               ),
                             ),
                             // Plus button
                             Container(
-                              padding: EdgeInsets.all(5),
+                              padding: const EdgeInsets.all(5),
                               decoration: BoxDecoration(
                                 color: Colors.white,
                                 borderRadius: BorderRadius.circular(20),
@@ -262,13 +323,13 @@ class _ItemPageState extends State<ItemPage> {
                                     color: Colors.grey.withOpacity(0.5),
                                     spreadRadius: 3,
                                     blurRadius: 10,
-                                    offset: Offset(0, 3),
+                                    offset: const Offset(0, 3),
                                   ),
                                 ],
                               ),
                               child: IconButton(
-                                icon: Icon(CupertinoIcons.plus, size: 20),
-                                color: Color.fromARGB(255, 21, 80, 13),
+                                icon: const Icon(CupertinoIcons.plus, size: 20),
+                                color: const Color.fromARGB(255, 21, 80, 13),
                                 onPressed: () {
                                   setState(() {
                                     if (quantity < widget.quantityAvailable) {
@@ -286,20 +347,23 @@ class _ItemPageState extends State<ItemPage> {
                         Directionality(
                           textDirection: TextDirection.rtl,
                           child: RatingBar.builder(
-                            initialRating: 4,
+                            initialRating: widget.productRate,
                             minRating: 1,
                             direction: Axis.horizontal,
                             itemCount: 5,
-                            itemPadding: EdgeInsets.symmetric(horizontal: 2),
+                            itemPadding:
+                                const EdgeInsets.symmetric(horizontal: 2),
                             itemSize: 30,
+                            allowHalfRating: false, // Disable half-star ratings
+                            ignoreGestures: true,
                             itemBuilder: (context, _) => Icon(
                               Icons.star,
-                              color: Color(0xFFFFD700),
+                              color: const Color(0xFFFFD700),
                               shadows: [
                                 Shadow(
                                   blurRadius: 15.0,
                                   color: Colors.yellowAccent.withOpacity(0.8),
-                                  offset: Offset(0, 0),
+                                  offset: const Offset(0, 0),
                                 ),
                               ],
                             ),
@@ -310,21 +374,72 @@ class _ItemPageState extends State<ItemPage> {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.symmetric(vertical: 30),
-                    child: Directionality(
-                      textDirection:
-                          TextDirection.rtl, // لجعل النص يبدأ من اليمين
-                      child: Text(
-                        widget.productDescription,
-                        style: TextStyle(
-                          fontSize: 20, // تكبير النص
-                          fontWeight: FontWeight.w600, // غمق اللون
-                          color: Color(0xFF333333), // لون داكن
-                        ),
-                        textAlign: TextAlign.justify,
-                        overflow: TextOverflow.visible, // للسماح بالتفاف النص
-                      ),
+                    padding: const EdgeInsets.symmetric(vertical: 20),
+                    child: Divider(
+                      thickness: 1.5,
+                      color: Colors.grey.shade300,
                     ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10),
+                    child: Row(
+                      textDirection: TextDirection.rtl,
+                      children: [
+                        const Icon(
+                          Icons.access_time,
+                          color: Color.fromARGB(255, 21, 80, 13),
+                          size: 33,
+                        ),
+                        const SizedBox(width: 8),
+                        Row(
+                          children: [
+                            Text(
+                              textDirection: TextDirection.rtl,
+                              "  ${widget.preparationTime} ${widget.preparationUnit}",
+                              style: const TextStyle(
+                                fontSize: 20,
+                                color: Color.fromARGB(255, 21, 80, 13),
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Text(
+                              " :المدة الزمنية لتحضير الطلب",
+                              style: TextStyle(
+                                fontSize: 17,
+                                color: Colors.grey.shade700,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
+                  ),
+                  // Divider line
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 20),
+                    child: Divider(
+                      thickness: 1.5,
+                      color: Colors.grey.shade300,
+                    ),
+                  ),
+                  // Description text
+                  Directionality(
+                    textDirection:
+                        TextDirection.rtl, // Right-to-left text direction
+                    child: Text(
+                      widget.productDescription,
+                      style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w600,
+                        color: Color(0xFF333333),
+                      ),
+                      textAlign: TextAlign.justify,
+                      overflow: TextOverflow.visible,
+                    ),
+                  ),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 20),
                   ),
                 ],
               ),
@@ -341,5 +456,15 @@ class _ItemPageState extends State<ItemPage> {
           token: widget.token,
           productId: widget.productId),
     );
+  }
+}
+
+bool _isValidBase64(String base64String) {
+  try {
+    base64Decode(base64String);
+    return true;
+  } catch (e) {
+    print("Invalid base64 data: $e");
+    return false;
   }
 }
