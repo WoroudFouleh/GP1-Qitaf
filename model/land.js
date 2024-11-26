@@ -67,7 +67,11 @@ const landSchema = new mongoose.Schema({
     endTime: {
         type: String,
         required: true
-    }
+    },
+    publishingDate: {
+        type: Date,
+        default: Date.now, // Automatically sets the current date
+      },
 
     
 });

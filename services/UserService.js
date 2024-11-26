@@ -39,7 +39,8 @@ class UserServices {
                 gender,
                 profilePhoto,
                 username,
-                userType
+                userType,
+                postsCount: 0
             });
 
             return await createUser.save();

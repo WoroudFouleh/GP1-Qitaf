@@ -63,7 +63,25 @@ const productSchema = new mongoose.Schema({
     description: {
         type: String,
         required: true
-    }
+    },
+    rate: {
+        type: Number,
+        default: 0, // Initial value
+        min: 0, // Ensures the rate cannot go below 0
+        max: 5 // Optional: Add if you want to restrict ratings to a 0-5 scale
+    },
+    preparationTime: {
+        type: String, // You can use String for flexible time formats like "2 hours" or "30 minutes"
+        required: true // Make it required if every product needs this field
+    },
+    preparationTimeUnit:{
+        type: String, // You can use String for flexible time formats like "2 hours" or "30 minutes"
+        required: true
+    },
+    publishingDate: {
+        type: Date,
+        default: Date.now, // Automatically sets the current date
+      },
 });
 
 module.exports = db.model('Product', productSchema);

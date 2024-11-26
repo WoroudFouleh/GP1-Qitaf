@@ -43,7 +43,8 @@ const userSchema = new mongoose.Schema({
     username: { type: String, required: true, unique: true },
     userType:{type: String, required:true},
     passwordResetToken: String, // Reset token
-    passwordResetTokenExpires: Date // Token expiry time
+    passwordResetTokenExpires: Date,// Token expiry time
+    postsCount: { type: Number, default: 0 },
 }, {
     timestamps: true // Automatically adds createdAt and updatedAt fields
 });

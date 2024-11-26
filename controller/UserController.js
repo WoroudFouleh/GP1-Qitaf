@@ -331,3 +331,90 @@ exports.verifyPassword = async (req, res, next) => {
         });
     }
 };
+
+exports.getUserInfo = async (req, res) => {
+    try {
+      const { username } = req.params;
+      console.log("heree"); // Extract the username from the URL
+      if (!username) {
+        return res.status(400).json({
+          status: false,
+          message: 'Username is required',
+        });
+      }
+  
+      // Find the user by username
+      const user = await User.findOne({ username });
+  
+      if (!user) {
+        return res.status(404).json({
+          status: false,
+          message: 'User not found',
+        });
+      }
+  
+      // Respond with the user's information
+      return res.status(200).json({
+        status: true,
+        data: {
+          firstName: user.firstName,
+          lastName: user.lastName,
+          profilePhoto: user.profilePhoto,
+          phoneNumber: user.phoneNumber,
+          email: user.email,
+          phoneCode: user.phoneCode,
+          city: user.city,
+          street: user.street,
+          postNumber:user.postsCount,
+          gender:user.gender
+        },
+      });
+    } catch (error) {
+      console.error('Error fetching user info:', error);
+      return res.status(500).json({
+        status: false,
+        message: 'An error occurred while fetching user info',
+      });
+    }
+  };
+  
+  exports.updateUserPosts = async (req, res, next) => {
+    try {
+        const { username } = req.params;
+        console.log("Received username:", username);
+
+        // Validate the productId format
+        
+
+        // Validate the new rate (it should be between 1 and 5)
+        
+        // Find the product
+        const user = await User.findOne({ username });
+  
+      if (!user) {
+        return res.status(404).json({
+          status: false,
+          message: 'User not found',
+        });
+      }
+
+        // Calculate new average rate
+        //const totalRating = product.rate + newRateInt;
+        user.postsCount += 1; // Increment count
+        //product.rate = totalRating / 2; // Update average rate
+
+        // Save the updated product
+        await user.save();
+
+        res.status(200).json({
+            status: true,
+            success: "posts number updated successfully",
+            
+        });
+    } catch (err) {
+        console.error("---> Error in updating rate --->", err);
+        next(err);
+    }
+};
+
+  

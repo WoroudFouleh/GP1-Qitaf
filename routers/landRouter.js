@@ -1,4 +1,10 @@
 const router = require("express").Router();
 const landController = require('../controller/landController');
 router.post('/addLand', landController.addLand);
+router.get('/getLands/:username', landController.getLands);
+router.get('/getOwnerLands/:username', landController.getOwnerlands);
+router.put('/updateLand/:landId', landController.updateLand);
+router.delete('/deleteLand/:landId', landController.deleteLand);
+router.put('/updateWorkersNum/:landId', landController.updateWorkerNumber);
+router.get('/getLand/:landId', landController.getLand);
 module.exports = router;

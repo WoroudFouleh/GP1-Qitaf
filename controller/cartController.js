@@ -62,3 +62,32 @@ exports.removeItemFromCart = async (req, res) => {
     }
   };
   
+// Function to delete user's cart
+exports.deleteUserCart = async (req, res) => {
+  try {
+    const { username } = req.params;
+
+    // Validation: Check if username is provided
+    if (!username) {
+      return res.status(400).json({
+        success: false,
+        message: 'Username is required',
+      });
+    }
+
+    // Delete all cart entries for the given username
+    const result = await Cart.deleteMany({ username });
+
+    res.status(200).json({
+      success: true,
+      message: `Cart cleared for user: ${username}`,
+      deletedCount: result.deletedCount, // Number of rows deleted
+    });
+  } catch (error) {
+    console.error('Error deleting user cart:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Server error. Could not delete user cart.',
+    });
+  }
+};
