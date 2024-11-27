@@ -87,13 +87,13 @@ class _AddProductState extends State<AddProduct> {
           'image': _image != null ? base64Encode(_image!) : null,
           "username": username,
           "name": _nameController.text,
+          "type": _selectedCategory,
           "quantity": int.tryParse(_quantityController.text),
+          "quantityType": _selectedUnit,
           "price": int.tryParse(_priceController.text),
+          "city": _selectedCity,
           "location": _locationDescriptionController.text,
           "description": _productDescriptionController.text,
-          "city": _selectedCity,
-          "type": _selectedCategory,
-          "quantityType": _selectedUnit,
           "preparationTime": _preparationTime.text,
           "preparationTimeUnit": _selectedTimeUnit
         };

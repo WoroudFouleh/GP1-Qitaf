@@ -7,6 +7,7 @@ import 'package:login_page/screens/owner_profile.dart';
 import 'dart:convert'; // For base64 decoding
 import 'package:http/http.dart' as http;
 import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:login_page/screens/welcome_screen.dart';
 
 class ProfilePage extends StatefulWidget {
   final token;
@@ -453,7 +454,10 @@ class _ProfilePageState extends State<ProfilePage>
             actions: [
               TextButton.icon(
                 onPressed: () {
-                  Navigator.pop(context); // إغلاق النافذة
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => WelcomeScreen()),
+                  ); // إغلاق النافذة
                   // إضافة منطق تسجيل الخروج هنا
                 },
                 icon: const Icon(

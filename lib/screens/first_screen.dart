@@ -1,10 +1,11 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:login_page/screens/map_screen.dart';
 import 'package:login_page/screens/owner_home.dart';
 import 'package:login_page/screens/owner_add.dart';
 import 'package:login_page/screens/owner_chat.dart';
 import 'package:login_page/screens/owner_notify.dart';
-import 'package:login_page/screens/map.dart';
+
 import 'package:jwt_decoder/jwt_decoder.dart';
 
 class HomePage extends StatefulWidget {
@@ -30,7 +31,7 @@ class _HomePageState extends State<HomePage> {
       OwnerChat(token: widget.token),
       OwnerAdd(token: widget.token),
       OwnerNotify(token: widget.token),
-      //GoogleMapPage(token: widget.token),
+      MapScreen(),
     ];
   }
 

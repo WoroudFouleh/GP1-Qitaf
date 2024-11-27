@@ -31,6 +31,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_vector_icons: 2.0.0
+  fl_chart: ^0.69.2
   
   
 
@@ -61,11 +62,17 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  google_maps_flutter: ^2.2.0
+  location: ^5.0.0
+  google_maps_webservice: ^0.0.20-nullsafety.5
+  shared_preferences: ^2.1.1
+  cupertino_icons: ^1.0.2
+  curved_navigation_bar: ^1.0.3
+  flutter_polyline_points: ^1.0.0
 
 
   
-  # cupertino_icons: ^1.0.2
-  curved_navigation_bar: ^1.0.3
+  
   
 
   # The "flutter_lints" package below contains a set of recommended lints to

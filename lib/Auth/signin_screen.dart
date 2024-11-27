@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:login_page/Admin/Admin.dart';
+import 'package:login_page/Delivery/DileveryHome.dart';
 import 'package:login_page/screens/animition_notification_bar.dart';
 import 'package:login_page/screens/custom_drawer.dart';
 import 'package:login_page/screens/dashboard.dart';
@@ -76,6 +78,32 @@ class _SigninScreenState extends State<SigninScreen> {
     try {
       if (_usernameController.text.isNotEmpty &&
           _passController.text.isNotEmpty) {
+        // Check for hardcoded admin credentials
+        if (_usernameController.text == "admin" &&
+            _passController.text == "admin") {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => AdminPage(), // Replace with your AdminPage
+            ),
+          );
+          return;
+        }
+
+        // Check for hardcoded delivery credentials
+        if (_usernameController.text == "delivery" &&
+            _passController.text == "delivery") {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) =>
+                  DeliveryOrdersPage(), // Replace with your DeliveryPage
+            ),
+          );
+          return;
+        }
+
+        // Proceed with API call for other users
         var reqBody = {
           "username": _usernameController.text,
           "password": _passController.text

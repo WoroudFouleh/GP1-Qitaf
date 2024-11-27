@@ -179,8 +179,8 @@ class _CustomerWorkPageState extends State<CustomerWorkPage> {
                                   Row(
                                     children: [
                                       Container(
-                                        height: 50,
-                                        width: 50,
+                                        height: 45,
+                                        width: 45,
                                         decoration: BoxDecoration(
                                           shape: BoxShape.circle,
                                           border: Border.all(
