@@ -29,7 +29,7 @@ app.use('/api/bookings', bookingRoute);
 // });
 
 const port = 3000;
-const host = '192.168.88.14';  // Your machine's IP address
+const host = '172.23.16.118';  // Your machine's IP address
 
 const server = app.listen(port, host, () => {
     console.log(`App listening at http://${host}:${port}/`);
