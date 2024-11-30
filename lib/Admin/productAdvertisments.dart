@@ -97,7 +97,7 @@ class _ProductAdvertisementsState extends State<Productadvertisments> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.green,
+        backgroundColor: Color(0xFF556B2F),
         title: const Text(
           'إعلانات المنتجات ',
           style: TextStyle(color: Colors.white),
@@ -130,7 +130,8 @@ class _ProductAdvertisementsState extends State<Productadvertisments> {
                             _showFullImage(context, _imagePaths[index]),
                         child: Container(
                           decoration: BoxDecoration(
-                            border: Border.all(color: Colors.green, width: 2),
+                            border:
+                                Border.all(color: Color(0xFF556B2F), width: 2),
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: Image.asset(
@@ -172,7 +173,7 @@ class _ProductAdvertisementsState extends State<Productadvertisments> {
                   label: const Text('إضافة صورة',
                       style: TextStyle(color: Colors.white)),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green,
+                    backgroundColor: Color(0xFF556B2F),
                   ),
                 ),
                 ElevatedButton.icon(
@@ -185,7 +186,7 @@ class _ProductAdvertisementsState extends State<Productadvertisments> {
                   label: const Text('حفظ التعديلات',
                       style: TextStyle(color: Colors.white)),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green,
+                    backgroundColor: Color(0xFF556B2F),
                   ),
                 ),
               ],

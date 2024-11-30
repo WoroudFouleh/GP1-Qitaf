@@ -98,7 +98,7 @@ class _AdvertisementsState extends State<Advertisements> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.green,
+        backgroundColor: Color(0xFF556B2F),
         title: const Text(
           'إعلانات الصفحة الرئيسية',
           style: TextStyle(color: Colors.white),
@@ -173,7 +173,7 @@ class _AdvertisementsState extends State<Advertisements> {
                   label: const Text('إضافة صورة',
                       style: TextStyle(color: Colors.white)),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green,
+                    backgroundColor: Color(0xFF556B2F),
                   ),
                 ),
                 ElevatedButton.icon(
@@ -186,7 +186,7 @@ class _AdvertisementsState extends State<Advertisements> {
                   label: const Text('حفظ التعديلات',
                       style: TextStyle(color: Colors.white)),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green,
+                    backgroundColor: Color(0xFF556B2F),
                   ),
                 ),
               ],

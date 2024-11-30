@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:login_page/Admin/advertisements.dart';
+import 'package:login_page/Admin/DeliveryAdvertisement.dart';
 import 'package:login_page/Admin/productAdvertisments.dart';
+import 'package:login_page/Admin/viewAdvertisements.dart';
 import 'package:login_page/screens/owner_profile.dart';
 
 class AdminDrawer extends StatelessWidget {
@@ -23,7 +25,7 @@ class AdminDrawer extends StatelessWidget {
             ),
             currentAccountPicture: CircleAvatar(
               child: ClipOval(
-                child: Image.asset('assets/images/profile.png'),
+                child: Image.asset('assets/images/admin (2).png'),
               ),
             ),
             decoration: const BoxDecoration(
@@ -62,15 +64,30 @@ class AdminDrawer extends StatelessWidget {
             },
           ),
           ListTile(
-            trailing: const Icon(Icons.campaign),
+            trailing: const Icon(Icons.post_add),
             title: const Align(
               alignment: Alignment.centerRight,
-              child: Text("إعلانات الزبائن"),
+              child: Text("إنشاء إعلان  "),
             ),
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const Advertisements()),
+                MaterialPageRoute(
+                    builder: (context) => const DeliveryAdvertisements()),
+              );
+            },
+          ),
+          ListTile(
+            trailing: const Icon(Icons.view_agenda),
+            title: const Align(
+              alignment: Alignment.centerRight,
+              child: Text(" إعلانات قطاف"),
+            ),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const ViewAdvertisement()),
               );
             },
           ),
