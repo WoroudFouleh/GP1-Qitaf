@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:login_page/Admin/Delivery.dart';
 import 'package:login_page/Admin/Posts.dart';
 import 'package:login_page/Admin/Statistics.dart';
+import 'package:login_page/Admin/admin_drawer.dart';
 
 class AdminPage extends StatefulWidget {
   @override
@@ -13,7 +14,7 @@ class _AdminPageState extends State<AdminPage> {
 
   final List<Widget> _pages = [
     StatisticsPage(),
-    DeliveryPage(), // تم إضافة صفحة التوصيل هنا
+    DeliveryPage(),
     PostsPage(),
   ];
 
@@ -28,14 +29,14 @@ class _AdminPageState extends State<AdminPage> {
       context: context,
       builder: (BuildContext context) {
         return Directionality(
-          textDirection: TextDirection.rtl, // لجعل النصوص من اليمين إلى اليسار
+          textDirection: TextDirection.rtl,
           child: AlertDialog(
             title: const Text(
               'تأكيد تسجيل الخروج',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
-                color: Color(0xFF556B2F), // لون زيتي
+                color: Color(0xFF556B2F),
               ),
             ),
             content: const Text(
@@ -43,7 +44,7 @@ class _AdminPageState extends State<AdminPage> {
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
-                color: Colors.black, // لون أسود
+                color: Colors.black,
               ),
             ),
             actions: [
@@ -58,13 +59,12 @@ class _AdminPageState extends State<AdminPage> {
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
-                    color: Colors.black, // لون أسود
+                    color: Colors.black,
                   ),
                 ),
               ),
               TextButton.icon(
                 onPressed: () {
-                  // قم بإضافة أي منطق لتسجيل الخروج هنا
                   Navigator.of(context).pop();
                   print('تم تسجيل الخروج');
                 },
@@ -74,7 +74,7 @@ class _AdminPageState extends State<AdminPage> {
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
-                    color: Color(0xFF556B2F), // لون زيتي
+                    color: Color(0xFF556B2F),
                   ),
                 ),
               ),
@@ -100,6 +100,8 @@ class _AdminPageState extends State<AdminPage> {
             ),
           ),
           backgroundColor: const Color.fromARGB(255, 69, 104, 21),
+          iconTheme: const IconThemeData(
+              color: Colors.white), // تغيير لون الثلاثة شحطات
           actions: [
             IconButton(
               onPressed: () {
@@ -113,6 +115,7 @@ class _AdminPageState extends State<AdminPage> {
             ),
           ],
         ),
+        drawer: const AdminDrawer(),
         body: IndexedStack(
           index: _currentIndex,
           children: _pages,
@@ -134,7 +137,7 @@ class _AdminPageState extends State<AdminPage> {
               label: 'التوصيل',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.kitchen),
+              icon: Icon(Icons.post_add),
               label: 'المنشورات',
             ),
           ],

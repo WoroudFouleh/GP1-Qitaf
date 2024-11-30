@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:login_page/Admin/Admin.dart';
 import 'package:login_page/Auth/test.dart';
+import 'package:login_page/Discussion/Home.dart';
 import 'package:login_page/screens/LandPage.dart';
 import 'package:login_page/screens/details.dart';
 import 'package:login_page/screens/previousOrders.dart';
@@ -24,7 +26,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         fontFamily: 'CustomArabicFont', // Use your custom font family here
       ),
-      home: const WelcomeScreen(),
+      home: AdminPage(),
     );
   }
 }
