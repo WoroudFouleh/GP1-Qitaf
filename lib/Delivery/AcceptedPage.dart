@@ -7,10 +7,19 @@ class AcceptedOrdersPage extends StatefulWidget {
 
 class _AcceptedOrdersPageState extends State<AcceptedOrdersPage> {
   bool _isDelivered = false; // حالة التوصيل
+  bool _isNotReceived = false; // حالة عدم الاستلام
 
   void _markAsDelivered() {
     setState(() {
       _isDelivered = true; // تم التوصيل
+      _isNotReceived = false; // إلغاء حالة عدم الاستلام
+    });
+  }
+
+  void _markAsNotReceived() {
+    setState(() {
+      _isNotReceived = true; // لم يتم الاستلام
+      _isDelivered = false; // إلغاء حالة التوصيل
     });
   }
 
@@ -87,7 +96,7 @@ class _AcceptedOrdersPageState extends State<AcceptedOrdersPage> {
 
                     const SizedBox(height: 8.0),
 
-                    // زر تم التوصيل
+                    // أزرار التحكم
                     _isDelivered
                         ? Row(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -108,26 +117,76 @@ class _AcceptedOrdersPageState extends State<AcceptedOrdersPage> {
                               ),
                             ],
                           )
-                        : ElevatedButton(
-                            onPressed: _markAsDelivered,
-                            style: ElevatedButton.styleFrom(
-                              padding: const EdgeInsets.all(12),
-                              backgroundColor: Colors.blue[50],
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8.0),
-                                side: BorderSide(
-                                    color: Colors.blue.shade800, width: 1.5),
+                        : _isNotReceived
+                            ? Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.cancel_outlined,
+                                    color: Colors.red,
+                                    size: 30,
+                                  ),
+                                  const SizedBox(width: 8.0),
+                                  const Text(
+                                    'لم يتم استلام الطلب',
+                                    style: TextStyle(
+                                      fontSize: 16.0,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.red,
+                                    ),
+                                  ),
+                                ],
+                              )
+                            : Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  ElevatedButton(
+                                    onPressed: _markAsDelivered,
+                                    style: ElevatedButton.styleFrom(
+                                      padding: const EdgeInsets.all(12),
+                                      backgroundColor: Colors.blue[50],
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(8.0),
+                                        side: BorderSide(
+                                            color: Colors.blue.shade800,
+                                            width: 1.5),
+                                      ),
+                                    ),
+                                    child: const Text(
+                                      'تم التوصيل',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.blue,
+                                        fontSize: 16.0,
+                                      ),
+                                    ),
+                                  ),
+                                  ElevatedButton(
+                                    onPressed: _markAsNotReceived,
+                                    style: ElevatedButton.styleFrom(
+                                      padding: const EdgeInsets.all(12),
+                                      backgroundColor: Colors.red[50],
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(8.0),
+                                        side: BorderSide(
+                                            color: Colors.red.shade800,
+                                            width: 1.5),
+                                      ),
+                                    ),
+                                    child: const Text(
+                                      'لم يتم الاستلام',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.red,
+                                        fontSize: 16.0,
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ),
-                            child: const Text(
-                              'تم التوصيل',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.blue,
-                                fontSize: 16.0,
-                              ),
-                            ),
-                          ),
                   ],
                 ),
               ),

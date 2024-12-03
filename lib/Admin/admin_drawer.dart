@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:login_page/Admin/AcceptDelivery.dart';
 import 'package:login_page/Admin/advertisements.dart';
 import 'package:login_page/Admin/DeliveryAdvertisement.dart';
 import 'package:login_page/Admin/productAdvertisments.dart';
 import 'package:login_page/Admin/viewAdvertisements.dart';
+import 'package:login_page/Delivery/DileveryHome.dart';
 import 'package:login_page/screens/owner_profile.dart';
 
 class AdminDrawer extends StatelessWidget {
@@ -91,12 +93,18 @@ class AdminDrawer extends StatelessWidget {
               );
             },
           ),
-          const ListTile(
-            trailing: Icon(Icons.delivery_dining),
-            title: Align(
+          ListTile(
+            trailing: const Icon(Icons.delivery_dining),
+            title: const Align(
               alignment: Alignment.centerRight,
               child: Text("طلبات عمل التوصيل "),
             ),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => DeliveryRequestsPage()),
+              );
+            },
           ),
           const SizedBox(height: 45.0),
           const ListTile(

@@ -1,341 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 class DeliveryPage extends StatefulWidget {
   @override
   _DeliveryPageState createState() => _DeliveryPageState();
 }
 
-class _DeliveryPageState extends State<DeliveryPage>
-    with SingleTickerProviderStateMixin {
-  late TabController _tabController;
-
-  @override
-  void initState() {
-    super.initState();
-    _tabController = TabController(
-        length: 2, vsync: this); // Two tabs: Add Delivery and Manage Delivery
-  }
-
-  @override
-  void dispose() {
-    _tabController.dispose();
-    super.dispose();
-  }
-
+class _DeliveryPageState extends State<DeliveryPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false, // Removes the back button
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(0), // No extra space below tabs
-          child: TabBar(
-            controller: _tabController,
-            tabs: [
-              Tab(text: 'إضافة توصيل'),
-              Tab(text: 'إدارة التوصيلات'),
-            ],
-            indicatorColor: const Color.fromARGB(
-                255, 17, 118, 21), // Change indicator color to zayti
-            labelColor: const Color.fromARGB(
-                255, 17, 118, 21), // Change label color to zayti
-            unselectedLabelColor:
-                Colors.black, // Change unselected label color to black
-          ),
-        ),
-        elevation: 0, // Removes shadow from app bar
-      ),
-      body: TabBarView(
-        controller: _tabController,
-        children: [
-          AddDeliveryScreen(),
-          ManageDeliveryScreen(),
-        ],
-      ),
-    );
-  }
-}
-
-class AddDeliveryScreen extends StatefulWidget {
-  @override
-  _AddDeliveryScreenState createState() => _AddDeliveryScreenState();
-}
-
-class _AddDeliveryScreenState extends State<AddDeliveryScreen> {
-  final _formKey = GlobalKey<FormState>();
-  bool _isObscured = true;
-  bool _isConfirmPasswordObscured = true; // For confirming password
-
-  // For city selection
-  String? _selectedCity;
-
-  final List<String> cities = [
-    'رام الله',
-    'نابلس',
-    'الخليل',
-    'جنين',
-    'بيت لحم',
-    'طولكرم',
-    'غزة',
-  ];
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(25.0),
-      child: Form(
-        key: _formKey,
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              const SizedBox(height: 25.0),
-              // First Name
-              TextFormField(
-                textAlign: TextAlign.right, // Right alignment for Arabic
-                decoration: InputDecoration(
-                  label: const Align(
-                    alignment: Alignment.centerRight,
-                    child: Text('الاسم الأول'),
-                  ),
-                  hintText: 'أدخل اسمك الأول',
-                  hintStyle: const TextStyle(color: Colors.black26),
-                  border: OutlineInputBorder(
-                    borderSide: const BorderSide(color: Colors.black12),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'يرجى إدخال اسمك الأول';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 25.0),
-              // Last Name
-              TextFormField(
-                textAlign: TextAlign.right, // Right alignment for Arabic
-                decoration: InputDecoration(
-                  label: const Align(
-                    alignment: Alignment.centerRight,
-                    child: Text('اسم العائلة'),
-                  ),
-                  hintText: 'أدخل اسم العائلة',
-                  hintStyle: const TextStyle(color: Colors.black26),
-                  border: OutlineInputBorder(
-                    borderSide: const BorderSide(color: Colors.black12),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'يرجى إدخال اسم العائلة';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 25.0),
-              // Phone Number with Country Code
-              Row(
-                children: [
-                  SizedBox(
-                    width: 100,
-                    child: DropdownButtonFormField<String>(
-                      value: '+970',
-                      items: ['+970', '+972'].map((code) {
-                        return DropdownMenuItem(
-                          value: code,
-                          child: Text(code),
-                        );
-                      }).toList(),
-                      onChanged: (value) {},
-                      decoration: InputDecoration(
-                        label: const Text('المقدمة'),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 10.0),
-                  Expanded(
-                    child: TextFormField(
-                      keyboardType: TextInputType.phone,
-                      textAlign: TextAlign.right, // Right alignment for Arabic
-                      decoration: InputDecoration(
-                        label: const Align(
-                          alignment: Alignment.centerRight,
-                          child: Text('رقم الهاتف'),
-                        ),
-                        hintText: 'أدخل رقم هاتفك',
-                        hintStyle: const TextStyle(color: Colors.black26),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'يرجى إدخال رقم الهاتف';
-                        }
-                        return null;
-                      },
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 25.0),
-              // Email
-              TextFormField(
-                textAlign: TextAlign.right, // Right alignment for Arabic
-                decoration: InputDecoration(
-                  label: const Align(
-                    alignment: Alignment.centerRight,
-                    child: Text('البريد الإلكتروني'),
-                  ),
-                  hintText: 'أدخل بريدك الإلكتروني',
-                  hintStyle: const TextStyle(color: Colors.black26),
-                  border: OutlineInputBorder(
-                    borderSide: const BorderSide(color: Colors.black12),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'يرجى إدخال البريد الإلكتروني';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 25.0),
-              // Password
-              TextFormField(
-                obscureText: _isObscured,
-                textAlign: TextAlign.right, // Right alignment for Arabic
-                decoration: InputDecoration(
-                  label: const Align(
-                    alignment: Alignment.centerRight,
-                    child: Text('كلمة السر'),
-                  ),
-                  hintText: 'أدخل كلمة السر',
-                  hintStyle: const TextStyle(color: Colors.black26),
-                  border: OutlineInputBorder(
-                    borderSide: const BorderSide(color: Colors.black12),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  prefixIcon: IconButton(
-                    icon: Icon(
-                      _isObscured ? Icons.visibility : Icons.visibility_off,
-                      color: Colors.black54,
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        _isObscured = !_isObscured;
-                      });
-                    },
-                  ),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'يرجى إدخال كلمة السر';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 25.0),
-              // Confirm Password
-              TextFormField(
-                obscureText: _isConfirmPasswordObscured,
-                textAlign: TextAlign.right, // Right alignment for Arabic
-                decoration: InputDecoration(
-                  label: const Align(
-                    alignment: Alignment.centerRight,
-                    child: Text('تأكيد كلمة السر'),
-                  ),
-                  hintText: 'أعد إدخال كلمة السر',
-                  hintStyle: const TextStyle(color: Colors.black26),
-                  border: OutlineInputBorder(
-                    borderSide: const BorderSide(color: Colors.black12),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  prefixIcon: IconButton(
-                    icon: Icon(
-                      _isConfirmPasswordObscured
-                          ? Icons.visibility
-                          : Icons.visibility_off,
-                      color: Colors.black54,
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        _isConfirmPasswordObscured =
-                            !_isConfirmPasswordObscured;
-                      });
-                    },
-                  ),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'يرجى تأكيد كلمة السر';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 25.0),
-              // City Dropdown
-              DropdownButtonFormField<String>(
-                value: _selectedCity,
-                onChanged: (value) {
-                  setState(() {
-                    _selectedCity = value;
-                  });
-                },
-                items: cities.map((city) {
-                  return DropdownMenuItem(
-                    value: city,
-                    child: Text(city),
-                  );
-                }).toList(),
-                decoration: InputDecoration(
-                  label: const Align(
-                    alignment: Alignment.centerRight,
-                    child: Text('اختار المدينة'),
-                  ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-                validator: (value) {
-                  if (value == null) {
-                    return 'يرجى اختيار المدينة';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 25.0),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      // Handle form submission
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color.fromARGB(255, 17, 118, 21),
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(vertical: 18.0),
-                    textStyle: const TextStyle(
-                      fontSize: 18.0,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  child: const Text('إضافة توصيل'),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
+      body: ManageDeliveryScreen(),
     );
   }
 }
@@ -346,42 +21,44 @@ class ManageDeliveryScreen extends StatefulWidget {
 }
 
 class _ManageDeliveryScreenState extends State<ManageDeliveryScreen> {
-  // Update the type of the map to support nullable strings for 'image'
-
-  List<Map<String, String?>> allDeliveries = [
+  List<Map<String, dynamic>> allDeliveries = [
     {
       'name': 'سامي بدر',
       'phone': '972598126148+',
       'city': 'رام الله',
       'image': null,
+      'rating': 4.5,
     },
     {
       'name': 'رامي خالد',
       'phone': '970599778821+',
       'city': 'نابلس',
-      'image': 'assets/images/profilew.png'
+      'image': 'assets/images/profilew.png',
+      'rating': 4.0,
     },
     {
       'name': 'علي حسن',
       'phone': '970599123456+',
       'city': 'جنين',
       'image': null,
+      'rating': 3.5,
     },
     {
       'name': 'محمد عادل',
       'phone': '970592334455+',
       'city': 'رام الله',
-      'image': 'assets/images/profilew.png'
+      'image': 'assets/images/profilew.png',
+      'rating': 5.0,
     },
   ];
 
-  List<Map<String, String?>> filteredDeliveries = [];
+  List<Map<String, dynamic>> filteredDeliveries = [];
   String? selectedCity;
 
   @override
   void initState() {
     super.initState();
-    filteredDeliveries = allDeliveries; // عرض جميع التوصيلات بشكل افتراضي
+    filteredDeliveries = allDeliveries;
   }
 
   void filterByCity(String city) {
@@ -495,11 +172,12 @@ class _ManageDeliveryScreenState extends State<ManageDeliveryScreen> {
               textAlign: TextAlign.right,
             ),
             items: allDeliveries
-                .map((delivery) => delivery['city'])
+                .map((delivery) => delivery['city'] as String?)
                 .toSet()
-                .map((city) => DropdownMenuItem(
-                      value: city,
-                      child: Text(city!, textAlign: TextAlign.right),
+                .where((city) => city != null)
+                .map((city) => DropdownMenuItem<String>(
+                      value: city!,
+                      child: Text(city, textAlign: TextAlign.right),
                     ))
                 .toList(),
             onChanged: (value) {
@@ -540,8 +218,7 @@ class _ManageDeliveryScreenState extends State<ManageDeliveryScreen> {
                     leading: CircleAvatar(
                       backgroundColor: Colors.green,
                       backgroundImage: deliveryMan['image'] != null
-                          ? AssetImage(
-                              deliveryMan['image']!) // استخدام AssetImage هنا
+                          ? AssetImage(deliveryMan['image']!)
                           : null,
                       child: deliveryMan['image'] == null
                           ? Text(
@@ -553,10 +230,46 @@ class _ManageDeliveryScreenState extends State<ManageDeliveryScreen> {
                             )
                           : null,
                     ),
-                    title: Text(
-                      deliveryMan['name']!,
-                      textAlign: TextAlign.right,
-                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    title: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Expanded(
+                              child: Text(
+                                deliveryMan['name']!,
+                                textAlign: TextAlign.right,
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 5),
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: RatingBar.builder(
+                            initialRating: deliveryMan['rating']!,
+                            minRating: 1,
+                            direction: Axis.horizontal,
+                            allowHalfRating: true,
+                            itemCount: 5,
+                            itemSize: 20.0,
+                            itemPadding:
+                                const EdgeInsets.symmetric(horizontal: 1.0),
+                            itemBuilder: (context, _) => const Icon(
+                              Icons.star,
+                              color: Colors.amber,
+                            ),
+                            onRatingUpdate: (rating) {
+                              setState(() {
+                                deliveryMan['rating'] = rating;
+                              });
+                            },
+                          ),
+                        ),
+                      ],
                     ),
                     subtitle: Text(
                       'رقم الهاتف: ${deliveryMan['phone']}',

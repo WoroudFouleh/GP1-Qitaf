@@ -3,14 +3,14 @@ import 'package:image_picker/image_picker.dart';
 import 'package:login_page/Admin/RequestDelivery.dart';
 import 'dart:io';
 
-class ViewAdvertisement extends StatefulWidget {
-  const ViewAdvertisement({super.key});
+class CustomerAdvertisement extends StatefulWidget {
+  const CustomerAdvertisement({super.key});
 
   @override
-  State<ViewAdvertisement> createState() => _ViewAdvertisementState();
+  State<CustomerAdvertisement> createState() => _CustomerAdvertisementState();
 }
 
-class _ViewAdvertisementState extends State<ViewAdvertisement> {
+class _CustomerAdvertisementState extends State<CustomerAdvertisement> {
   String adText =
       'هذا هو نص الإعلان المقدم من قِطاف. يمكن للمستخدمين قراءة التفاصيل هنا.';
   File? adImageFile; // لتخزين الصورة المختارة من المعرض
@@ -53,32 +53,10 @@ class _ViewAdvertisementState extends State<ViewAdvertisement> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  // السطر الخاص بالاسم وقائمة الخيارات
+                  // السطر الخاص بالاسم
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      PopupMenuButton<String>(
-                        icon: const Icon(Icons.more_vert),
-                        onSelected: (value) {
-                          if (value == 'edit') {
-                            _showEditDialog();
-                          } else if (value == 'delete') {
-                            _showDeleteDialog();
-                          }
-                        },
-                        itemBuilder: (BuildContext context) {
-                          return [
-                            const PopupMenuItem<String>(
-                              value: 'edit',
-                              child: Text('تعديل الإعلان'),
-                            ),
-                            const PopupMenuItem<String>(
-                              value: 'delete',
-                              child: Text('حذف الإعلان'),
-                            ),
-                          ];
-                        },
-                      ),
                       Row(
                         children: [
                           const Text(
@@ -151,111 +129,6 @@ class _ViewAdvertisementState extends State<ViewAdvertisement> {
             ),
           );
         },
-      ),
-    );
-  }
-
-  // نافذة تعديل الإعلان
-  void _showEditDialog() {
-    TextEditingController textController = TextEditingController(text: adText);
-
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text(
-          'تعديل الإعلان',
-          textAlign: TextAlign.right,
-        ),
-        content: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              const Text(
-                'تعديل النص:',
-                textAlign: TextAlign.right,
-              ),
-              const SizedBox(height: 8),
-              TextField(
-                controller: textController,
-                maxLines: 3,
-                textAlign: TextAlign.right,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                ),
-              ),
-              const SizedBox(height: 16),
-              const Text(
-                'تغيير الصورة:',
-                textAlign: TextAlign.right,
-              ),
-              const SizedBox(height: 8),
-              ElevatedButton.icon(
-                onPressed: () async {
-                  final pickedFile = await _picker.pickImage(
-                    source: ImageSource.gallery,
-                  );
-                  if (pickedFile != null) {
-                    setState(() {
-                      adImageFile = File(pickedFile.path);
-                    });
-                  }
-                },
-                icon: const Icon(Icons.image),
-                label: const Text('اختر صورة جديدة'),
-                style: ElevatedButton.styleFrom(
-                  foregroundColor: Colors.white,
-                  backgroundColor: Color(0xFF556B2F),
-                  textStyle: const TextStyle(fontWeight: FontWeight.bold),
-                ),
-              ),
-            ],
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('إلغاء'),
-            style: TextButton.styleFrom(
-              foregroundColor: Color(0xFF556B2F),
-            ),
-          ),
-          TextButton(
-            onPressed: () {
-              setState(() {
-                adText = textController.text;
-              });
-              Navigator.pop(context);
-            },
-            child: const Text('حفظ'),
-            style: TextButton.styleFrom(
-              foregroundColor: Color(0xFF556B2F),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  // نافذة حذف الإعلان
-  void _showDeleteDialog() {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('حذف الإعلان'),
-        content: const Text('هل أنت متأكد من حذف هذا الإعلان؟'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('إلغاء'),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-              // منطق حذف الإعلان
-            },
-            child: const Text('تأكيد'),
-          ),
-        ],
       ),
     );
   }

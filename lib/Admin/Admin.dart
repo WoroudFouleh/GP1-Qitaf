@@ -20,7 +20,7 @@ class _AdminPageState extends State<AdminPage> {
 
   final List<String> _titles = [
     'الإحصائيات',
-    'التوصيل',
+    'إدارة التوصيلات',
     'المنشورات',
   ];
 
