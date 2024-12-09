@@ -79,8 +79,7 @@ class _ChatScreenState extends State<ChatScreen> {
         backgroundColor: Colors.green,
         actions: [
           IconButton(
-            icon: const Icon(Icons.more_vert,
-                color: Colors.white), // Replaced arrow with three dots
+            icon: const Icon(Icons.more_vert, color: Colors.white),
             onPressed: () {
               // Add any action for the 3 dots here if needed
             },
@@ -89,185 +88,200 @@ class _ChatScreenState extends State<ChatScreen> {
       ),
       body: Directionality(
         textDirection: TextDirection.rtl,
-        child: Column(
+        child: Stack(
           children: [
-            Expanded(
-              child: StreamBuilder(
-                stream: FirebaseFirestore.instance
-                    .collection('messages')
-                    .doc(chatId)
-                    .collection('messages')
-                    .orderBy('timestamp', descending: true)
-                    .snapshots(),
-                builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(child: CircularProgressIndicator());
-                  }
-
-                  if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                    return const Center(child: Text('لا توجد رسائل بعد.'));
-                  }
-
-                  var messages = snapshot.data!.docs;
-                  return ListView.builder(
-                    reverse: true,
-                    itemCount: messages.length,
-                    itemBuilder: (context, index) {
-                      var message = messages[index];
-                      bool isSender =
-                          message['senderId'] == widget.currentUserId;
-                      bool isLastMessage =
-                          index == 0; // Check if it's the last message
-
-                      String messageStatus = 'تم الإرسال'; // Default status
-                      if (isSender && message['seen'] == true) {
-                        messageStatus = 'تم القراءة';
-                      }
-
-                      return GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            // Toggle time display for the message
-                            if (selectedMessageId == message.id) {
-                              messageTime = null; // Hide time if tapped again
-                              selectedMessageId = null;
-                            } else {
-                              messageTime = message['timestamp'] != null
-                                  ? (message['timestamp'] as Timestamp)
-                                      .toDate()
-                                      .toString()
-                                  : 'غير متوفر';
-                              selectedMessageId = message.id;
-                            }
-                          });
-                        },
-                        child: Column(
-                          crossAxisAlignment: isSender
-                              ? CrossAxisAlignment.end
-                              : CrossAxisAlignment.start,
-                          children: [
-                            // فقاعة الرسالة
-                            Container(
-                              margin: const EdgeInsets.symmetric(
-                                  vertical: 5, horizontal: 10),
-                              padding: const EdgeInsets.all(10),
-                              decoration: BoxDecoration(
-                                color: isSender ? Colors.green : Colors.white,
-                                borderRadius: BorderRadius.only(
-                                  topLeft: const Radius.circular(15),
-                                  topRight: const Radius.circular(15),
-                                  bottomLeft: isSender
-                                      ? const Radius.circular(15)
-                                      : const Radius.circular(0),
-                                  bottomRight: isSender
-                                      ? const Radius.circular(0)
-                                      : const Radius.circular(15),
-                                ),
-                                border: Border.all(
-                                  color: Colors.grey.shade300,
-                                ),
-                              ),
-                              child: Text(
-                                message['content'],
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  color: isSender ? Colors.white : Colors.black,
-                                ),
-                              ),
-                            ),
-                            if (messageTime != null &&
-                                selectedMessageId == message.id)
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: 2, horizontal: 10),
-                                child: Text(
-                                  messageTime!,
-                                  style: const TextStyle(
-                                    fontSize: 12,
-                                    color: Colors.grey,
-                                  ),
-                                ),
-                              ),
-                            // Display message status for last message
-                            if (isLastMessage && isSender)
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: 2, horizontal: 10),
-                                child: Text(
-                                  messageStatus,
-                                  style: const TextStyle(
-                                    fontSize: 12,
-                                    color: Colors.green,
-                                  ),
-                                ),
-                              ),
-                          ],
-                        ),
-                      );
-                    },
-                  );
-                },
+            // Add background image here
+            Positioned.fill(
+              child: Image.asset(
+                'assets/images/message.png', // Replace with your image path
+                fit: BoxFit.cover,
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      controller: _messageController,
-                      decoration: InputDecoration(
-                        hintText: 'اكتب رسالة...',
-                        hintStyle: TextStyle(color: Colors.grey[600]),
-                        filled: true,
-                        fillColor: Colors.grey[200],
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(30),
-                          borderSide: BorderSide.none,
-                        ),
-                      ),
-                    ),
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.send, color: Colors.green),
-                    onPressed: () async {
-                      String message = _messageController.text.trim();
-                      if (message.isEmpty) return;
+            Column(
+              children: [
+                Expanded(
+                  child: StreamBuilder(
+                    stream: FirebaseFirestore.instance
+                        .collection('messages')
+                        .doc(chatId)
+                        .collection('messages')
+                        .orderBy('timestamp', descending: true)
+                        .snapshots(),
+                    builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Center(child: CircularProgressIndicator());
+                      }
 
-                      await FirebaseFirestore.instance
-                          .collection('messages')
-                          .doc(chatId)
-                          .collection('messages')
-                          .add({
-                        'content': message,
-                        'senderId': widget.currentUserId,
-                        'receiverId': widget.otherUserId,
-                        'timestamp': FieldValue.serverTimestamp(),
-                        'seen': false,
-                      });
+                      if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                        return const Center(child: Text('لا توجد رسائل بعد.'));
+                      }
 
-                      await FirebaseFirestore.instance
-                          .collection('chats')
-                          .doc(chatId)
-                          .set(
-                        {
-                          'lastMessage': message,
-                          'lastMessageTime': FieldValue.serverTimestamp(),
-                          'lastMessageFromUser': widget.currentUserId,
-                          'seen': false,
-                          'participants': [
-                            widget.currentUserId,
-                            widget.otherUserId,
-                          ],
+                      var messages = snapshot.data!.docs;
+                      return ListView.builder(
+                        reverse: true,
+                        itemCount: messages.length,
+                        itemBuilder: (context, index) {
+                          var message = messages[index];
+                          bool isSender =
+                              message['senderId'] == widget.currentUserId;
+                          bool isLastMessage =
+                              index == 0; // Check if it's the last message
+
+                          String messageStatus = 'تم الإرسال'; // Default status
+                          if (isSender && message['seen'] == true) {
+                            messageStatus = 'تم القراءة';
+                          }
+
+                          return GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                // Toggle time display for the message
+                                if (selectedMessageId == message.id) {
+                                  messageTime =
+                                      null; // Hide time if tapped again
+                                  selectedMessageId = null;
+                                } else {
+                                  messageTime = message['timestamp'] != null
+                                      ? (message['timestamp'] as Timestamp)
+                                          .toDate()
+                                          .toString()
+                                      : 'غير متوفر';
+                                  selectedMessageId = message.id;
+                                }
+                              });
+                            },
+                            child: Column(
+                              crossAxisAlignment: isSender
+                                  ? CrossAxisAlignment.end
+                                  : CrossAxisAlignment.start,
+                              children: [
+                                // فقاعة الرسالة
+                                Container(
+                                  margin: const EdgeInsets.symmetric(
+                                      vertical: 5, horizontal: 10),
+                                  padding: const EdgeInsets.all(10),
+                                  decoration: BoxDecoration(
+                                    color:
+                                        isSender ? Colors.green : Colors.white,
+                                    borderRadius: BorderRadius.only(
+                                      topLeft: const Radius.circular(15),
+                                      topRight: const Radius.circular(15),
+                                      bottomLeft: isSender
+                                          ? const Radius.circular(15)
+                                          : const Radius.circular(0),
+                                      bottomRight: isSender
+                                          ? const Radius.circular(0)
+                                          : const Radius.circular(15),
+                                    ),
+                                    border: Border.all(
+                                      color: Colors.grey.shade300,
+                                    ),
+                                  ),
+                                  child: Text(
+                                    message['content'],
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: isSender
+                                          ? Colors.white
+                                          : Colors.black,
+                                    ),
+                                  ),
+                                ),
+                                if (messageTime != null &&
+                                    selectedMessageId == message.id)
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 2, horizontal: 10),
+                                    child: Text(
+                                      messageTime!,
+                                      style: const TextStyle(
+                                        fontSize: 12,
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                  ),
+                                // Display message status for last message
+                                if (isLastMessage && isSender)
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 2, horizontal: 10),
+                                    child: Text(
+                                      messageStatus,
+                                      style: const TextStyle(
+                                        fontSize: 12,
+                                        color: Colors.green,
+                                      ),
+                                    ),
+                                  ),
+                              ],
+                            ),
+                          );
                         },
-                        SetOptions(merge: true),
                       );
-
-                      _messageController.clear();
                     },
                   ),
-                ],
-              ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: TextField(
+                          controller: _messageController,
+                          decoration: InputDecoration(
+                            hintText: 'اكتب رسالة...',
+                            hintStyle: TextStyle(color: Colors.grey[600]),
+                            filled: true,
+                            fillColor: Colors.grey[200],
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(30),
+                              borderSide: BorderSide.none,
+                            ),
+                          ),
+                        ),
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.send, color: Colors.green),
+                        onPressed: () async {
+                          String message = _messageController.text.trim();
+                          if (message.isEmpty) return;
+
+                          await FirebaseFirestore.instance
+                              .collection('messages')
+                              .doc(chatId)
+                              .collection('messages')
+                              .add({
+                            'content': message,
+                            'senderId': widget.currentUserId,
+                            'receiverId': widget.otherUserId,
+                            'timestamp': FieldValue.serverTimestamp(),
+                            'seen': false,
+                          });
+
+                          await FirebaseFirestore.instance
+                              .collection('chats')
+                              .doc(chatId)
+                              .set(
+                            {
+                              'lastMessage': message,
+                              'lastMessageTime': FieldValue.serverTimestamp(),
+                              'lastMessageFromUser': widget.currentUserId,
+                              'seen': false,
+                              'participants': [
+                                widget.currentUserId,
+                                widget.otherUserId,
+                              ],
+                            },
+                            SetOptions(merge: true),
+                          );
+
+                          _messageController.clear();
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
           ],
         ),
