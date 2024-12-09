@@ -1,5 +1,7 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:login_page/screens/InboxScreen.dart';
+import 'package:login_page/screens/chat_screen.dart';
 import 'package:login_page/screens/map_screen.dart';
 import 'package:login_page/screens/owner_home.dart';
 import 'package:login_page/screens/owner_add.dart';
@@ -10,7 +12,10 @@ import 'package:jwt_decoder/jwt_decoder.dart';
 
 class HomePage extends StatefulWidget {
   final token;
-  const HomePage({@required this.token, Key? key}) : super(key: key);
+  final token2;
+
+  const HomePage({@required this.token, Key? key, this.token2})
+      : super(key: key);
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -23,19 +28,20 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+
     Map<String, dynamic> jwtDecoderToken = JwtDecoder.decode(widget.token);
+    String uid = JwtDecoder.decode(widget.token2)['user_id']; // استخراج UID
 
     // Initialize the pages here because widget.token is needed
     _pages = [
       OwnerHome(token: widget.token), // Pass the token correctly without const
-      OwnerChat(token: widget.token),
+      InboxScreen(userId: uid, token: widget.token),
       OwnerAdd(token: widget.token),
       OwnerNotify(token: widget.token),
       MapScreen(),
     ];
   }
 
-  @override
   @override
   Widget build(BuildContext context) {
     return Scaffold(

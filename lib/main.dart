@@ -8,14 +8,18 @@ import 'package:login_page/Delivery/DileveryHome.dart';
 import 'package:login_page/Discussion/Home.dart';
 import 'package:login_page/screens/LandPage.dart';
 import 'package:login_page/screens/details.dart';
+import 'package:login_page/screens/first_screen.dart';
 import 'package:login_page/screens/previousOrders.dart';
 import 'package:login_page/screens/production_line.dart';
 import 'package:login_page/screens/profile2.dart';
 import 'package:login_page/screens/qataf.dart';
 import 'package:login_page/screens/welcome_screen.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-void main() {
-  runApp(const MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -30,7 +34,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         fontFamily: 'CustomArabicFont', // Use your custom font family here
       ),
-      home: AdminPage(),
+      home: WelcomeScreen(),
     );
   }
 }

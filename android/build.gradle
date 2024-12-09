@@ -1,3 +1,10 @@
+// Project-level build.gradle
+
+plugins {
+    // أضف Google Services Gradle Plugin هنا
+    id 'com.google.gms.google-services' version '4.4.2' apply false
+}
+
 allprojects {
     repositories {
         google()

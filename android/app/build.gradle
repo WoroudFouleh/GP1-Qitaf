@@ -3,6 +3,9 @@ plugins {
     id "kotlin-android"
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id "dev.flutter.flutter-gradle-plugin"
+
+    // أضف Google Services Gradle Plugin
+    id "com.google.gms.google-services"
 }
 
 android {
@@ -19,16 +22,13 @@ android {
         jvmTarget = JavaVersion.VERSION_1_8
     }
 
-    defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId = "com.example.login_page"
-        // You can update the following values to match your application needs.
-        // For more information, see: https://flutter.dev/to/review-gradle-config.
-        minSdk = flutter.minSdkVersion
-        targetSdk = flutter.targetSdkVersion
-        versionCode = flutter.versionCode
-        versionName = flutter.versionName
-    }
+defaultConfig {
+    applicationId = "woroud.fouleh.Qitaf_App"
+    minSdkVersion 23  // تحديث minSdkVersion إلى 23
+    targetSdkVersion flutter.targetSdkVersion
+    versionCode flutter.versionCode
+    versionName flutter.versionName
+}
 
     buildTypes {
         release {
@@ -41,4 +41,19 @@ android {
 
 flutter {
     source = "../.."
+}
+
+dependencies {
+    // Import the Firebase BoM (Bill of Materials)
+    implementation platform('com.google.firebase:firebase-bom:33.6.0')
+
+    // أضف أي مكتبات Firebase تريد استخدامها. أمثلة:
+    // مكتبة Firebase Authentication
+    implementation 'com.google.firebase:firebase-auth'
+
+    // مكتبة Firebase Firestore
+    implementation 'com.google.firebase:firebase-firestore'
+
+    // مكتبة Firebase Realtime Database (اختياري)
+    // implementation 'com.google.firebase:firebase-database'
 }

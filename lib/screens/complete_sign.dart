@@ -9,6 +9,9 @@ import 'package:login_page/screens/welcome_screen.dart';
 import 'package:login_page/widgets/custom_scaffold.dart';
 import 'config.dart';
 import 'dart:developer' as developer;
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 class CompleteSignUpScreen extends StatefulWidget {
   final String name;
@@ -53,6 +56,66 @@ class _CompleteSignUpScreenState extends State<CompleteSignUpScreen> {
 
   final TextEditingController _usernameController =
       TextEditingController(); // Username controller
+  Future<String?> uploadImageToFirebaseStorage(Uint8List imageData) async {
+    try {
+      // Reference to the storage location
+      Reference storageReference = FirebaseStorage.instance
+          .ref()
+          .child('profile_images/${DateTime.now().millisecondsSinceEpoch}.jpg');
+
+      // Upload the image
+      UploadTask uploadTask = storageReference.putData(imageData);
+      TaskSnapshot taskSnapshot = await uploadTask;
+
+      // Get the image URL after upload
+      String imageUrl = await taskSnapshot.ref.getDownloadURL();
+      print('Image uploaded successfully. Image URL: $imageUrl');
+      return imageUrl; // Return the image URL to store in Firestore or MongoDB
+    } catch (e) {
+      print('Error uploading image: $e');
+      return null;
+    }
+  }
+
+  Future<void> registerUserInFirebase(
+      String email,
+      String password,
+      String username,
+      Uint8List? profileImage, // Profile image in raw data
+      String name,
+      String familyName) async {
+    try {
+      // Register user in Firebase Auth
+      final authResult =
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+
+      final String uid = authResult.user!.uid;
+
+      // If profile image exists, upload to Firebase Storage
+      String? imageUrl;
+      if (profileImage != null) {
+        imageUrl = await uploadImageToFirebaseStorage(profileImage);
+      }
+
+      // Store additional user data in Firestore
+      await FirebaseFirestore.instance.collection('users').doc(uid).set({
+        'username': username,
+        'email': email,
+        'profileImage': imageUrl, // Store the uploaded image URL
+        'name': name,
+        'familyName': familyName,
+      });
+
+      print('User registered and additional data saved!');
+    } on FirebaseAuthException catch (e) {
+      print('Error registering user in Firebase: $e');
+      throw e;
+    }
+  }
+
   void registerUser() async {
     var regBody = {
       'firstName': widget.name,
@@ -67,14 +130,23 @@ class _CompleteSignUpScreenState extends State<CompleteSignUpScreen> {
       'monthOfBirth': widget.monthOfBirth,
       'yearOfBirth': widget.yearOfBirth,
       'gender': widget.gender,
-      'profilePhoto': _image != null
-          ? base64Encode(_image!)
-          : null, // Add the profile photo conditionally
+      'profilePhoto': _image != null ? base64Encode(_image!) : null,
       'username': _usernameController.text,
       'userType': _userType,
     };
 
     try {
+      // تسجيل المستخدم في Firebase
+      await registerUserInFirebase(
+        widget.email,
+        widget.password,
+        _usernameController.text,
+        _image, // Pass the image data here
+        widget.name,
+        widget.familyName,
+      );
+
+      // تسجيل المستخدم في MongoDB
       developer.log(jsonEncode(regBody), name: 'RegisterUser');
       var response = await http.post(
         Uri.parse(registration),
@@ -83,16 +155,13 @@ class _CompleteSignUpScreenState extends State<CompleteSignUpScreen> {
       );
 
       if (response.statusCode == 200) {
-        // Handle success
         var responseData = jsonDecode(response.body);
         if (responseData['status'] == true) {
-          // Navigate to the welcome screen
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => const WelcomeScreen()),
           );
         } else {
-          // Display error from backend
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
                 content:
@@ -100,14 +169,12 @@ class _CompleteSignUpScreenState extends State<CompleteSignUpScreen> {
           );
         }
       } else {
-        // Handle server error
         print('Server error: ${response.statusCode}');
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Server error: ${response.statusCode}')),
         );
       }
     } catch (e) {
-      // Handle any exceptions
       print('Error: $e');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('An error occurred: $e')),

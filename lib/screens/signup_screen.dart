@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:login_page/screens/nextsign.dart';
 import 'package:login_page/Auth/signin_screen.dart';

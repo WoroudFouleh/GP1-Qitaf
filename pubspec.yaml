@@ -34,6 +34,12 @@ dependencies:
   fl_chart: ^0.69.2
   file_picker: ^5.0.0
   url_launcher: ^6.3.1
+  firebase_core: ^3.8.1
+  firebase_auth: ^5.3.4
+  cloud_firestore: ^5.5.1
+  firebase_storage: ^12.3.7
+  timeago: ^3.3.0
+
 
   
   
@@ -72,7 +78,8 @@ dev_dependencies:
   cupertino_icons: ^1.0.2
   curved_navigation_bar: ^1.0.3
   flutter_polyline_points: ^1.0.0
-
+  
+  
 
   
   

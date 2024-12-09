@@ -17,6 +17,8 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import '../screens/config.dart';
 import 'dart:convert';
+import 'package:firebase_auth/firebase_auth.dart';
+
 //import 'animition_notification_bar.dart'; // Import the animated notification bar
 
 class SigninScreen extends StatefulWidget {
@@ -76,85 +78,83 @@ class _SigninScreenState extends State<SigninScreen> {
 
   void loginUser() async {
     try {
+      var myToken2;
       if (_usernameController.text.isNotEmpty &&
           _passController.text.isNotEmpty) {
-        // Check for hardcoded admin credentials
-        if (_usernameController.text == "admin" &&
-            _passController.text == "admin") {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => AdminPage(), // Replace with your AdminPage
-            ),
-          );
-          return;
+        bool firebaseLoginSuccess = false;
+
+        // Try Firebase login first
+        try {
+          UserCredential firebaseUser = await FirebaseAuth.instance
+              .signInWithEmailAndPassword(
+                  email: _usernameController.text,
+                  password: _passController.text);
+
+          if (firebaseUser.user != null) {
+            myToken2 = await firebaseUser.user!.getIdToken();
+            showNotification('تم تسجيل الدخول عبر Firebase بنجاح');
+            firebaseLoginSuccess = true; // Mark Firebase login as successful
+          }
+        } catch (e) {
+          showNotification('خطأ في تسجيل الدخول عبر Firebase',
+              backgroundColor: Colors.red);
         }
 
-        // Check for hardcoded delivery credentials
-        if (_usernameController.text == "delivery" &&
-            _passController.text == "delivery") {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) =>
-                  DeliveryOrdersPage(), // Replace with your DeliveryPage
-            ),
+        // Proceed with MongoDB login if Firebase login fails
+        if (true) {
+          var reqBody = {
+            "email": _usernameController.text,
+            "password": _passController.text
+          };
+
+          var response = await http.post(
+            Uri.parse(login), // MongoDB login API URL
+            headers: {"Content-Type": "application/json"},
+            body: jsonEncode(reqBody),
           );
-          return;
-        }
 
-        // Proceed with API call for other users
-        var reqBody = {
-          "username": _usernameController.text,
-          "password": _passController.text
-        };
+          // Debug the response
+          print("Response Status Code: ${response.statusCode}");
+          print("Response Body: ${response.body}");
 
-        var response = await http.post(
-          Uri.parse(login),
-          headers: {"Content-Type": "application/json"},
-          body: jsonEncode(reqBody),
-        );
+          if (response.statusCode == 200) {
+            var jsonResponse = jsonDecode(response.body);
+            if (jsonResponse['status']) {
+              var myToken = jsonResponse['token'];
+              var userType = jsonResponse['userType'];
+              await prefs.setString('token', myToken);
+              showNotification('تم تسجيل الدخول بنجاح');
 
-        if (response.statusCode == 200) {
-          var jsonResponse = jsonDecode(response.body);
-          if (jsonResponse['status']) {
-            var myToken = jsonResponse['token'];
-            var userType = jsonResponse['userType'];
-            print('User Type from API: $userType'); // Log userType to debug
-            await prefs.setString('token', myToken);
-            showNotification('تم تسجيل الدخول بنجاح');
-
-            if (userType == '2') {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => HomePage(token: myToken),
-                ),
-              );
-            } else if (userType == '1') {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => dashboard(token: myToken),
-                ),
-              );
+              // Wait a few seconds before navigating
+              Future.delayed(const Duration(seconds: 2), () {
+                if (userType == '2') {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          HomePage(token: myToken, token2: myToken2),
+                    ),
+                  );
+                } else if (userType == '1') {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => dashboard(token: myToken),
+                    ),
+                  );
+                } else {
+                  showNotification('خلل في النوع', backgroundColor: Colors.red);
+                }
+              });
             } else {
-              showNotification('خلل في النوع', backgroundColor: Colors.red);
+              showNotification('بيانات تسجيل الدخول غير صحيحة',
+                  backgroundColor: Colors.red);
             }
-
-            // Navigate to Welcome Screen or Home Screen
           } else {
-            showNotification('بيانات تسجيل الدخول غير صحيحة',
+            // Handle error status codes
+            showNotification('خطأ في اسم المستخدم أو كلمة المرور',
                 backgroundColor: Colors.red);
           }
-        } else if (response.statusCode == 401) {
-          showNotification('خطأ في اسم المستخدم أو كلمة المرور',
-              backgroundColor: Colors.red);
-        } else {
-          var errorResponse = jsonDecode(response.body);
-          showNotification(
-              'حدث خطأ: ${errorResponse['message'] ?? response.statusCode}',
-              backgroundColor: Colors.red);
         }
       } else {
         showNotification('يرجى إدخال البريد الإلكتروني وكلمة المرور',
