@@ -67,11 +67,11 @@ exports.login = async (req, res, next) => {
     try {
         console.log("Request Body from Flutter:", req.body);
         
-        const { username, password } = req.body;
+        const { email, password } = req.body;
         
 
         // Check if user exists with the provided email
-        const user = await UserServices.checkUser(username);
+        const user = await UserServices.checkUser(email);
         if (!user) {
             // Send 401 Unauthorized if the user doesn't exist
             return res.status(401).json({ status: false, message: 'User does not exist' });
@@ -92,7 +92,7 @@ exports.login = async (req, res, next) => {
         // If login is successful, generate a token
         let tokenData = { _id: user._id, username: user.username , email:user.email,dayOfBirth:user.dayOfBirth, monthOfBirth:user.monthOfBirth , yearOfBirth:user.yearOfBirth,
             phoneCode:user.phoneCode, phoneNumber:user.phoneNumber, street:user.street, city: user.city, profilePhoto:user.profilePhoto, userType: user.userType,
-            firstName: user.firstName, lastName: user.lastName, gender: user.gender, password: user.password
+            firstName: user.firstName, lastName: user.lastName, gender: user.gender, password: user.password,rate: user.rate
          };
         const token = await UserServices.generateToken(tokenData, "secretKey", '1h');
 
@@ -416,5 +416,63 @@ exports.getUserInfo = async (req, res) => {
         next(err);
     }
 };
+const mongoose = require('mongoose');
+  exports.rateWorker = async (req, res, next) => {
+    try {
+        const { username, newRate } = req.body;
+        console.log("Received username:", username);
 
+        // Validate the productId format
+        
+
+        // Validate the new rate (it should be between 1 and 5)
+        if (newRate < 1 || newRate > 5) {
+            return res.status(400).json({ status: false, error: "Rate must be between 1 and 5" });
+        }
+
+        // Convert newRate to an integer
+        const newRateInt = Math.round(newRate);
+
+        // Convert productId to ObjectId
+        //const objectId = new mongoose.Types.ObjectId(productionLineId);
+
+        // Find the product
+        const user = await User.findOne({username});
+
+        if (!user) {
+            return res.status(404).json({ status: false, error: "user not found" });
+        }
+
+        // Calculate new average rate
+        const totalRating = user.rate + newRateInt;
+        ///user.rateCount += 1; // Increment count
+        user.rate = totalRating / 2; // Update average rate
+
+        // Save the updated product
+        await user.save();
+
+        res.status(200).json({
+            status: true,
+            success: "user rating updated successfully",
+            
+        });
+    } catch (err) {
+        console.error("---> Error in updating rate --->", err);
+        next(err);
+    }
+};
+
+exports.getUserStatistics = async (req, res) => {
+    try {
+      const totalUsers = await User.countDocuments();
+      const stats = await User.aggregate([
+        { $group: { _id: "$city", count: { $sum: 1 } } },
+        { $project: { city: "$_id", count: 1, percentage: { $multiply: [{ $divide: ["$count", totalUsers] }, 100] } } },
+      ]);
+      res.json(stats);
+    } catch (error) {
+      res.status(500).json({ message: "Server error", error });
+    }
+  };
+  
   

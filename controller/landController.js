@@ -15,11 +15,13 @@ exports.addLand = async (req, res) => {
             numOfWorkers,
             city,
             location,
+            coordinates,
             startDate,
             endDate,
             startTime,
             endTime
         } = req.body;
+        console.log(req.body);
 
         // Validate required fields
         if (!username || !landName || !cropType || !workerWages || !landSpace || !numOfWorkers || !city || !location || !startDate || !endDate || !startTime || !endTime) {
@@ -37,6 +39,7 @@ exports.addLand = async (req, res) => {
             numOfWorkers,
             city,
             location,
+            coordinates,
             startDate: new Date(startDate), // Convert to Date object if needed
             endDate: new Date(endDate),     // Convert to Date object if needed
             startTime,
@@ -45,21 +48,42 @@ exports.addLand = async (req, res) => {
 
         // Save the entry to the database
         await newLand.save();
-        res.status(201).json({ message: "Land entry added successfully", land: newLand });
+        console.log("added");
+        res.status(201).json({ status: true,message: "Land entry added successfully", land: newLand });
     } catch (error) {
         console.error("Error adding land:", error);
-        res.status(500).json({ message: "Error adding land entry", error });
+        res.status(500).json({status: false, message: "Error adding land entry", error });
     }
 };
 exports.getLands = async (req, res, next) => {
     try {
-        const {username}=req.params;
-        
-        const lands = await Land.find({username: { $ne: username }}  );
+        const { username } = req.params; // Extract username from URL params
+        const { search, category } = req.query; // Extract search query and category from URL query parameters
+
+        // Base filter to exclude lands by the same username
+        let filter = { username: { $ne: username } };
+
+        // Add dynamic search filter
+        if (search && category) {
+            const searchRegex = new RegExp(search, 'i'); // Case-insensitive regex for flexible matching
+
+            if (category === 'crop') {
+                filter.cropType = searchRegex; // Filter by crop type
+            } else if (category === 'location') {
+                filter.city = searchRegex; // Filter by location (city)
+            }
+            else if (category === 'name') {
+                filter.landName = searchRegex; // Filter by location (city)
+            }
+        }
+
+        // Fetch lands based on the filters
+        const lands = await Land.find(filter);
+
         res.status(200).json({ status: true, lands });
     } catch (err) {
-        console.log("---> err -->", err);
-        next(err);  
+        console.error("---> Error fetching lands -->", err);
+        next(err);
     }
 };
 exports.getOwnerlands = async (req, res) => {
@@ -268,4 +292,16 @@ exports.getLand = async (req, res, next) => {
 };
 
   
-
+exports.getLandStatistics = async (req, res) => {
+    try {
+      const totalLands = await Land.countDocuments();
+      const stats = await Land.aggregate([
+        { $group: { _id: "$city", count: { $sum: 1 } } },
+        { $project: { city: "$_id", count: 1, percentage: { $multiply: [{ $divide: ["$count", totalLands] }, 100] } } },
+      ]);
+      res.json(stats);
+    } catch (error) {
+      res.status(500).json({ message: "Server error", error });
+    }
+  };
+  

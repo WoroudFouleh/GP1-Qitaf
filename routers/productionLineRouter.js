@@ -5,4 +5,7 @@ router.get('/getProductionLines/:username', productionLineController.getProducti
 router.get('/getOwnerLines/:username', productionLineController.getOwnerProductionLines);
 router.put('/updateProductionLine/:productionLineId', productionLineController.updateProductionLine);
 router.delete('/deleteLine/:productionLineId', productionLineController.deleteLine);
+router.post('/updateLineRate', productionLineController.updateRate);
+router.get('/getLineStatistics', productionLineController.getProductionStatistics);
+
 module.exports = router;

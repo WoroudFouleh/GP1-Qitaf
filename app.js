@@ -10,6 +10,13 @@ const orderRoute = require('./routers/orderRouter');
 const workRequestRoute = require('./routers/workRequestRouter');
 const productionLineRoute = require('./routers/productionLineRouter');
 const bookingRoute = require('./routers/bookingRouter');
+const mapRoute = require('./routers/mapRouter');
+const postRoute = require('./routers/postRouter');
+const statisticRoute = require('./routers/statisticsRouter');
+const mainAdsRoute = require('./routers/mainAdRouter');
+const productAdsRoute = require('./routers/prodAdRouter');
+const customerAdsRoute = require('./routers/customerAdRouter');
+const deliveryWorkRoute = require('./routers/deliveryWorkRouter');
 const app = express();
 app.use(bodyParser.json({ limit: '10mb' })); // You can increase '10mb' to whatever size you need
 app.use(bodyParser.urlencoded({ limit: '10mb', extended: true }));
@@ -23,13 +30,15 @@ app.use('/api/orders', orderRoute);
 app.use('/api/workRequests', workRequestRoute);
 app.use('/api/productionLines', productionLineRoute);
 app.use('/api/bookings', bookingRoute);
-// Optional: Add a fallback route for testing
-// app.get('/', (req, res) => {
-//     res.send('Server is working');
-// });
-
+app.use('/api/maps', mapRoute);
+app.use('/api/posts', postRoute);
+app.use('/api/statistics', statisticRoute);
+app.use('/api/mainAds', mainAdsRoute);
+app.use('/api/productAds', productAdsRoute);
+app.use('/api/customerAds', customerAdsRoute);
+app.use('/api/deliveryWorks', deliveryWorkRoute);
 const port = 3000;
-const host = '172.23.16.118';  // Your machine's IP address
+const host = '192.168.88.7';  // Your machine's IP address
 
 const server = app.listen(port, host, () => {
     console.log(`App listening at http://${host}:${port}/`);

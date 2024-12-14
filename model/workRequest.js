@@ -30,6 +30,10 @@ const workRequestSchema = new mongoose.Schema({
      // Adjust enum values if needed
     required: true,
   },
+  workerRate: {
+    type: Number,
+    
+},
   landId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Land', // Assuming you have a Land model

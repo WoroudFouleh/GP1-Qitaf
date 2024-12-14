@@ -182,5 +182,70 @@ exports.getBookedTimes = async (req, res) => {
       });
     }
   }; 
+  exports.deleteBooking = async (req, res) => {
+    const { id } = req.params;
+    console.log("d1");
+    try {
+      await Booking.findByIdAndDelete(id);
+      res.status(200).json({ status:true,message: 'request removed ' });
+    console.log("deleted");
+    } catch (error) {
+        console.log(error);
+      res.status(500).json({ status:false, message: 'Error removing request ', error });
+    }
+  };
+  exports.updatebookingStatus = async (req, res) => {
+    const { bookingId, status } = req.body; // Retrieve request ID and status from the request body
+    //const currentDate = moment().format('YYYY-MM-DD HH:mm:ss'); // Get the current date and time in a specific format
 
+    if (!bookingId || !status) {
+        return res.status(400).json({ status: false, message: "Request ID and status are required" });
+    }
+
+    try {
+        // Find the work request by ID
+        const booking = await Booking.findById(bookingId);
+        if (!booking) {
+            return res.status(404).json({ status: false, message: "Work request not found" });
+        }
+
+        // Determine the new status and apply the relevant changes
+        if (status === 'Done') {
+            // Update request status to accepted
+            booking.status = 'confirmed';
+            // Decrease the number of workers by 1 (if it's greater than 0)
+            
+            // Set the owner decision date to the current date
+            // workRequest.ownerDecisionDate = Date.now;
+        } else if (status === 'Cancelled') {
+            // Update request status to rejected
+            booking.status = 'canceled';
+            // Set the owner decision date to the current date
+            // workRequest.ownerDecisionDate = Date.now;
+        } else if (status === 'Not Yet') {
+          // Update request status to rejected
+          booking.status = 'pending';
+          // Set the owner decision date to the current date
+          // workRequest.ownerDecisionDate = Date.now;
+      }
+        else {
+            return res.status(400).json({ status: false, message: "Invalid status, should be 'accepted' or 'rejected'" });
+        }
+
+        // Save the updated work request
+        await booking.save();
+
+        res.status(200).json({
+            status: true,
+            message: `Request ${status} successfully`,
+            booking,
+        });
+    } catch (error) {
+        res.status(500).json({
+            status: false,
+            message: 'Error updating work request status',
+            error,
+        });
+    }
+};
 

@@ -33,25 +33,34 @@ const landSchema = new mongoose.Schema({
         type: String,
         enum: [
             'القدس',
-            'بيت لحم',
-            'رام الله',
-            'نابلس',
-            'الخليل',
-            'جنين',
-            'طولكرم',
-            'قلقيلية',
-            'سلفيت',
-            'أريحا',
-            'غزة',
-            'دير البلح',
-            'خان يونس',
-            'رفح'],
+    'بيت لحم',
+    'طوباس',
+    'رام الله',
+    'نابلس',
+    'الخليل',
+    'جنين',
+    'طولكرم',
+    'قلقيلية',
+    'سلفيت',
+    'أريحا',
+    'غزة',
+    'دير البلح',
+    'خان يونس',
+    'رفح',
+    'الداخل الفلسطيني'],
         required: true
     },
     location: {
         type: String,
         required: true
     },
+    coordinates: {
+        type: {
+          lat: { type: Number, required: true }, // Latitude
+          lng: { type: Number, required: true }  // Longitude
+        },
+        required: false // Optional, make required if all products must have coordinates
+      },
     startDate: {
         type: Date,
         required: true

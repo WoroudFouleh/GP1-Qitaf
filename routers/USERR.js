@@ -9,5 +9,8 @@ router.put('/updateUser/:username', UserController.updateUser);
 router.post('/verifyPassword', UserController.verifyPassword);
 router.get('/getUser/:username', UserController.getUserInfo);
 router.post('/updatePostsCount/:username', UserController.updateUserPosts);
+router.post('/rateWorker', UserController.rateWorker);
+router.get('/getUserStatistics', UserController.getUserStatistics);
+
 module.exports = router;
 

@@ -32,13 +32,36 @@ const productionLineSchema = new mongoose.Schema({
   },
   city: {
     type: String,
-    required: true,
-    trim: true,
-  },
+    enum: [
+        'القدس',
+'بيت لحم',
+'طوباس',
+'رام الله',
+'نابلس',
+'الخليل',
+'جنين',
+'طولكرم',
+'قلقيلية',
+'سلفيت',
+'أريحا',
+'غزة',
+'دير البلح',
+'خان يونس',
+'رفح',
+'الداخل الفلسطيني'],
+    required: true
+},
   location: {
     type: String,
     required: true,
     trim: true,
+  },
+  coordinates: {
+    type: {
+      lat: { type: Number, required: true }, // Latitude
+      lng: { type: Number, required: true }  // Longitude
+    },
+    required: false // Optional, make required if all products must have coordinates
   },
   timeOfPreparation: {
     type: String, // Time in minutes/hours

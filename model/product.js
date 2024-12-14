@@ -23,6 +23,7 @@ const productSchema = new mongoose.Schema({
     },
     quantity: {
         type: Number,
+        required: true,
         
     },
     quantityType: {
@@ -40,26 +41,35 @@ const productSchema = new mongoose.Schema({
     city: {
         type: String,
         enum: [
-            'القدس',
-            'بيت لحم',
-            'رام الله',
-            'نابلس',
-            'الخليل',
-            'جنين',
-            'طولكرم',
-            'قلقيلية',
-            'سلفيت',
-            'أريحا',
-            'غزة',
-            'دير البلح',
-            'خان يونس',
-            'رفح'],
+           'القدس',
+    'بيت لحم',
+    'طوباس',
+    'رام الله',
+    'نابلس',
+    'الخليل',
+    'جنين',
+    'طولكرم',
+    'قلقيلية',
+    'سلفيت',
+    'أريحا',
+    'غزة',
+    'دير البلح',
+    'خان يونس',
+    'رفح',
+    'الداخل الفلسطيني'],
         required: true
     },
     location: {
         type: String,
         required: true
     },
+    coordinates: {
+        type: {
+          lat: { type: Number, required: true }, // Latitude
+          lng: { type: Number, required: true }  // Longitude
+        },
+        required: false // Optional, make required if all products must have coordinates
+      },
     description: {
         type: String,
         required: true

@@ -7,4 +7,5 @@ router.put('/updateLand/:landId', landController.updateLand);
 router.delete('/deleteLand/:landId', landController.deleteLand);
 router.put('/updateWorkersNum/:landId', landController.updateWorkerNumber);
 router.get('/getLand/:landId', landController.getLand);
+router.get('/getLandStatistics/', landController.getLandStatistics);
 module.exports = router;

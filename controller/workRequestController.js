@@ -9,6 +9,7 @@ exports.registerRequest = async (req, res) => {
       workerUsername,
       workerCity,
       workerGender,
+      workerRate,
       landId,
       landName,
       landLocation,
@@ -46,6 +47,7 @@ exports.registerRequest = async (req, res) => {
       workerProfileImage,
       workerCity,
       workerGender,
+      workerRate,
       landId,
       landName,
       landLocation,
@@ -180,3 +182,44 @@ exports.getWorkerRequests = async (req, res) => {
     }
   }; 
 
+  exports.deleteWorkRequest = async (req, res) => {
+    const { id } = req.params;
+    console.log("d1");
+    try {
+      await WorkRequest.findByIdAndDelete(id);
+      res.status(200).json({ status:true,message: 'request removed ' });
+    console.log("deleted");
+    } catch (error) {
+        console.log(error);
+      res.status(500).json({ status:false, message: 'Error removing request ', error });
+    }
+  };
+
+  exports.getLandWorkers = async (req, res) => {
+    const { landId } = req.params; // Retrieve username from the request body
+    console.log("Received landId:", landId);
+  
+    if (!landId) {
+      return res.status(400).json({ status: false, message: "Username is required" });
+    }
+  
+    try {
+      const requests = await WorkRequest.find({ landId, 
+      requestStatus: 'accepted'
+       });
+      if (!requests || requests.length === 0) {
+        return res.status(404).json({ message: "No requests found for this owner." });
+      }
+      res.status(200).json({
+        status: true,
+        message: 'requests retrieved successfully',
+        requests,
+      });
+    } catch (error) {
+      res.status(500).json({
+        status: false,
+        message: 'Error fetching requests',
+        error,
+      });
+    }
+  };

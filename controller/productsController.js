@@ -14,6 +14,7 @@ exports.addProduct = async (req, res, next) => {
             price,
             city,
             location,
+            coordinates,
             description,
             preparationTime,
             preparationTimeUnit
@@ -30,6 +31,7 @@ exports.addProduct = async (req, res, next) => {
             price,
             city,
             location,
+            coordinates,
             description,
             rate:5,
             preparationTime,
@@ -45,43 +47,90 @@ exports.addProduct = async (req, res, next) => {
         next(err);  
     }
 };
-exports.getProducts1 = async (req, res) => {
-    try {
-        console.log("here")
-        const {username}=req.params;
-        const products = await Product.find({ 
-            type: "محصول", 
-            username: { $ne: username } 
-        });
-        console.log("Fetched products:", products);
-         res.status(200).json({ status: true, products });
-    } catch (err) {
-        console.log("---> err -->", err);
-        next(err);  
-    }
+exports.getProducts1 = async (req, res, next) => {
+  try {
+      const { username } = req.params; // Extract username from URL params
+      const { search } = req.query; // Extract search query and category from URL query parameters
+
+      // Base filter to exclude lands by the same username
+      let filter = { type: "محصول",  username: { $ne: username } };
+
+      // Add dynamic search filter
+      if (search ) {
+          const searchRegex = new RegExp(search, 'i'); // Case-insensitive regex for flexible matching
+
+          
+              filter.name = searchRegex; // Filter by crop type
+         
+               // Filter by location (city)
+          
+      }
+
+      // Fetch lands based on the filters
+      const products = await Product.find(filter);
+
+      res.status(200).json({ status: true, products });
+  } catch (err) {
+      console.error("---> Error fetching lands -->", err);
+      next(err);
+  }
 };
 exports.getProducts2 = async (req, res, next) => {
-    try {
-        const {username}=req.params;
-        const products = await Product.find({ type: "منتج غذائي", 
-            username: { $ne: username }  });
-        res.status(200).json({ status: true, products });
-    } catch (err) {
-        console.log("---> err -->", err);
-        next(err);  
-    }
+  try {
+      const { username } = req.params; // Extract username from URL params
+      const { search } = req.query; // Extract search query and category from URL query parameters
+
+      // Base filter to exclude lands by the same username
+      let filter = { type: "منتج غذائي",   username: { $ne: username } };
+
+      // Add dynamic search filter
+      if (search ) {
+          const searchRegex = new RegExp(search, 'i'); // Case-insensitive regex for flexible matching
+
+          
+              filter.name = searchRegex; // Filter by crop type
+         
+               // Filter by location (city)
+          
+      }
+
+      // Fetch lands based on the filters
+      const products = await Product.find(filter);
+
+      res.status(200).json({ status: true, products });
+  } catch (err) {
+      console.error("---> Error fetching lands -->", err);
+      next(err);
+  }
 };
 exports.getProducts3 = async (req, res, next) => {
-    try {
-        const {username}=req.params;
-        const products = await Product.find({ type: "منتج غير غذائي", 
-            username: { $ne: username }  });
-        res.status(200).json({ status: true, products });
-    } catch (err) {
-        console.log("---> err -->", err);
-        next(err);  
-    }
+  try {
+      const { username } = req.params; // Extract username from URL params
+      const { search } = req.query; // Extract search query and category from URL query parameters
+      // Base filter to exclude lands by the same username
+      let filter = { type: "منتج غير غذائي",   username: { $ne: username } };
+
+      // Add dynamic search filter
+      if (search ) {
+          const searchRegex = new RegExp(search, 'i'); // Case-insensitive regex for flexible matching
+
+          
+              filter.name = searchRegex; // Filter by crop type
+         
+               // Filter by location (city)
+          
+      }
+
+      // Fetch lands based on the filters
+      const products = await Product.find(filter);
+
+      res.status(200).json({ status: true, products });
+  } catch (err) {
+      console.error("---> Error fetching lands -->", err);
+      next(err);
+  }
 };
+
 
 
 exports.updateProductQuantities = async (req, res) => {
@@ -294,6 +343,18 @@ exports.deleteProduct = async (req, res) => {
         success: false,
         message: 'Server error. Could not delete user cart.',
       });
+    }
+  };
+  exports.getProductStatistics = async (req, res) => {
+    try {
+      const totalProducts = await Product.countDocuments();
+      const stats = await Product.aggregate([
+        { $group: { _id: "$type", count: { $sum: 1 } } },
+        { $project: { category: "$_id", count: 1, percentage: { $multiply: [{ $divide: ["$count", totalProducts] }, 100] } } },
+      ]);
+      res.json(stats);
+    } catch (error) {
+      res.status(500).json({ message: "Server error", error });
     }
   };
   

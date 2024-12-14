@@ -15,19 +15,22 @@ const userSchema = new mongoose.Schema({
         type: String, 
         enum: [
             'القدس',
-            'بيت لحم',
-            'رام الله',
-            'نابلس',
-            'الخليل',
-            'جنين',
-            'طولكرم',
-            'قلقيلية',
-            'سلفيت',
-            'أريحا',
-            'غزة',
-            'دير البلح',
-            'خان يونس',
-            'رفح'], // List of allowed cities
+            'القدس',
+    'بيت لحم',
+    'طوباس',
+    'رام الله',
+    'نابلس',
+    'الخليل',
+    'جنين',
+    'طولكرم',
+    'قلقيلية',
+    'سلفيت',
+    'أريحا',
+    'غزة',
+    'دير البلح',
+    'خان يونس',
+    'رفح',
+    'الداخل الفلسطيني'], // List of allowed cities
         required: true 
     },
     street: { type: String },
@@ -45,6 +48,12 @@ const userSchema = new mongoose.Schema({
     passwordResetToken: String, // Reset token
     passwordResetTokenExpires: Date,// Token expiry time
     postsCount: { type: Number, default: 0 },
+    rate: {
+        type: Number,
+        default: 5, // Initial value
+        min: 0, // Ensures the rate cannot go below 0
+        max: 5 // Optional: Add if you want to restrict ratings to a 0-5 scale
+    },
 }, {
     timestamps: true // Automatically adds createdAt and updatedAt fields
 });

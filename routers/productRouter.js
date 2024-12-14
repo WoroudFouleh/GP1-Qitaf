@@ -9,4 +9,6 @@ router.post('/updateProductRate', productController.updateRate);
 router.get('/getOwnerProducts/:username', productController.getOwnerproducts);
 router.put('/updateProduct/:productId', productController.updateProduct);
 router.delete('/deleteProduct/:productId', productController.deleteProduct);
+router.get('/getProductsStatistics', productController.getProductStatistics);
+
 module.exports = router;

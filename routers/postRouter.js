@@ -1,0 +1,12 @@
+const router = require("express").Router();
+const postController = require('../controller/postController');
+router.post('/puplishPost', postController.createPost);
+router.get('/getAllPosts', postController.getAllPosts);
+router.post('/addComment', postController.addComment);
+router.post('/addReaction', postController.addReaction);
+router.post('/updateCommentLikes', postController.updateCommentLikes);
+router.delete('/deletePost/:postId', postController.deletePost);
+router.put('/editPost/:postId', postController.editPost);
+router.delete('/deleteComment/:postId/comment/:commentId', postController.deleteComment);
+router.put('/editComment/:postId/comment/:commentId', postController.editComment);
+module.exports = router;

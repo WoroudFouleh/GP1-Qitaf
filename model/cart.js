@@ -1,6 +1,10 @@
 const mongoose = require('mongoose');
 const db = require('../config/db');
 const CartSchema = new mongoose.Schema({
+  ownerusername:{
+    type: String,
+    required: true,
+  },
   username: {
     type: String,
     required: true,

@@ -4,11 +4,22 @@ const orderSchema = new mongoose.Schema({
   username: { type: String, required: true }, // Username as a string
   phoneNumber: { type: String, required: true },
   location: { type: String, required: true },
+  coordinates: {
+    type: {
+      lat: { type: Number, required: true }, // Latitude
+      lng: { type: Number, required: true }  // Longitude
+    },
+    required: false // Optional, make required if all products must have coordinates
+  },
   orderDate: { type: Date, default: Date.now },
   totalPrice: { type: Number, required: true },
   status: { type: String, enum: ['مستلم', 'غير مستلم'], default: 'غير مستلم' },
   items: [
     {
+      ownerusername: {
+        type: String,
+        required: true,
+      },
         username: {
             type: String,
             required: true,

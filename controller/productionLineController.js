@@ -13,6 +13,7 @@ exports.registerProductionLine = async (req, res) => {
       phoneNumber,
       city,
       location,
+      coordinates,
       timeOfPreparation,
       unitTimeOfPreparation,
       price,
@@ -36,6 +37,7 @@ exports.registerProductionLine = async (req, res) => {
       phoneNumber,
       city,
       location,
+      coordinates,
       timeOfPreparation,
       unitTimeOfPreparation,
       price,
@@ -54,16 +56,37 @@ exports.registerProductionLine = async (req, res) => {
   }
 };
 exports.getProductionLines = async (req, res, next) => {
-    try {
-        const {username}=req.params;
-        const productionLines = await ProductionLine.find({ 
-            ownerUsername: { $ne: username }  });
-        res.status(200).json({ status: true, productionLines });
-    } catch (err) {
-        console.log("---> err -->", err);
-        next(err);  
-    }
+  try {
+      const { username } = req.params; // Extract username from URL params
+      const { search, category } = req.query; // Extract search query and category from URL query parameters
+
+      // Base filter to exclude lands by the same username
+      let filter = { username: { $ne: username } };
+
+      // Add dynamic search filter
+      if (search && category) {
+          const searchRegex = new RegExp(search, 'i'); // Case-insensitive regex for flexible matching
+
+          if (category === 'crop') {
+              filter.materialType = searchRegex; // Filter by crop type
+          } else if (category === 'location') {
+              filter.city = searchRegex; // Filter by location (city)
+          }
+          else if (category === 'name') {
+            filter.lineName = searchRegex; // Filter by location (city)
+        }
+      }
+
+      // Fetch lands based on the filters
+      const lines = await ProductionLine.find(filter);
+
+      res.status(200).json({ status: true, lines });
+  } catch (err) {
+      console.error("---> Error fetching lands -->", err);
+      next(err);
+  }
 };
+
 exports.getOwnerProductionLines = async (req, res) => {
     const { username } = req.params; // Retrieve username from the request body
     console.log("Received username:", username);
@@ -182,3 +205,69 @@ exports.deleteLine = async (req, res) => {
       });
     }
   };
+  const mongoose = require('mongoose');
+  exports.updateRate = async (req, res, next) => {
+    try {
+        const { productionLineId, newRate } = req.body;
+        console.log("Received productId:", productionLineId);
+
+        // Validate the productId format
+        if (!mongoose.Types.ObjectId.isValid(productionLineId)) {
+            console.log("here");
+            return res.status(400).json({ status: false, error: "Invalid Product ID format" });
+        }
+
+        // Validate the new rate (it should be between 1 and 5)
+        if (newRate < 1 || newRate > 5) {
+            return res.status(400).json({ status: false, error: "Rate must be between 1 and 5" });
+        }
+
+        // Convert newRate to an integer
+        const newRateInt = Math.round(newRate);
+
+        // Convert productId to ObjectId
+        const objectId = new mongoose.Types.ObjectId(productionLineId);
+
+        // Find the product
+        const line = await ProductionLine.findById(objectId);
+
+        if (!line) {
+            return res.status(404).json({ status: false, error: "Product not found" });
+        }
+
+        // Calculate new average rate
+        const totalRating = line.rate + newRateInt;
+        line.rateCount += 1; // Increment count
+        line.rate = totalRating / 2; // Update average rate
+
+        // Save the updated product
+        await line.save();
+
+        res.status(200).json({
+            status: true,
+            success: "Product rating updated successfully",
+            line: {
+                id: line._id,
+                name: line.lineName,
+                rate: line.rate,
+            }
+        });
+    } catch (err) {
+        console.error("---> Error in updating rate --->", err);
+        next(err);
+    }
+};
+
+exports.getProductionStatistics = async (req, res) => {
+  try {
+    console.log("in lines");
+    const totalLines = await ProductionLine.countDocuments();
+    const stats = await ProductionLine.aggregate([
+      { $group: { _id: "$city", count: { $sum: 1 } } },
+      { $project: { city: "$_id", count: 1, percentage: { $multiply: [{ $divide: ["$count", totalLines] }, 100] } } },
+    ]);
+    res.json(stats);
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error });
+  }
+};

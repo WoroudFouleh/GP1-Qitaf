@@ -3,7 +3,7 @@ const Order = require('../model/order'); // Adjust the path as necessary
 exports.registerOrder = async (req, res) => {
   try {
     // Extract data from the request body
-    const { username, phoneNumber, location, totalPrice, items } = req.body;
+    const { username, phoneNumber, location,coordinates, totalPrice, items } = req.body;
 
     // Validation: Check if all required fields are provided
     if (!username || !phoneNumber || !location || !totalPrice || !items || items.length === 0) {
@@ -18,6 +18,7 @@ exports.registerOrder = async (req, res) => {
       username,
       phoneNumber,
       location,
+      coordinates,
       totalPrice,
       items,
       orderDate: new Date(), // Add the current date
