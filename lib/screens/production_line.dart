@@ -10,8 +10,10 @@ import 'config.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 
 class ProductionLinesPage extends StatefulWidget {
+  final String userId;
   final String token;
-  const ProductionLinesPage({required this.token, super.key});
+  const ProductionLinesPage(
+      {required this.token, super.key, required this.userId});
 
   @override
   State<ProductionLinesPage> createState() => _ProductionLinesPageState();
@@ -180,6 +182,7 @@ class _ProductionLinesPageState extends State<ProductionLinesPage> {
                       context,
                       MaterialPageRoute(
                         builder: (context) => LinePage(
+                          userId: widget.userId,
                           token: widget.token,
                           lineName: line['lineName'],
                           image: line['image'],

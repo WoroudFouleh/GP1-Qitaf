@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:login_page/screens/profile3.dart';
 
 import 'dart:convert'; // To handle JSON decoding
 import 'config.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 
 class CustomerWorkPage extends StatefulWidget {
+  final userId;
   final String token;
-  const CustomerWorkPage({required this.token, Key? key});
+  const CustomerWorkPage({required this.token, Key? key, this.userId});
 
   @override
   State<CustomerWorkPage> createState() => _CustomerWorkPageState();
@@ -83,6 +85,37 @@ class _CustomerWorkPageState extends State<CustomerWorkPage> {
       }
     } else {
       print("Failed to load requests: ${response.statusCode}");
+    }
+  }
+
+  void deleteRequest(String requestId) async {
+    try {
+      print("request id: $requestId");
+      final response = await http.delete(
+        Uri.parse(
+            '$deleteWorkRequest/${requestId}'), // Send the URL without the username
+        headers: {'Content-Type': 'application/json'},
+        // Send the username in the body
+      );
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        if (data['status'] == true) {
+          print("request deleted successfully");
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => CustomerWorkPage(token: widget.token),
+            ),
+          );
+        } else {
+          print("Error deleting request1");
+        }
+      } else {
+        print("Error deleting request2 ");
+      }
+    } catch (e) {
+      print("An error occurred: $e");
     }
   }
 
@@ -217,7 +250,10 @@ class _CustomerWorkPageState extends State<CustomerWorkPage> {
                                               IconButton(
                                                 onPressed: () {
                                                   // ضع الوظيفة التي تريد تنفيذها عند الضغط على الأيقونة
-                                                  print('Delete icon pressed');
+                                                  print(
+                                                      "request1: ${request['_id']}");
+                                                  deleteRequest(request['_id']);
+                                                  //print('Delete icon pressed');
                                                 },
                                                 icon: Icon(
                                                   Icons.delete,
@@ -343,12 +379,29 @@ class _CustomerWorkPageState extends State<CustomerWorkPage> {
                                         size: 20,
                                       ),
                                       SizedBox(width: 5),
-                                      Text(
-                                        "المالك: ${landData['username']}",
-                                        style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.black,
+                                      GestureDetector(
+                                        onTap: () {
+                                          // Navigate to the profile page and pass the username
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  Ownerprofile2(
+                                                username: landData[
+                                                    'username'], // Pass the owner's username
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                        child: Text(
+                                          '  حساب مالك خط الإنتاج:  ${landData['username']} ',
+                                          style: TextStyle(
+                                            fontSize: 18,
+                                            color: Colors
+                                                .black, // لون النص أزرق للإشارة إلى إمكانية التفاعل
+                                            fontWeight: FontWeight.bold,
+                                            // خط تحت النص للإشارة إلى رابط
+                                          ),
                                         ),
                                       ),
                                     ],

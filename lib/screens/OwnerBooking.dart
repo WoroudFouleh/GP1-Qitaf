@@ -7,8 +7,10 @@ import 'config.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 
 class OwnerBookingPage extends StatefulWidget {
+  final userId;
   final String token;
-  const OwnerBookingPage({required this.token, Key? key}) : super(key: key);
+  const OwnerBookingPage({required this.token, Key? key, this.userId})
+      : super(key: key);
 
   @override
   _OwnerBookingPageState createState() => _OwnerBookingPageState();
@@ -184,6 +186,7 @@ class _OwnerBookingPageState extends State<OwnerBookingPage> {
                                         context,
                                         MaterialPageRoute(
                                           builder: (context) => Customerprofile(
+                                            userId: widget.userId,
                                             username: booking[
                                                 'customerUsername'], // Pass the worker's username
                                           ),

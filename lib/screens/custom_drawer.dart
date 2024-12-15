@@ -12,7 +12,9 @@ import 'package:login_page/screens/previousOrders.dart';
 
 class CustomDrawer extends StatefulWidget {
   final token;
-  const CustomDrawer({required this.token, Key? key}) : super(key: key);
+  final userId;
+  const CustomDrawer({required this.token, Key? key, this.userId})
+      : super(key: key);
 
   @override
   _CustomDrawerState createState() => _CustomDrawerState();
@@ -86,6 +88,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                 MaterialPageRoute(
                     builder: (context) => ProfilePage(
                           token: widget.token,
+                          userId: widget.userId,
                         )),
               );
             },
@@ -101,6 +104,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                 context,
                 MaterialPageRoute(
                   builder: (context) => MyBookingPage(
+                    userId: widget.userId,
                     token: widget.token,
                   ),
                 ),
@@ -117,7 +121,8 @@ class _CustomDrawerState extends State<CustomDrawer> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => CustomerWorkPage(token: widget.token),
+                  builder: (context) => CustomerWorkPage(
+                      userId: widget.userId, token: widget.token),
                 ),
               );
             },
@@ -162,7 +167,8 @@ class _CustomDrawerState extends State<CustomDrawer> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => OwnerWorkingPage(token: widget.token),
+                    builder: (context) => OwnerWorkingPage(
+                        token: widget.token, userId: widget.userId),
                   ),
                 );
               }),
@@ -184,6 +190,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                 context,
                 MaterialPageRoute(
                   builder: (context) => OwnerBookingPage(
+                    userId: widget.userId,
                     token: widget.token,
                   ),
                 ),

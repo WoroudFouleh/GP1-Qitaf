@@ -32,6 +32,38 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 
+  // Function to delete the message from Firestore
+  Future<void> _deleteMessage(String chatId, String messageId) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection('messages')
+          .doc(chatId)
+          .collection('messages')
+          .doc(messageId)
+          .delete();
+    } catch (e) {
+      print("Error deleting message: $e");
+    }
+  }
+
+  // Function to delete the entire chat (all messages)
+  Future<void> _deleteChat(String chatId) async {
+    try {
+      var messages = await FirebaseFirestore.instance
+          .collection('messages')
+          .doc(chatId)
+          .collection('messages')
+          .get();
+      for (var message in messages.docs) {
+        await _deleteMessage(chatId, message.id); // Delete each message
+      }
+      // Optionally delete the chat entry itself
+      await FirebaseFirestore.instance.collection('chats').doc(chatId).delete();
+    } catch (e) {
+      print("Error deleting chat: $e");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     String chatId = widget.currentUserId.compareTo(widget.otherUserId) < 0
@@ -76,12 +108,51 @@ class _ChatScreenState extends State<ChatScreen> {
             );
           },
         ),
-        backgroundColor: Colors.green,
+        backgroundColor: Color.fromARGB(255, 65, 139, 67),
         actions: [
           IconButton(
             icon: const Icon(Icons.more_vert, color: Colors.white),
             onPressed: () {
-              // Add any action for the 3 dots here if needed
+              // Show the options menu when pressed
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return Directionality(
+                    textDirection:
+                        TextDirection.rtl, // Right to left for Arabic text
+                    child: AlertDialog(
+                      title: Text('خيارات المحادثة'),
+                      content: Text('هل ترغب في حذف المحادثة؟'),
+                      actions: <Widget>[
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: Text(
+                            'إلغاء',
+                            style: TextStyle(
+                                color: Color.fromARGB(255, 65, 139,
+                                    67)), // Green color for cancel button
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: () async {
+                            await _deleteChat(
+                                chatId); // Delete all messages and the chat
+                            Navigator.of(context).pop();
+                          },
+                          child: Text(
+                            'حذف المحادثة',
+                            style: TextStyle(
+                                color:
+                                    Colors.red), // Red color for delete button
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              );
             },
           ),
         ],
@@ -90,10 +161,9 @@ class _ChatScreenState extends State<ChatScreen> {
         textDirection: TextDirection.rtl,
         child: Stack(
           children: [
-            // Add background image here
             Positioned.fill(
               child: Image.asset(
-                'assets/images/message.png', // Replace with your image path
+                'assets/images/mm.png',
                 fit: BoxFit.cover,
               ),
             ),
@@ -124,45 +194,80 @@ class _ChatScreenState extends State<ChatScreen> {
                           var message = messages[index];
                           bool isSender =
                               message['senderId'] == widget.currentUserId;
-                          bool isLastMessage =
-                              index == 0; // Check if it's the last message
+                          bool isLastMessage = index == 0;
 
-                          String messageStatus = 'تم الإرسال'; // Default status
+                          String messageStatus = 'تم الإرسال';
                           if (isSender && message['seen'] == true) {
                             messageStatus = 'تم القراءة';
                           }
 
                           return GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                // Toggle time display for the message
-                                if (selectedMessageId == message.id) {
-                                  messageTime =
-                                      null; // Hide time if tapped again
-                                  selectedMessageId = null;
-                                } else {
-                                  messageTime = message['timestamp'] != null
-                                      ? (message['timestamp'] as Timestamp)
-                                          .toDate()
-                                          .toString()
-                                      : 'غير متوفر';
-                                  selectedMessageId = message.id;
-                                }
-                              });
+                            // Modify the long press on message to show confirmation dialog
+                            onLongPress: () {
+                              // Show dialog to confirm deletion
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return Directionality(
+                                    textDirection: TextDirection
+                                        .rtl, // Right to left for Arabic text
+                                    child: AlertDialog(
+                                      title: Text('تأكيد الحذف'),
+                                      content: Text(
+                                          'هل أنت متأكد من أنك تريد حذف هذه الرسالة؟'),
+                                      actions: <Widget>[
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                          child: Text(
+                                            'إلغاء',
+                                            style: TextStyle(
+                                                color: Color.fromARGB(
+                                                    255,
+                                                    65,
+                                                    139,
+                                                    67)), // Green color for cancel button
+                                          ),
+                                        ),
+                                        TextButton(
+                                          onPressed: () async {
+                                            await _deleteMessage(
+                                                chatId, message.id);
+                                            Navigator.of(context).pop();
+                                          },
+                                          child: Text(
+                                            'موافق',
+                                            style: TextStyle(
+                                                color: Color.fromARGB(
+                                                    255,
+                                                    65,
+                                                    139,
+                                                    67)), // Green color for confirm button
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                },
+                              );
                             },
+
                             child: Column(
                               crossAxisAlignment: isSender
                                   ? CrossAxisAlignment.end
                                   : CrossAxisAlignment.start,
                               children: [
-                                // فقاعة الرسالة
+                                // Message bubble
                                 Container(
                                   margin: const EdgeInsets.symmetric(
                                       vertical: 5, horizontal: 10),
                                   padding: const EdgeInsets.all(10),
                                   decoration: BoxDecoration(
-                                    color:
-                                        isSender ? Colors.green : Colors.white,
+                                    color: isSender
+                                        ? Color.fromARGB(255, 65, 139, 67)
+                                        : const Color.fromARGB(
+                                            255, 246, 255, 226),
                                     borderRadius: BorderRadius.only(
                                       topLeft: const Radius.circular(15),
                                       topRight: const Radius.circular(15),
@@ -187,13 +292,13 @@ class _ChatScreenState extends State<ChatScreen> {
                                     ),
                                   ),
                                 ),
-                                if (messageTime != null &&
-                                    selectedMessageId == message.id)
+                                // Add message time when clicked
+                                if (selectedMessageId == message.id)
                                   Padding(
                                     padding: const EdgeInsets.symmetric(
                                         vertical: 2, horizontal: 10),
                                     child: Text(
-                                      messageTime!,
+                                      message['timestamp'].toDate().toString(),
                                       style: const TextStyle(
                                         fontSize: 12,
                                         color: Colors.grey,
@@ -209,12 +314,21 @@ class _ChatScreenState extends State<ChatScreen> {
                                       messageStatus,
                                       style: const TextStyle(
                                         fontSize: 12,
-                                        color: Colors.green,
+                                        color: Color.fromARGB(255, 65, 139, 67),
                                       ),
                                     ),
                                   ),
                               ],
                             ),
+                            onTap: () {
+                              setState(() {
+                                if (selectedMessageId == message.id) {
+                                  selectedMessageId = null;
+                                } else {
+                                  selectedMessageId = message.id;
+                                }
+                              });
+                            },
                           );
                         },
                       );
@@ -232,7 +346,7 @@ class _ChatScreenState extends State<ChatScreen> {
                             hintText: 'اكتب رسالة...',
                             hintStyle: TextStyle(color: Colors.grey[600]),
                             filled: true,
-                            fillColor: Colors.grey[200],
+                            fillColor: const Color.fromARGB(255, 252, 255, 239),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(30),
                               borderSide: BorderSide.none,
@@ -241,7 +355,8 @@ class _ChatScreenState extends State<ChatScreen> {
                         ),
                       ),
                       IconButton(
-                        icon: const Icon(Icons.send, color: Colors.green),
+                        icon: const Icon(Icons.send,
+                            color: Color.fromARGB(255, 56, 138, 59)),
                         onPressed: () async {
                           String message = _messageController.text.trim();
                           if (message.isEmpty) return;

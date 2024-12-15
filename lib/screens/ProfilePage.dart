@@ -11,7 +11,9 @@ import 'package:login_page/screens/welcome_screen.dart';
 
 class ProfilePage extends StatefulWidget {
   final token;
-  const ProfilePage({required this.token, Key? key}) : super(key: key);
+  final userId;
+  const ProfilePage({required this.token, Key? key, this.userId})
+      : super(key: key);
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
@@ -176,6 +178,7 @@ class _ProfilePageState extends State<ProfilePage>
                         MaterialPageRoute(
                             builder: (context) => OwnerProfile(
                                   token: widget.token,
+                                  userId: widget.userId,
                                 )),
                       );
                     },

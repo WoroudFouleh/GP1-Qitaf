@@ -2,13 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-
-import 'config.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:login_page/screens/chat_screen.dart';
+import 'package:login_page/screens/config.dart'; // إضافة Firebase Firestore
 
 class Workerprofile extends StatefulWidget {
+  final String userId;
   final String username;
 
-  const Workerprofile({required this.username, Key? key}) : super(key: key);
+  const Workerprofile({required this.username, Key? key, required this.userId})
+      : super(key: key);
 
   @override
   _WorkerprofileState createState() => _WorkerprofileState();
@@ -63,6 +66,44 @@ class _WorkerprofileState extends State<Workerprofile> {
       }
     } catch (e) {
       print("An error occurred: $e");
+    }
+  }
+
+  Future<void> navigateToChat() async {
+    try {
+      // استعلام Firestore للحصول على userId بناءً على البريد الإلكتروني
+      final querySnapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .where('email', isEqualTo: email) // البحث بالبريد الإلكتروني
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        final otherUserId =
+            querySnapshot.docs.first.id; // جلب ID المستخدم الآخر
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ChatScreen(
+              currentUserId: widget.userId,
+              otherUserId: otherUserId,
+            ),
+          ),
+        );
+      } else {
+        // إذا لم يتم العثور على المستخدم
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('المستخدم غير موجود'),
+          ),
+        );
+      }
+    } catch (e) {
+      // التعامل مع الأخطاء
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('حدث خطأ أثناء جلب البيانات: $e'),
+        ),
+      );
     }
   }
 
@@ -160,18 +201,25 @@ class _WorkerprofileState extends State<Workerprofile> {
                                               ),
                                             ),
                                             const Divider(thickness: 1.5),
-                                            Text(
-                                              'دردشة مع العامل',
-                                              style: TextStyle(
-                                                color: Colors.grey[700],
-                                                fontSize: 20,
+                                            GestureDetector(
+                                              onTap: navigateToChat,
+                                              child: Column(
+                                                children: [
+                                                  Text(
+                                                    'دردشة مع العامل',
+                                                    style: TextStyle(
+                                                      color: Colors.grey[700],
+                                                      fontSize: 20,
+                                                    ),
+                                                  ),
+                                                  const Icon(
+                                                    AntDesign.message1,
+                                                    color: Color.fromRGBO(
+                                                        52, 121, 40, 1),
+                                                    size: 25,
+                                                  ),
+                                                ],
                                               ),
-                                            ),
-                                            const Icon(
-                                              AntDesign.message1, // Chat icon
-                                              color: Color.fromRGBO(
-                                                  52, 121, 40, 1),
-                                              size: 25,
                                             ),
                                           ],
                                         ),
@@ -282,7 +330,7 @@ class _WorkerprofileState extends State<Workerprofile> {
                         ],
                       ),
                     ),
-                  )
+                  ),
                 ],
               ),
             ),

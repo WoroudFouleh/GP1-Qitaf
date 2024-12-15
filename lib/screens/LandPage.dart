@@ -12,6 +12,7 @@ import 'config.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 
 class LandPage extends StatefulWidget {
+  final String userId;
   final String landName;
   final String landId;
   final String username;
@@ -44,7 +45,8 @@ class LandPage extends StatefulWidget {
       required this.numOfWorkers,
       required this.workerWages,
       required this.token,
-      required this.landId})
+      required this.landId,
+      required this.userId})
       : super(key: key);
 
   @override
@@ -189,6 +191,7 @@ class _LandPageState extends State<LandPage> {
                               context,
                               MaterialPageRoute(
                                 builder: (context) => Profile2(
+                                  userId: widget.userId,
                                   token: widget.token,
                                   phoneNum: phoneNum,
                                   code: code,

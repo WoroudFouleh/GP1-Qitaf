@@ -11,8 +11,10 @@ import 'package:login_page/screens/itemPage.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 
 class ProductsPage extends StatefulWidget {
+  final String userId;
   final String token;
-  const ProductsPage({required this.token, Key? key}) : super(key: key);
+  const ProductsPage({required this.token, Key? key, required this.userId})
+      : super(key: key);
 
   @override
   _ProductsPageState createState() => _ProductsPageState();
@@ -292,6 +294,7 @@ class _ProductsPageState extends State<ProductsPage> {
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) => ItemPage(
+                                          userId: widget.userId,
                                           type: 1,
                                           productName: product['name'],
                                           productDescription:
@@ -424,6 +427,7 @@ class _ProductsPageState extends State<ProductsPage> {
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) => ItemPage(
+                                          userId: widget.userId,
                                           type: 2,
                                           productName: product2['name'],
                                           productDescription:
@@ -558,6 +562,7 @@ class _ProductsPageState extends State<ProductsPage> {
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) => ItemPage(
+                                          userId: widget.userId,
                                           type: 3,
                                           productName: product3['name'],
                                           productDescription:

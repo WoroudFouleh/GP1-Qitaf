@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:http/http.dart' as http;
+import 'package:login_page/screens/profile3.dart';
 import 'dart:convert'; // To handle JSON decoding
 import 'config.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 
 class MyBookingPage extends StatefulWidget {
+  final userId;
   final String token;
-  const MyBookingPage({required this.token, Key? key}) : super(key: key);
+  const MyBookingPage({required this.token, Key? key, this.userId})
+      : super(key: key);
 
   @override
   _MyBookingPageState createState() => _MyBookingPageState();
@@ -51,89 +54,126 @@ class _MyBookingPageState extends State<MyBookingPage> {
     }
   }
 
-  void _showRatingBottomSheet() {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (context) {
-        return Directionality(
-          textDirection: TextDirection.rtl,
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "تقييم خط الإنتاج",
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF556B2F), // لون زيتي
-                      ),
-                    ),
-                    InkWell(
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                      child: Icon(
-                        Icons.close,
-                        color: Color(0xFF556B2F),
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 20),
-                RatingBar.builder(
-                  initialRating: rating,
-                  minRating: 1,
-                  itemSize: 40,
-                  direction: Axis.horizontal,
-                  allowHalfRating: true,
-                  itemCount: 5,
-                  itemBuilder: (context, _) => const Icon(
-                    Icons.star,
-                    color: Colors.amber,
-                  ),
-                  onRatingUpdate: (rating) {
-                    setState(() {
-                      this.rating = rating;
-                    });
-                  },
-                  textDirection: TextDirection.rtl, // النجوم تبدأ من اليمين
-                ),
-                SizedBox(height: 20),
-                // تصغير زر "تم"
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.pop(context); // إغلاق الـ BottomSheet
-                    _showSuccessDialog(); // عرض النافذة الجديدة
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xFF556B2F), // لون زيتي
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    padding: EdgeInsets.symmetric(
-                        vertical: 10, horizontal: 20), // تصغير حجم الزر
-                  ),
-                  child: Text(
-                    "تم",
-                    style: TextStyle(
-                      fontSize: 16, // تصغير النص
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-              ],
+  void deleteBooked(String bookId) async {
+    try {
+      print("request id: $bookId");
+      final response = await http.delete(
+        Uri.parse(
+            '$deleteBooking/${bookId}'), // Send the URL without the username
+        headers: {'Content-Type': 'application/json'},
+        // Send the username in the body
+      );
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        if (data['status'] == true) {
+          print("request deleted successfully");
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => MyBookingPage(token: widget.token),
             ),
+          );
+        } else {
+          print("Error deleting request1");
+        }
+      } else {
+        print("Error deleting request2 ");
+      }
+    } catch (e) {
+      print("An error occurred: $e");
+    }
+  }
+
+  void rateProductionLine(String lineId, double rate) async {
+    print("line id: $lineId");
+    try {
+      // Prepare the request body
+      var reqBody = {
+        'productionLineId': lineId,
+        "newRate": rate,
+      };
+
+      // Make the POST request
+      var response = await http.post(
+        Uri.parse(rateLine), // Ensure the URL is correct
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: jsonEncode(reqBody),
+      );
+
+      if (response.statusCode == 200) {
+        var jsonResponse = jsonDecode(response.body);
+        if (jsonResponse['status']) {
+          print('Product rated successfully');
+          _showSuccessDialog();
+          // setState(() {
+          //   userRate = jsonResponse['product']
+          //       ['rate']; // Access the rate from the response
+          // });
+        } else {
+          print('Error rating product: ${jsonResponse['message']}');
+        }
+      } else {
+        var errorResponse = jsonDecode(response.body);
+        print('Error: ${errorResponse['message'] ?? response.statusCode}');
+      }
+    } catch (e) {
+      print('An error occurred: $e');
+    }
+  }
+
+  void showRatingDialog(BuildContext context, String lineId, String lineName) {
+    double rating = 0.0;
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
           ),
+          title: Text(" ($lineName) قيّم خط الإنتاج"),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text("الرجاء تقييم خط الإنتاج"),
+              const SizedBox(height: 10),
+              RatingBar.builder(
+                initialRating: 0,
+                minRating: 1,
+                direction: Axis.horizontal,
+                allowHalfRating: true,
+                itemCount: 5,
+                itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
+                itemBuilder: (context, _) => const Icon(
+                  Icons.star,
+                  color: Colors.amber,
+                ),
+                onRatingUpdate: (value) {
+                  rating = value;
+                },
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text("إلغاء"),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+                // Handle the rating submission here
+                print("User rated $rating stars for item $lineName");
+                rateProductionLine(lineId, rating);
+              },
+              child: const Text("تقييم"),
+            ),
+          ],
         );
       },
     );
@@ -180,6 +220,68 @@ class _MyBookingPageState extends State<MyBookingPage> {
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Color(0xFF556B2F), // لون زيتي
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10), // زوايا مدورة
+                    ),
+                  ),
+                  child: const Text(
+                    "موافق",
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white, // لون النص أبيض
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showFailedDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20), // زوايا مدورة
+          ),
+          contentPadding: EdgeInsets.all(20),
+          content: const Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                Icons.error, // أيقونة صح
+                color: Colors.red,
+                size: 50,
+              ),
+              SizedBox(height: 10),
+              Text(
+                " تقييم خط الإنتاج غير متاح",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black, // لون زيتي
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            Center(
+              // لجعل الزر في المنتصف
+              child: Container(
+                width: double.infinity, // عرض الزر ليملأ النافذة
+                margin: EdgeInsets.symmetric(horizontal: 20),
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.red, // لون زيتي
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10), // زوايا مدورة
                     ),
@@ -293,36 +395,42 @@ class _MyBookingPageState extends State<MyBookingPage> {
                                     ),
                                   ),
                                   const SizedBox(width: 10),
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                  Row(
                                     children: [
-                                      Text(
-                                        ' ${booking['lineName']}', // اسم خط الإنتاج مع رقم مميز
-                                        style: TextStyle(
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.bold,
-                                          color: Color(0xFF556B2F), // لون زيتي
-                                        ),
-                                      ),
-                                      SizedBox(height: 5),
-                                      Row(
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
-                                          Icon(
-                                            Icons.star,
-                                            color: Colors.orange,
-                                            size: 16,
-                                          ),
-                                          SizedBox(width: 5),
                                           Text(
-                                            "4.25", // التقييم
+                                            ' ${booking['lineName']}', // اسم خط الإنتاج مع رقم مميز
                                             style: TextStyle(
-                                              fontSize: 14,
-                                              color: Colors.black,
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.bold,
+                                              color:
+                                                  Color(0xFF556B2F), // لون زيتي
                                             ),
+                                          ),
+                                          SizedBox(height: 5),
+                                          Row(
+                                            children: [
+                                              Icon(
+                                                Icons.star,
+                                                color: Colors.orange,
+                                                size: 16,
+                                              ),
+                                              SizedBox(width: 5),
+                                              Text(
+                                                "4.25", // التقييم
+                                                style: TextStyle(
+                                                  fontSize: 14,
+                                                  color: Colors.black,
+                                                ),
+                                              ),
+                                            ],
                                           ),
                                         ],
                                       ),
+                                      SizedBox(width: 90),
                                     ],
                                   ),
                                 ],
@@ -441,12 +549,30 @@ class _MyBookingPageState extends State<MyBookingPage> {
                                         size: 20,
                                       ),
                                       SizedBox(width: 5),
-                                      Text(
-                                        '  حساب مالك خط الإنتاج:  ${booking['ownerUsername']} ',
-                                        style: TextStyle(
-                                          fontSize: 18,
-                                          color: Colors.black, // لون النص أسود
-                                          fontWeight: FontWeight.bold,
+                                      GestureDetector(
+                                        onTap: () {
+                                          // Navigate to the profile page and pass the username
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  Ownerprofile2(
+                                                userId: widget.userId,
+                                                username: booking[
+                                                    'ownerUsername'], // Pass the owner's username
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                        child: Text(
+                                          '  حساب مالك خط الإنتاج:  ${booking['ownerUsername']} ',
+                                          style: TextStyle(
+                                            fontSize: 18,
+                                            color: Colors
+                                                .black, // لون النص أزرق للإشارة إلى إمكانية التفاعل
+                                            fontWeight: FontWeight.bold,
+                                            // خط تحت النص للإشارة إلى رابط
+                                          ),
                                         ),
                                       ),
                                     ],
@@ -457,17 +583,27 @@ class _MyBookingPageState extends State<MyBookingPage> {
                               SizedBox(height: 15),
 
                               ElevatedButton(
-                                onPressed: () {},
+                                onPressed:
+                                    () {}, // Add your desired functionality here
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Icon(
-                                      Icons.pending,
+                                      booking['status'] == 'pending'
+                                          ? Icons
+                                              .hourglass_empty // Loading icon
+                                          : booking['status'] == 'confirmed'
+                                              ? Icons.check_circle // Check icon
+                                              : Icons.cancel, // Cancelled icon
                                       color: Colors.white,
                                     ),
                                     SizedBox(width: 10),
                                     Text(
-                                      "لم يتحقق بعد",
+                                      booking['status'] == 'pending'
+                                          ? "لم يتحقق بعد"
+                                          : booking['status'] == 'confirmed'
+                                              ? "انتهت العملية"
+                                              : "ملغي",
                                       style: TextStyle(
                                         fontSize: 18,
                                         fontWeight: FontWeight.bold,
@@ -477,13 +613,20 @@ class _MyBookingPageState extends State<MyBookingPage> {
                                   ],
                                 ),
                                 style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.red,
+                                  backgroundColor: booking['status'] ==
+                                          'pending'
+                                      ? Colors.amber // Amber color for pending
+                                      : booking['status'] == 'confirmed'
+                                          ? Colors
+                                              .green // Green color for confirmed
+                                          : Colors
+                                              .red, // Red color for cancelled
                                   padding: EdgeInsets.symmetric(vertical: 15),
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(5),
                                   ),
-                                  minimumSize:
-                                      Size(double.infinity, 0), // عرض الزر كامل
+                                  minimumSize: Size(
+                                      double.infinity, 0), // Full-width button
                                 ),
                               ),
                             ],
@@ -494,7 +637,14 @@ class _MyBookingPageState extends State<MyBookingPage> {
                           top: 5,
                           left: 5,
                           child: InkWell(
-                            onTap: _showRatingBottomSheet,
+                            onTap: () {
+                              if (booking['status'] == "confirmed") {
+                                showRatingDialog(context, booking['lineId'],
+                                    booking['lineName']);
+                              } else {
+                                _showFailedDialog();
+                              }
+                            },
                             child: Container(
                               height: 40,
                               width: 40,
@@ -511,6 +661,35 @@ class _MyBookingPageState extends State<MyBookingPage> {
                               ),
                               child: Icon(
                                 Icons.star,
+                                color: Colors.white,
+                                size: 20,
+                              ),
+                            ),
+                          ),
+                        ),
+                        Positioned(
+                          top: 50,
+                          left: 5,
+                          child: InkWell(
+                            onTap: () {
+                              deleteBooked(booking['_id']);
+                            },
+                            child: Container(
+                              height: 40,
+                              width: 40,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Color.fromARGB(255, 255, 0, 0),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.2),
+                                    blurRadius: 4,
+                                    offset: Offset(2, 2),
+                                  ),
+                                ],
+                              ),
+                              child: Icon(
+                                Icons.delete,
                                 color: Colors.white,
                                 size: 20,
                               ),

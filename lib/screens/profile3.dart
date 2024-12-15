@@ -1,96 +1,79 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
-import 'package:jwt_decoder/jwt_decoder.dart';
 import 'dart:convert';
-
+import 'package:http/http.dart' as http;
 import 'package:login_page/screens/chat_screen.dart';
 
-class Profile2 extends StatelessWidget {
-  final userId;
-  final token;
-  final String firstName;
-  final String lastName;
-  final String email;
-  final String code;
-  final String phoneNum;
-  final String? image;
-  final String city;
-  final String street;
-  final int postsCount;
-  //final userData;
+import 'config.dart';
 
-  const Profile2(
-      {required this.token,
-      required this.firstName,
-      required this.lastName,
-      required this.email,
-      required this.phoneNum,
-      required this.code,
-      required this.image,
-      required this.city,
-      required this.street,
-      required this.postsCount,
-      Key? key,
-      this.userId})
+class Ownerprofile2 extends StatefulWidget {
+  final userId;
+  final String username;
+
+  const Ownerprofile2({required this.username, Key? key, this.userId})
       : super(key: key);
 
-  // Decode the token using jwt_decoder and extract necessary fields
-  //Map<String, dynamic> jwtDecoderToken = JwtDecoder.decode(widget.token);
+  @override
+  _ownerprofile2State createState() => _ownerprofile2State();
+}
+
+class _ownerprofile2State extends State<Ownerprofile2> {
+  late String firstName = "";
+  late String lastName = "";
+  late String userProfileImage = "";
+  late String phoneNum = "";
+  late String code = "";
+  late String email = "";
+  late String city = "";
+  late String location = "";
+  late String gender = "";
+
+  @override
+  void initState() {
+    super.initState();
+    fetchUser();
+  }
+
+  void fetchUser() async {
+    print("Sending username: ${widget.username}");
+
+    try {
+      final response = await http.get(
+        Uri.parse('$getUser/${widget.username}'),
+        headers: {'Content-Type': 'application/json'},
+      );
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        if (data['status'] == true) {
+          final userInfo = data['data'];
+          setState(() {
+            firstName = userInfo['firstName'] ?? "";
+            lastName = userInfo['lastName'] ?? "";
+            userProfileImage = userInfo['profilePhoto'] ?? "";
+            phoneNum = userInfo['phoneNumber'] ?? "";
+            email = userInfo['email'] ?? "";
+            code = userInfo['phoneCode'] ?? "";
+            city = userInfo['city'] ?? "";
+            location = userInfo['street'] ?? "";
+            gender = userInfo['gender'] ?? 0;
+          });
+        } else {
+          print("Error fetching user: ${data['message']}");
+        }
+      } else {
+        print("Failed to load user: ${response.statusCode}");
+      }
+    } catch (e) {
+      print("An error occurred: $e");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    //final userData = decodeToken(token);
-    Future<void> navigateToChat(BuildContext context) async {
-      try {
-        // استعلام Firestore للحصول على userId بناءً على البريد الإلكتروني
-        final querySnapshot = await FirebaseFirestore.instance
-            .collection('users')
-            .where('email', isEqualTo: email) // البحث بالبريد الإلكتروني
-            .get();
-
-        if (querySnapshot.docs.isNotEmpty) {
-          final otherUserId =
-              querySnapshot.docs.first.id; // جلب ID المستخدم الآخر
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => ChatScreen(
-                currentUserId: userId,
-                otherUserId: otherUserId,
-              ),
-            ),
-          );
-        } else {
-          // إذا لم يتم العثور على المستخدم
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('المستخدم غير موجود'),
-            ),
-          );
-        }
-      } catch (e) {
-        // التعامل مع الأخطاء
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('حدث خطأ أثناء جلب البيانات: $e'),
-          ),
-        );
-      }
-    }
-
-    // Extract name, email, and phone
-    // final firstName = userData['firstName'] ?? 'Unknown Name';
-    // final lastName = userData['lastName'] ?? 'Unknown Name';
-    // final profileImage = userData['profilePhoto'];
-    // final email = userData['email'] ?? 'Unknown Email';
-    // final phoneCode = userData['phoneCode'] ?? 'Unknown Phone';
-    // final phoneNumber = userData['phoneNumber'] ?? 'Unknown Phone';
-    // final city = userData['city'] ?? 'Unknown city';
-    // final street = userData['street'] ?? 'Unknown street';
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
-    int rating = 1; // Example rating, adjust dynamically based on your data
 
     return Stack(
       fit: StackFit.expand,
@@ -122,24 +105,19 @@ class Profile2 extends StatelessWidget {
                     child: const Icon(
                       Icons.arrow_back,
                       size: 30,
-                      color: Colors.white, // لون السهم أبيض
+                      color: Colors.white,
                     ),
                   ),
-                  //Spacer(), // Push the text to the right
-                  const SizedBox(
-                    height: 20,
-                  ),
+                  const SizedBox(height: 20),
                   const Text(
-                    'صفحة\nالمالك الشخصية',
+                    'صفحة \nالمالك الشخصية',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 34,
                     ),
                   ),
-                  const SizedBox(
-                    height: 22,
-                  ),
+                  const SizedBox(height: 22),
                   SizedBox(
                     height: height * 0.43,
                     child: LayoutBuilder(
@@ -163,9 +141,7 @@ class Profile2 extends StatelessWidget {
                                 ),
                                 child: Column(
                                   children: [
-                                    const SizedBox(
-                                      height: 80,
-                                    ),
+                                    const SizedBox(height: 80),
                                     Text(
                                       '$firstName $lastName',
                                       style: const TextStyle(
@@ -173,9 +149,7 @@ class Profile2 extends StatelessWidget {
                                         fontSize: 30,
                                       ),
                                     ),
-                                    const SizedBox(
-                                      height: 5,
-                                    ),
+                                    const SizedBox(height: 5),
                                     Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
@@ -183,70 +157,79 @@ class Profile2 extends StatelessWidget {
                                         Column(
                                           children: [
                                             Text(
-                                              'المنشورات',
+                                              widget.username,
                                               style: TextStyle(
                                                 color: Colors.grey[700],
-                                                fontSize: 20,
+                                                fontSize: 15,
                                               ),
                                             ),
-                                            Text(
-                                              postsCount.toString(),
-                                              style: const TextStyle(
-                                                color: Color.fromRGBO(
-                                                    52, 121, 40, 1),
-                                                fontSize: 20,
+                                            const Divider(thickness: 1.5),
+                                            InkWell(
+                                              onTap: () async {
+                                                // استعلام Firebase للحصول على userId باستخدام username
+                                                final querySnapshot =
+                                                    await FirebaseFirestore
+                                                        .instance
+                                                        .collection('users')
+                                                        .where('username',
+                                                            isEqualTo:
+                                                                widget.username)
+                                                        .get();
+
+                                                if (querySnapshot
+                                                    .docs.isNotEmpty) {
+                                                  final otherUserId =
+                                                      querySnapshot
+                                                          .docs.first.id;
+
+                                                  // الانتقال إلى صفحة ChatScreen
+                                                  Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          ChatScreen(
+                                                        currentUserId:
+                                                            widget.userId,
+                                                        otherUserId:
+                                                            otherUserId,
+                                                      ),
+                                                    ),
+                                                  );
+                                                } else {
+                                                  // إذا لم يتم العثور على المستخدم
+                                                  ScaffoldMessenger.of(context)
+                                                      .showSnackBar(
+                                                    const SnackBar(
+                                                      content: Text(
+                                                          'المستخدم غير موجود'),
+                                                    ),
+                                                  );
+                                                }
+                                              },
+                                              child: Column(
+                                                children: [
+                                                  Text(
+                                                    'دردشة مع المالك',
+                                                    style: TextStyle(
+                                                      color: Colors.grey[700],
+                                                      fontSize: 20,
+                                                    ),
+                                                  ),
+                                                  const Icon(
+                                                    AntDesign.message1,
+                                                    color: Color.fromRGBO(
+                                                        52, 121, 40, 1),
+                                                    size: 25,
+                                                  ),
+                                                ],
                                               ),
                                             ),
                                           ],
                                         ),
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                            horizontal: 25,
-                                            vertical: 8,
-                                          ),
-                                          child: Container(
-                                            height: 50,
-                                            width: 3,
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(100),
-                                              color: Colors.grey,
-                                            ),
-                                          ),
-                                        ),
-                                        GestureDetector(
-                                          onTap: () => navigateToChat(context),
-                                          child: Column(
-                                            children: [
-                                              Text(
-                                                'دردشة مع المالك',
-                                                style: TextStyle(
-                                                  color: Colors.grey[700],
-                                                  fontSize: 20,
-                                                ),
-                                              ),
-                                              const Icon(
-                                                AntDesign.message1,
-                                                color: Color.fromRGBO(
-                                                    52, 121, 40, 1),
-                                                size: 25,
-                                              ),
-                                            ],
-                                          ),
-                                        ),
                                       ],
-                                    )
+                                    ),
                                   ],
                                 ),
-                              ),
-                            ),
-                            Positioned(
-                              top: 110,
-                              right: 20,
-                              child: Icon(
-                                AntDesign.setting,
-                                color: Colors.grey[700],
-                                size: 30,
                               ),
                             ),
                             Positioned(
@@ -255,15 +238,18 @@ class Profile2 extends StatelessWidget {
                               right: 0,
                               child: Center(
                                 child: ClipOval(
-                                  child: image != null
+                                  child: userProfileImage.isNotEmpty
                                       ? Image.memory(
-                                          base64Decode(image!),
+                                          base64Decode(userProfileImage),
                                           fit: BoxFit.cover,
                                           width: 150.0,
                                           height: 150.0,
                                         )
                                       : Image.asset(
-                                          'assets/images/profile.png'),
+                                          'assets/images/profile.png',
+                                          width: 150.0,
+                                          height: 150.0,
+                                        ),
                                 ),
                               ),
                             ),
@@ -272,9 +258,7 @@ class Profile2 extends StatelessWidget {
                       },
                     ),
                   ),
-                  const SizedBox(
-                    height: 30,
-                  ),
+                  const SizedBox(height: 30),
                   Container(
                     height: height * 0.5,
                     width: width,
@@ -286,9 +270,7 @@ class Profile2 extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(horizontal: 15),
                       child: Column(
                         children: [
-                          const SizedBox(
-                            height: 20,
-                          ),
+                          const SizedBox(height: 20),
                           const Text(
                             'معلومات المالك',
                             style: TextStyle(
@@ -296,12 +278,8 @@ class Profile2 extends StatelessWidget {
                               fontSize: 27,
                             ),
                           ),
-                          const Divider(
-                            thickness: 2.5,
-                          ),
-                          const SizedBox(
-                            height: 20,
-                          ),
+                          const Divider(thickness: 2.5),
+                          const SizedBox(height: 20),
                           Row(
                             children: [
                               Icon(AntDesign.mail, color: Colors.grey[700]),
@@ -317,12 +295,8 @@ class Profile2 extends StatelessWidget {
                               ),
                             ],
                           ),
-                          const Divider(
-                            thickness: 1.5,
-                          ),
-                          const SizedBox(
-                            height: 20,
-                          ),
+                          const Divider(thickness: 1.5),
+                          const SizedBox(height: 20),
                           Row(
                             children: [
                               Icon(AntDesign.phone, color: Colors.grey[700]),
@@ -338,12 +312,8 @@ class Profile2 extends StatelessWidget {
                               ),
                             ],
                           ),
-                          const Divider(
-                            thickness: 1.5,
-                          ),
-                          const SizedBox(
-                            height: 20,
-                          ),
+                          const Divider(thickness: 1.5),
+                          const SizedBox(height: 20),
                           Row(
                             children: [
                               Icon(AntDesign.enviromento,
@@ -351,7 +321,7 @@ class Profile2 extends StatelessWidget {
                               const SizedBox(width: 10),
                               Expanded(
                                 child: Text(
-                                  '$city , $street',
+                                  '$city , $location',
                                   style: TextStyle(
                                     fontSize: 20,
                                     color: Colors.grey[700],
@@ -368,7 +338,7 @@ class Profile2 extends StatelessWidget {
               ),
             ),
           ),
-        )
+        ),
       ],
     );
   }

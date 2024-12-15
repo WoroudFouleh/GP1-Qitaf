@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:login_page/Admin/Admin.dart';
 import 'package:login_page/Delivery/DileveryHome.dart';
@@ -92,6 +93,17 @@ class _SigninScreenState extends State<SigninScreen> {
 
           if (firebaseUser.user != null) {
             myToken2 = await firebaseUser.user!.getIdToken();
+
+            User? firebaseUser2 = FirebaseAuth.instance.currentUser;
+            String userId = firebaseUser2?.uid ?? ''; // احصل على الـ UID
+            if (myToken2 != null) {
+              await FirebaseFirestore.instance
+                  .collection('users')
+                  .doc(userId)
+                  .update({
+                'fcmToken': myToken2,
+              });
+            }
             showNotification('تم تسجيل الدخول عبر Firebase بنجاح');
             firebaseLoginSuccess = true; // Mark Firebase login as successful
           }
@@ -126,7 +138,7 @@ class _SigninScreenState extends State<SigninScreen> {
               showNotification('تم تسجيل الدخول بنجاح');
 
               // Wait a few seconds before navigating
-              Future.delayed(const Duration(seconds: 2), () {
+              Future.delayed(const Duration(seconds: 0), () {
                 if (userType == '2') {
                   Navigator.push(
                     context,
@@ -269,11 +281,11 @@ class _SigninScreenState extends State<SigninScreen> {
                             decoration: InputDecoration(
                               label: const Align(
                                 alignment: Alignment.centerRight,
-                                child: Text('اسم المستخدم'),
+                                child: Text('البريد الإلكتروني'),
                               ),
                               // filled: true,
                               // fillColor: Color.fromARGB(180, 255, 255, 255),
-                              hintText: 'ادخل اسم المستخدم الخاص بك',
+                              hintText: 'ادخل البريد الإلكتروني الخاص بك',
                               hintStyle: const TextStyle(
                                 color: Colors.black26,
                               ),

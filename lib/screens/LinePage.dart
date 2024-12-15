@@ -15,6 +15,7 @@ import 'config.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 
 class LinePage extends StatefulWidget {
+  final String userId;
   final String lineName;
   final String lineId;
   final double lineRate;
@@ -70,7 +71,8 @@ class LinePage extends StatefulWidget {
       required this.location,
       required this.lineRate,
       required this.price,
-      required this.quantityUnit});
+      required this.quantityUnit,
+      required this.userId});
 
   @override
   State<LinePage> createState() => _LinePageState();
@@ -217,6 +219,7 @@ class _LinePageState extends State<LinePage> {
                               context,
                               MaterialPageRoute(
                                 builder: (context) => Profile2(
+                                  userId: widget.userId,
                                   token: widget.token,
                                   phoneNum: phoneNum,
                                   code: code,

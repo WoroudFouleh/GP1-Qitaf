@@ -9,7 +9,9 @@ import 'package:jwt_decoder/jwt_decoder.dart';
 
 class QatafPage extends StatefulWidget {
   final String token;
-  const QatafPage({required this.token, Key? key}) : super(key: key);
+  final String userId;
+  const QatafPage({required this.token, Key? key, required this.userId})
+      : super(key: key);
 
   @override
   State<QatafPage> createState() => _QatafPageState();
@@ -149,6 +151,7 @@ class _QatafPageState extends State<QatafPage> {
                           startTime: land['startTime'],
                           endTime: land['endTime'],
                           landId: land['_id'],
+                          userId: widget.userId,
                         ),
                       ),
                     );

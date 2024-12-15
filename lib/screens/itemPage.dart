@@ -10,6 +10,7 @@ import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:http/http.dart' as http;
 
 class ItemPage extends StatefulWidget {
+  final String userId;
   final String productName;
   final String productDescription;
   final String profilePhotoBase64;
@@ -38,7 +39,8 @@ class ItemPage extends StatefulWidget {
       required this.productId,
       required this.username,
       required this.preparationTime,
-      required this.preparationUnit})
+      required this.preparationUnit,
+      required this.userId})
       : super(key: key);
 
   @override
@@ -164,6 +166,7 @@ class _ItemPageState extends State<ItemPage> {
                               context,
                               MaterialPageRoute(
                                 builder: (context) => Profile2(
+                                  userId: widget.userId,
                                   token: widget.token,
                                   phoneNum: phoneNum,
                                   code: code,

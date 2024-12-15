@@ -9,7 +9,9 @@ import 'config.dart';
 
 class Changepass extends StatefulWidget {
   final String token;
-  const Changepass({required this.token, Key? key}) : super(key: key);
+  final userId;
+  const Changepass({required this.token, Key? key, this.userId})
+      : super(key: key);
 
   @override
   State<Changepass> createState() => _ChangepassState();
@@ -57,7 +59,8 @@ class _ChangepassState extends State<Changepass> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => Changepass2(token: widget.token),
+          builder: (context) =>
+              Changepass2(token: widget.token, userId: widget.userId),
         ),
       );
     } else {

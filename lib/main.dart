@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
+      title: 'Qitaf',
       theme: ThemeData(
         fontFamily: 'CustomArabicFont', // Use your custom font family here
       ),

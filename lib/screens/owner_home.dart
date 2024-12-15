@@ -7,7 +7,9 @@ import 'package:login_page/screens/qataf.dart';
 
 class OwnerHome extends StatefulWidget {
   final String token;
-  const OwnerHome({required this.token, Key? key}) : super(key: key);
+  final String userId;
+  const OwnerHome({required this.token, Key? key, required this.userId})
+      : super(key: key);
 
   @override
   State<OwnerHome> createState() => _OwnerHomeState();
@@ -43,8 +45,9 @@ class _OwnerHomeState extends State<OwnerHome> {
             ),
           ),
         ),
-        endDrawer:
-            CustomDrawer(token: widget.token), // استخدام الـ CustomDrawer هنا
+        endDrawer: CustomDrawer(
+            token: widget.token,
+            userId: widget.userId), // استخدام الـ CustomDrawer هنا
 
         body: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -104,7 +107,8 @@ class _OwnerHomeState extends State<OwnerHome> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => QatafPage(token: widget.token),
+                        builder: (context) => QatafPage(
+                            token: widget.token, userId: widget.userId),
                       ),
                     );
                   },
@@ -117,7 +121,8 @@ class _OwnerHomeState extends State<OwnerHome> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => ProductsPage(token: widget.token),
+                        builder: (context) => ProductsPage(
+                            token: widget.token, userId: widget.userId),
                       ),
                     );
                   },
@@ -130,8 +135,8 @@ class _OwnerHomeState extends State<OwnerHome> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) =>
-                            ProductionLinesPage(token: widget.token),
+                        builder: (context) => ProductionLinesPage(
+                            token: widget.token, userId: widget.userId),
                       ),
                     );
                   },

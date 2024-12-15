@@ -1,6 +1,7 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:login_page/screens/InboxScreen.dart';
+import 'package:login_page/screens/allInbox.dart';
 import 'package:login_page/screens/chat_screen.dart';
 import 'package:login_page/screens/map_screen.dart';
 import 'package:login_page/screens/owner_home.dart';
@@ -30,12 +31,15 @@ class _HomePageState extends State<HomePage> {
     super.initState();
 
     Map<String, dynamic> jwtDecoderToken = JwtDecoder.decode(widget.token);
+
     String uid = JwtDecoder.decode(widget.token2)['user_id']; // استخراج UID
 
     // Initialize the pages here because widget.token is needed
     _pages = [
-      OwnerHome(token: widget.token), // Pass the token correctly without const
-      InboxScreen(userId: uid, token: widget.token),
+      OwnerHome(
+          token: widget.token,
+          userId: uid), // Pass the token correctly without const
+      TabbedInboxScreen(userId: uid),
       OwnerAdd(token: widget.token),
       OwnerNotify(token: widget.token),
       MapScreen(),

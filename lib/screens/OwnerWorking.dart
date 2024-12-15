@@ -7,8 +7,10 @@ import 'config.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 
 class OwnerWorkingPage extends StatefulWidget {
+  final String userId;
   final String token;
-  const OwnerWorkingPage({required this.token, Key? key}) : super(key: key);
+  const OwnerWorkingPage({required this.token, Key? key, required this.userId})
+      : super(key: key);
 
   @override
   _OwnerWorkingPageState createState() => _OwnerWorkingPageState();
@@ -98,7 +100,8 @@ class _OwnerWorkingPageState extends State<OwnerWorkingPage> {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => OwnerWorkingPage(token: widget.token),
+            builder: (context) =>
+                OwnerWorkingPage(token: widget.token, userId: widget.userId),
           ),
         );
       } else {
@@ -219,6 +222,7 @@ class _OwnerWorkingPageState extends State<OwnerWorkingPage> {
                                         context,
                                         MaterialPageRoute(
                                           builder: (context) => Workerprofile(
+                                            userId: widget.userId,
                                             username: request[
                                                 'workerUsername'], // Pass the worker's username
                                           ),
