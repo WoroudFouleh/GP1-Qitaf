@@ -19,5 +19,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 router.post('/sendWorkRequest', upload.single('licenseFile'), deliveryController.createDeliveryRequest);
-
+router.get('/getPendingRequests', deliveryController.getAllRequests);
+router.put('/deliveryRequestDecision', deliveryController.updateRequestStatus);
+router.post('/generateCredentials', deliveryController.generateCredentials);
 module.exports = router;

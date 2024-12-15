@@ -1,6 +1,7 @@
 //require('dotenv');
 
 const express = require('express');
+const path = require('path');
 const bodyParser = require('body-parser');
 const UserRoute = require('./routers/USERR'); // Ensure path is correct
 const productRoute = require('./routers/productRouter'); // Ensure path is correct
@@ -37,6 +38,8 @@ app.use('/api/mainAds', mainAdsRoute);
 app.use('/api/productAds', productAdsRoute);
 app.use('/api/customerAds', customerAdsRoute);
 app.use('/api/deliveryWorks', deliveryWorkRoute);
+app.use('/uploads/', express.static(path.join(__dirname, 'uploads')));
+
 const port = 3000;
 const host = '192.168.88.7';  // Your machine's IP address
 
