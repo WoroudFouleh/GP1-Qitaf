@@ -4,6 +4,7 @@ const Tesseract = require('tesseract.js');
 const moment = require('moment');
 const fs = require('fs');
 const crypto = require('crypto');
+const sendEmail = require('../Utils/email');
 const processLicense = async (filePath) => {
   try {
     // Step 1: Perform OCR on the license image with additional options
@@ -130,13 +131,17 @@ exports.updateRequestStatus = async (req, res) => {
 };
 // Utility function to generate a random password
 function generatePassword() {
-  return crypto.randomBytes(8).toString('hex'); // Generates a 16-character password
+  return crypto.randomBytes(4).toString('hex'); // Generates a 16-character password
 }
 
 // Utility function to create a username (example: first name + ID)
 function generateUsername(firstName, lastName, userId) {
-  return `${firstName.toLowerCase()}${lastName.toLowerCase()}${userId}`;
+  const firstNamePart = firstName.slice(0, 2).toLowerCase(); // Take the first 2 letters of the first name
+  const lastNamePart = lastName.slice(0, 2).toLowerCase();
+  const idPart = userId.slice(0, 2).toLowerCase(); // Take the first 2 letters of the last name
+  return `${firstNamePart}.${lastNamePart}${idPart}`;
 }
+
 exports.generateCredentials = async (req, res) => {
   try {
     const { firstName, lastName, userId } = req.body;
@@ -155,6 +160,32 @@ exports.generateCredentials = async (req, res) => {
     res.status(500).json({ message: 'An error occurred while updating the status.' });
   }
 };
+exports.sendInfoByEmail = async (req, res, next) => {
+  const { username, password, email } = req.body;
+  
+ 
+
+  // 4: Send email with the 4-digit code
+  const message = `Congrats! \n Your request to work as a delivery on QItaf app is approved. Your username is ${username} and your password is ${password}. \n make sure to use them when logging in to the app.`;
+  
+  try {
+      await sendEmail({
+          email: email,
+          subject: 'Password Reset Code',
+          message: message
+      });
+
+      res.status(200).json({
+          status: true,
+          message: 'email sent successfully'
+      });
+  } catch (err) {
+      
+
+      return res.status(500).json({ status: 'fail', message: 'Error sending email' });
+  }
+};
+
 // const DeliveryRequest = require('../model/deliveryWorkRequest');
 // const path = require('path');
 // const Tesseract = require('tesseract.js');

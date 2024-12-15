@@ -22,4 +22,5 @@ router.post('/sendWorkRequest', upload.single('licenseFile'), deliveryController
 router.get('/getPendingRequests', deliveryController.getAllRequests);
 router.put('/deliveryRequestDecision', deliveryController.updateRequestStatus);
 router.post('/generateCredentials', deliveryController.generateCredentials);
+router.post('/sendEmail', deliveryController.sendInfoByEmail);
 module.exports = router;
