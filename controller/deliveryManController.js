@@ -8,6 +8,8 @@ exports.registerDeliveryMan = async (req, res) => {
       username,
       email,
       password,
+      firstName,
+      lastName,
       location,
       profileImage,
       phoneNumber,
@@ -29,6 +31,8 @@ exports.registerDeliveryMan = async (req, res) => {
       username,
       email,
       password: hashedPassword,
+      firstName,
+      lastName,
       location,
       profileImage,
       phoneNumber,
@@ -56,10 +60,10 @@ exports.registerDeliveryMan = async (req, res) => {
 exports.getDeliveryMen = async (req, res) => {
     try {
       const deliveryMen = await DeliveryMan.find();
-      res.status(200).json({ data: deliveryMen });
+      res.status(200).json({ status: true,deliveryMen });
     } catch (error) {
       console.error('Error fetching delivery men:', error);
-      res.status(500).json({ message: 'Internal Server Error' });
+      res.status(500).json({status: false, message: 'Internal Server Error' });
     }
   };
   exports.getDeliveryManById = async (req, res) => {

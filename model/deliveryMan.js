@@ -17,9 +17,17 @@ const deliveryManSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  firstName: {
+    type: String,
+    required: true,
+  },
+  lastName: {
+    type: String,
+    required: true,
+  },
   location: {
-    city: { type: String, required: true },
-    address: { type: String, required: true },
+    type:String,
+    required: true
   },
   status: {
     type: String,
@@ -28,7 +36,7 @@ const deliveryManSchema = new mongoose.Schema({
   },
   profileImage: {
     type: String,
-    required: false, // Assume URL to the image is required
+    default: null // Assume URL to the image is required
   },
   phoneNumber: {
     type: String,
@@ -36,12 +44,18 @@ const deliveryManSchema = new mongoose.Schema({
   },
   licenseNumber: {
     type: String,
-    required: false,
+    default: null,
   },
   licenseFile: {
     type: String, // URL to the uploaded file
     required: true,
   },
+  rate: {
+    type: Number,
+    default: 0, // Initial value
+    min: 0, // Ensures the rate cannot go below 0
+    max: 5 // Optional: Add if you want to restrict ratings to a 0-5 scale
+},
   createdAt: {
     type: Date,
     default: Date.now,
