@@ -171,7 +171,7 @@ exports.sendInfoByEmail = async (req, res, next) => {
   try {
       await sendEmail({
           email: email,
-          subject: 'Password Reset Code',
+          subject: 'قبول طلب العمل في قطاف',
           message: message
       });
 
