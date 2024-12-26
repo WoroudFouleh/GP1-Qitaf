@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "13481026485",
+    "project_id": "messageapp-75f3c",
+    "storage_bucket": "messageapp-75f3c.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:13481026485:android:0c12dea8fc270da1d62ffc",
+        "android_client_info": {
+          "package_name": "woroud.fouleh.Qitaf_App"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC__lWoRd8-JBGKgqZirimqtMedw0yY4sU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

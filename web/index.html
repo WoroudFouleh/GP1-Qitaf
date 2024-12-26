@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <!-- Base path for web app -->
+  <base href="$FLUTTER_BASE_HREF">
+
+  <meta charset="UTF-8">
+  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+  <meta name="description" content="A new Flutter project.">
+
+  <!-- iOS meta tags & icons -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="login_page">
+  <link rel="apple-touch-icon" href="icons/Icon-192.png">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="favicon.png"/>
+
+  <!-- Firebase SDK for Firebase App and Firebase Authentication -->
+  <!-- <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app.js" type="module"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth.js" type="module"></script> -->
+
+  
+
+  <title>login_page</title>
+  <link rel="manifest" href="manifest.json">
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-firestore.js"></script>
+
+ 
+</head>
+<body>
+  <script src="flutter_bootstrap.js" async></script>
+  <script type="module">
+    // Import the functions you need from the SDKs you need
+    //import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-app.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-app.js";
+  import { getAuth } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-auth.js";
+
+    // TODO: Add SDKs for Firebase products that you want to use
+    // https://firebase.google.com/docs/web/setup#available-libraries
+  
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+    apiKey: "AIzaSyDMCeGo2DZ-IKrD787tWwQeCT8WPN8fRbU",
+    authDomain: "qitaf-fcb79.firebaseapp.com",
+    projectId: "qitaf-fcb79",
+    storageBucket: "qitaf-fcb79.firebasestorage.app",
+    messagingSenderId: "775040333132",
+    appId: "1:775040333132:web:49388abbd9aa30b111cbe9"
+  };
+  
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+  </script>
+</body>
+</html>
