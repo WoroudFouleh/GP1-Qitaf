@@ -69,7 +69,7 @@ const productSchema = new mongoose.Schema({
           lng: { type: Number, required: true }  // Longitude
         },
         required: false // Optional, make required if all products must have coordinates
-      },
+    },
     description: {
         type: String,
         required: true

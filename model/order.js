@@ -48,6 +48,21 @@ const orderSchema = new mongoose.Schema({
             type: String,
             required: true,
           },
+          productCity: {
+            type: String,
+            required: true,
+          },
+          productCoordinates: {
+            type: {
+              lat: { type: Number, required: true },
+              lng: { type: Number, required: true },
+            },
+            required: true,
+          },
+          itemStatus:{
+            type: String,
+            default: "undelivered"
+          },
           addedAt: {
             type: Date,
             default: Date.now,

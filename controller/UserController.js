@@ -1,5 +1,6 @@
 const UserServices = require('../services/UserService');
 const User=require('../model/user');
+const DeliveryMan=require('../model/deliveryMan');
 //const Util=require('util');
 const sendEmail = require('../Utils/email');
 const { stat } = require('fs');
@@ -66,49 +67,88 @@ exports.register = async (req, res, next) => {
 exports.login = async (req, res, next) => {
     try {
         console.log("Request Body from Flutter:", req.body);
-        
+
         const { email, password } = req.body;
-        
 
         // Check if user exists with the provided email
         const user = await UserServices.checkUser(email);
+        const deliveryMan = await DeliveryMan.findOne({ email: email });
+
+        console.log("User:", user);
+        console.log("DeliveryMan:", deliveryMan);
+
         if (!user) {
-            // Send 401 Unauthorized if the user doesn't exist
+            // Send 401 Unauthorized if the user doesn't exist in the User table
             return res.status(401).json({ status: false, message: 'User does not exist' });
         }
 
-        // Check if the provided password matches the stored password
-        console.log("Stored Hash:", user.password); // Log the hashed password from the database
-        console.log("Provided Password:", password); // Log the password being input by the user
+        // Verify password only for User
         const isMatch = await user.comparePassword(password);
-        console.log("Password Match:", isMatch); // Log the result of the password comparison
-
-        //const isMatch = await user.comparePassword(password);
         if (!isMatch) {
-            // Send 401 Unauthorized if the password is incorrect
             return res.status(401).json({ status: false, message: 'Invalid password' });
         }
 
-        // If login is successful, generate a token
-        let tokenData = { _id: user._id, username: user.username , email:user.email,dayOfBirth:user.dayOfBirth, monthOfBirth:user.monthOfBirth , yearOfBirth:user.yearOfBirth,
-            phoneCode:user.phoneCode, phoneNumber:user.phoneNumber, street:user.street, city: user.city, profilePhoto:user.profilePhoto, userType: user.userType,
-            firstName: user.firstName, lastName: user.lastName, gender: user.gender, password: user.password,rate: user.rate
-         };
-        const token = await UserServices.generateToken(tokenData, "secretKey", '1h');
+        // Generate user token
+        const userTokenData = {
+            _id: user._id,
+            username: user.username,
+            email: user.email,
+            dayOfBirth: user.dayOfBirth,
+            monthOfBirth: user.monthOfBirth,
+            yearOfBirth: user.yearOfBirth,
+            phoneCode: user.phoneCode,
+            phoneNumber: user.phoneNumber,
+            street: user.street,
+            city: user.city,
+            profilePhoto: user.profilePhoto,
+            userType: user.userType,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            gender: user.gender,
+            password: user.password,
+            rate: user.rate
+        };
+        const userToken = await UserServices.generateToken(userTokenData, "secretKey", '1h');
 
-        // Send the token and success response
-        res.status(200).json({
+        // If email exists in both User and DeliveryMan tables
+        if (deliveryMan) {
+            console.log("Email found in both User and DeliveryMan tables");
+
+            // Generate deliveryMan token
+            const deliveryTokenData = {
+                _id: deliveryMan._id,
+                email: deliveryMan.email,
+                userType: 'delivery',
+                firstName: deliveryMan.firstName,
+                lastName: deliveryMan.lastName,
+                phoneNumber: deliveryMan.phoneNumber
+            };
+            const deliveryToken = await UserServices.generateToken(deliveryTokenData, "secretKey", '1h');
+
+            return res.status(200).json({
+                status: true,
+                success: 'Email exists in both User and DeliveryMan tables',
+                userType: "3", // Type 3 indicates email found in both tables
+                token: userToken,
+                deliveryToken: deliveryToken
+            });
+        }
+
+        // If email exists only in User table
+        return res.status(200).json({
             status: true,
             success: "Login successful",
-            token: token,
-            userType: user.userType
+            userType: user.userType,
+            token: userToken
         });
 
     } catch (err) {
         console.log("---> err -->", err);
-        next(err);  // Pass the error to the next middleware (error handler)
+        next(err); // Pass the error to the next middleware (error handler)
     }
-}
+};
+
+
 
 
 // Forgot Password

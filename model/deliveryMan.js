@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const db = require('../config/db');
+const bcrypt = require('bcrypt');
 const deliveryManSchema = new mongoose.Schema({
   username: {
     type: String,
@@ -61,5 +62,12 @@ const deliveryManSchema = new mongoose.Schema({
     default: Date.now,
   },
 });
+deliveryManSchema.methods.comparePassword = async function(userPassword) {
+    try {
 
+        return await bcrypt.compare(userPassword,this.password);
+    } catch (err) {
+        throw err;
+    }
+}
 module.exports = db.model('DeliveryMan', deliveryManSchema);
