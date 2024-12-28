@@ -6,6 +6,7 @@ import 'package:login_page/Discussion/Home.dart';
 import 'package:login_page/screens/allInbox.dart';
 import 'package:login_page/screens/mainMap.dart';
 import 'package:login_page/screens/map_screen.dart';
+import 'package:login_page/screens/notificationsMainPage.dart';
 import 'package:login_page/screens/owner_home.dart';
 import 'package:login_page/screens/owner_add.dart';
 import 'package:login_page/screens/owner_chat.dart';
@@ -33,6 +34,7 @@ class _CustomerBarState extends State<CustomerBar> {
     Map<String, dynamic> jwtDecoderToken = JwtDecoder.decode(widget.token);
     String uid = JwtDecoder.decode(widget.token2)['user_id'];
     // Initialize the pages here because widget.token is needed
+    print("2Fetching notifications for userId: $uid");
     _pages = [
       CustomerHome(
         token: widget.token,
@@ -40,7 +42,7 @@ class _CustomerBarState extends State<CustomerBar> {
       ), // Pass the token correctly without const
       TabbedInboxScreen(userId: uid),
 
-      OwnerNotify(token: widget.token),
+      NotificationsPage(currentUserId: uid),
       HomeDiscussion(token: widget.token),
       CustomerAdvertisement(token: widget.token),
     ];

@@ -10,7 +10,7 @@
    
 
     <application
-        android:label="login_page"
+        android:label="Qitaf | قِطاف"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         

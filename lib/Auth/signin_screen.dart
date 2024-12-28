@@ -144,10 +144,10 @@ class _SigninScreenState extends State<SigninScreen> {
               });
             }
             await NotificationService.instance.sendNotificationToSpecific(
-              await FirebaseMessaging.instance.getToken(),
-              'Login Successful',
-              'Welcome back to the app!',
-            );
+                await FirebaseMessaging.instance.getToken(),
+                'Login Successful',
+                'Welcome back to the app!',
+                userId);
             showNotification('تم تسجيل الدخول عبر Firebase بنجاح');
             firebaseLoginSuccess = true;
           }
