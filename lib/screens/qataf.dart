@@ -10,7 +10,8 @@ import 'package:jwt_decoder/jwt_decoder.dart';
 class QatafPage extends StatefulWidget {
   final String token;
   final String userId;
-  const QatafPage({required this.token, Key? key, required this.userId}) : super(key: key);
+  const QatafPage({required this.token, Key? key, required this.userId})
+      : super(key: key);
 
   @override
   State<QatafPage> createState() => _QatafPageState();
@@ -241,10 +242,15 @@ class _QatafPageState extends State<QatafPage> {
                           startTime: land['startTime'],
                           endTime: land['endTime'],
                           landId: land['_id'],
-                          coordinates: {
-                            'lat': land['coordinates']['lat'],
-                            'lng': land['coordinates']['lng']
-                          },
+                          coordinates: land['coordinates'] != null
+                              ? {
+                                  'lat': land['coordinates']['lat'],
+                                  'lng': land['coordinates']['lng']
+                                }
+                              : {
+                                  'lat': 0.0,
+                                  'lng': 0.0
+                                }, // يمكنك وضع قيم افتراضية مثل 0.0 في حال كانت null
                         ),
                       ),
                     );
@@ -286,148 +292,129 @@ class RecipeCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 22, vertical: 10),
-      width: MediaQuery.of(context).size.width,
-      height: 180,
-      decoration: BoxDecoration(
-        color: Colors.black,
-        borderRadius: BorderRadius.circular(15),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.6),
-            offset: const Offset(0.0, 10.0),
-            blurRadius: 10.0,
-            spreadRadius: -6.0,
+    return Center(
+      // لضمان تمركز الـ Container في وسط الصفحة
+      child: Container(
+        margin: const EdgeInsets.symmetric(
+            horizontal: 30, vertical: 20), // تعديل المارجين لتناسب شاشات الويب
+        width: MediaQuery.of(context).size.width *
+            0.9, // جعل العرض 90% من عرض الشاشة لظهور العناصر بشكل جيد
+        height: MediaQuery.of(context).size.height *
+            0.4, // زيادة الارتفاع بنسبة 40% من ارتفاع الشاشة لتظهر الصورة بشكل أكبر
+        decoration: BoxDecoration(
+          color: Colors.black,
+          borderRadius: BorderRadius.circular(
+              20), // زيادة نصف القطر لجعل الحواف أكثر استدارة
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.6),
+              offset: const Offset(0.0, 15.0), // تعديل الإزاحة لتناسب الويب
+              blurRadius: 15.0, // زيادة التمويه للظل
+              spreadRadius: -8.0,
+            ),
+          ],
+          image: DecorationImage(
+            colorFilter: ColorFilter.mode(
+              Colors.black
+                  .withOpacity(0.5), // تقليل الشفافية لتكون الصورة أكثر وضوحًا
+              BlendMode.multiply,
+            ),
+            image: MemoryImage(
+                base64Decode(thumbnailUrl)), // إذا كانت الصورة بتنسيق base64
+            fit: BoxFit.cover,
           ),
-        ],
-        image: DecorationImage(
-          colorFilter: ColorFilter.mode(
-            Colors.black.withOpacity(0.35),
-            BlendMode.multiply,
-          ),
-          image: MemoryImage(base64Decode(thumbnailUrl)),
-          fit: BoxFit.cover,
         ),
-      ),
-      child: Stack(
-        children: [
-          Align(
-            alignment: Alignment.center,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 5.0),
-              child: Text(
-                title,
-                style: const TextStyle(
-                  fontSize: 16,
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  shadows: [
-                    Shadow(
-                      color: Color(0xFFD1E7D6),
-                      blurRadius: 10.0,
-                      offset: Offset(0, 5),
-                    ),
-                    Shadow(
-                      color: Color(0xFFF5F5DC),
-                      blurRadius: 5.0,
-                      offset: Offset(0, 2),
-                    ),
-                  ],
+        child: Stack(
+          children: [
+            Align(
+              alignment: Alignment.center,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                child: Text(
+                  title,
+                  style: const TextStyle(
+                    fontSize: 24, // زيادة حجم النص
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  maxLines: 2, // تحديد الحد الأقصى لعدد الأسطر
+                  textAlign: TextAlign.center, // محاذاة النص في المنتصف
                 ),
-                overflow: TextOverflow.ellipsis,
-                maxLines: 2,
-                textAlign: TextAlign.center,
               ),
             ),
+            Align(
+              alignment: Alignment.bottomLeft, // محاذاة العنصر إلى أقصى اليسار
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                    vertical: 10.0), // إضافة بعض الهوامش من الأسفل
+                child: Row(
+                  mainAxisAlignment:
+                      MainAxisAlignment.start, // محاذاة العناصر في اليسار
+                  children: [
+                    _buildInfoContainer(
+                        Icons.location_city, city, 22), // العنصر في أقصى اليسار
+                  ],
+                ),
+              ),
+            ),
+            Align(
+              alignment: Alignment.bottomCenter, // محاذاة العنصر في المنتصف
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 10.0),
+                child: Row(
+                  mainAxisAlignment:
+                      MainAxisAlignment.center, // محاذاة العناصر في المنتصف
+                  children: [
+                    _buildInfoContainer(
+                        Icons.access_time, workernum, 22), // العنصر في المنتصف
+                  ],
+                ),
+              ),
+            ),
+            Align(
+              alignment: Alignment.bottomRight, // محاذاة العنصر إلى أقصى اليمين
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 10.0),
+                child: Row(
+                  mainAxisAlignment:
+                      MainAxisAlignment.end, // محاذاة العناصر في اليمين
+                  children: [
+                    _buildInfoContainer(
+                        Icons.apple, crops, 20), // العنصر في أقصى اليمين
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+// دالة مساعدة لبناء العناصر المكررة
+  Widget _buildInfoContainer(IconData icon, String text, double iconSize) {
+    return Container(
+      padding: const EdgeInsets.all(8),
+      margin: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: const Color.fromARGB(255, 247, 246, 246).withOpacity(0.4),
+        borderRadius: BorderRadius.circular(15),
+      ),
+      child: Row(
+        children: [
+          Icon(
+            icon,
+            color: Colors.yellow,
+            size: iconSize, // تحديد حجم الأيقونة
           ),
-          Align(
-            alignment: Alignment.bottomRight,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(5),
-                  margin: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    color: const Color.fromARGB(255, 247, 246, 246)
-                        .withOpacity(0.4),
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  child: Row(
-                    children: [
-                      const Icon(
-                        Icons.location_city,
-                        color: Colors.yellow,
-                        size: 18,
-                      ),
-                      const SizedBox(width: 7),
-                      Text(
-                        city,
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.all(5),
-                  margin: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    color: const Color.fromARGB(255, 255, 254, 254)
-                        .withOpacity(0.4),
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  child: Row(
-                    children: [
-                      const Icon(
-                        Icons.group,
-                        color: Colors.yellow,
-                        size: 18,
-                      ),
-                      const SizedBox(width: 7),
-                      Text(
-                        workernum,
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.all(5),
-                  margin: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    color: const Color.fromARGB(255, 255, 254, 254)
-                        .withOpacity(0.4),
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  child: Row(
-                    children: [
-                      const Icon(
-                        Icons.apple,
-                        color: Colors.yellow,
-                        size: 16,
-                      ),
-                      const SizedBox(width: 7),
-                      Text(
-                        crops,
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
+          const SizedBox(width: 10),
+          Text(
+            text,
+            style: const TextStyle(
+              fontSize: 18, // حجم النص
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
             ),
           ),
         ],

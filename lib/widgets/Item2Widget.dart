@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:login_page/screens/itemPage.dart';
 import 'dart:convert'; // For base64 decoding
 
 class Item2Widget extends StatelessWidget {
@@ -21,50 +20,39 @@ class Item2Widget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.only(left: 15, right: 15, top: 10),
-      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: const BorderRadius.all(Radius.circular(20)),
-        boxShadow: [
-          BoxShadow(
-            color: const Color(0xFFD3E5D3).withOpacity(0.7), // Olive green glow
-            spreadRadius: 5,
-            blurRadius: 15,
-            offset: const Offset(0, 3), // Position of shadow
-          ),
-        ],
-      ),
-      child: SingleChildScrollView(
+    final screenWidth = MediaQuery.of(context).size.width;
+    final imageSize = screenWidth / 5 - 20;
+
+    return SingleChildScrollView(
+      child: Container(
+        padding: const EdgeInsets.only(left: 15, right: 15, top: 10),
+        margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: const BorderRadius.all(Radius.circular(20)),
+          boxShadow: [
+            BoxShadow(
+              color: const Color(0xFFD3E5D3).withOpacity(0.7),
+              spreadRadius: 5,
+              blurRadius: 15,
+              offset: const Offset(0, 3),
+            ),
+          ],
+        ),
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
             InkWell(
-              // onTap: () {
-              //   // Navigate and pass product details
-              //   Navigator.push(
-              //     context,
-              //     MaterialPageRoute(
-              //       builder: (context) => ItemPage(
-              //         productName: productName,
-              //         productDescription: productDescription,
-              //         productImage: productImage,
-              //         price: price,
-              //       ),
-              //     ),
-              //   );
-              // },
               child: Container(
                 margin: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(15),
                   boxShadow: [
                     BoxShadow(
-                      color: const Color(0xFFD3E5D3)
-                          .withOpacity(0.5), // Olive green glow for image
+                      color: const Color(0xFFD3E5D3).withOpacity(0.5),
                       spreadRadius: 3,
                       blurRadius: 15,
-                      offset: const Offset(0, 3), // Position of shadow
+                      offset: const Offset(0, 3),
                     ),
                   ],
                 ),
@@ -72,10 +60,15 @@ class Item2Widget extends StatelessWidget {
                     ? Image.memory(
                         base64Decode(profilePhotoBase64!),
                         fit: BoxFit.cover,
-                        width: 90.0,
-                        height: 90.0,
+                        width: imageSize,
+                        height: imageSize,
                       )
-                    : Image.asset('assets/images/food.jpg'),
+                    : Image.asset(
+                        'assets/images/food.jpg',
+                        fit: BoxFit.cover,
+                        width: imageSize,
+                        height: imageSize,
+                      ),
               ),
             ),
             Padding(
@@ -83,9 +76,9 @@ class Item2Widget extends StatelessWidget {
               child: Container(
                 alignment: Alignment.centerRight,
                 child: Text(
-                  productName, // Dynamic product name
+                  productName,
                   style: const TextStyle(
-                    fontSize: 18,
+                    fontSize: 20.0,
                     fontWeight: FontWeight.bold,
                     color: Colors.black54,
                   ),
@@ -95,9 +88,11 @@ class Item2Widget extends StatelessWidget {
             Container(
               alignment: Alignment.centerRight,
               child: Text(
-                productDescription, // Dynamic product description
+                productDescription,
+                maxLines: 3, // اختصار النصوص الطويلة
+                overflow: TextOverflow.ellipsis,
                 style: const TextStyle(
-                  fontSize: 16,
+                  fontSize: 16.0,
                   color: Colors.black54,
                 ),
               ),
@@ -110,7 +105,7 @@ class Item2Widget extends StatelessWidget {
                   Row(
                     children: [
                       const Text(
-                        "₪", // Shekel symbol
+                        "₪",
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
@@ -119,18 +114,18 @@ class Item2Widget extends StatelessWidget {
                       ),
                       const SizedBox(width: 5),
                       Text(
-                        productPrice.toString(), // Dynamic price
+                        productPrice.toString(),
                         style: const TextStyle(
-                          fontSize: 18,
+                          fontSize: 22.0,
                           fontWeight: FontWeight.bold,
                           color: Color(0xFF556B2F),
                         ),
                       ),
                       const SizedBox(width: 5),
                       Text(
-                        quantityType.toString(), // Unit for weight
+                        quantityType.toString(),
                         style: const TextStyle(
-                          fontSize: 16,
+                          fontSize: 16.0,
                           color: Color(0xFF7C7C7C),
                         ),
                       ),

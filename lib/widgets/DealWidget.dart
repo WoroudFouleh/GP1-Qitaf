@@ -46,6 +46,13 @@ class _DealWidgetState extends State<DealWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width; // Get screen width
+    final imageWidth = screenWidth > 800
+        ? 1000.0
+        : screenWidth * 0.9; // Larger width for bigger screens
+    final imageHeight =
+        screenWidth > 800 ? 650.0 : 450.0; // Larger height for bigger screens
+
     return isLoading
         ? const Center(child: CircularProgressIndicator())
         : advertisements.isEmpty
@@ -61,23 +68,21 @@ class _DealWidgetState extends State<DealWidget> {
                   children: advertisements.map((ad) {
                     return Padding(
                       padding: const EdgeInsets.symmetric(
-                          vertical: 10, horizontal: 10),
+                          vertical: 20, horizontal: 20),
                       child: Container(
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(15),
+                          borderRadius: BorderRadius.circular(20),
                           boxShadow: [
                             BoxShadow(
-                              color: const Color(0xFFD1E7D6)
-                                  .withOpacity(0.5), // Light olive green glow
+                              color: const Color(0xFFD1E7D6).withOpacity(0.5),
                               spreadRadius: 5,
                               blurRadius: 15,
-                              offset: const Offset(0, 3), // Position of shadow
+                              offset: const Offset(0, 3),
                             ),
                           ],
                         ),
                         child: ClipRRect(
-                          borderRadius: BorderRadius.circular(
-                              15), // Ensure image corners match the container
+                          borderRadius: BorderRadius.circular(20),
                           child: ad['image'] != null
                               ? FutureBuilder<Widget>(
                                   future: _loadImage(ad['image']),
@@ -89,8 +94,8 @@ class _DealWidgetState extends State<DealWidget> {
                                     } else if (snapshot.hasError) {
                                       return Image.asset(
                                         'assets/images/placeholder.jpg',
-                                        height: 220,
-                                        width: 300,
+                                        height: imageHeight,
+                                        width: imageWidth,
                                         fit: BoxFit.cover,
                                       );
                                     } else {
@@ -100,8 +105,8 @@ class _DealWidgetState extends State<DealWidget> {
                                 )
                               : Image.asset(
                                   'assets/images/placeholder.jpg',
-                                  height: 220,
-                                  width: 300,
+                                  height: imageHeight,
+                                  width: imageWidth,
                                   fit: BoxFit.cover,
                                 ),
                         ),

@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
 import 'package:login_page/Auth/signin_screen.dart';
 import 'package:login_page/screens/welcome_screen.dart';
@@ -12,6 +11,7 @@ import 'dart:developer' as developer;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:file_picker/file_picker.dart';
 
 class CompleteSignUpScreen extends StatefulWidget {
   final String name;
@@ -230,26 +230,24 @@ class _CompleteSignUpScreenState extends State<CompleteSignUpScreen> {
                         ),
                       ),
                       const SizedBox(height: 15.0),
-
                       Stack(
                         children: [
-                          _image != null
-                              ? CircleAvatar(
-                                  radius: 120,
-                                  backgroundImage: MemoryImage(_image!))
-                              : const CircleAvatar(
-                                  radius: 120,
-                                  backgroundImage: NetworkImage(
-                                      "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"),
-                                ),
+                          CircleAvatar(
+                            radius: 120,
+                            backgroundImage: _image != null
+                                ? MemoryImage(_image!)
+                                : const NetworkImage(
+                                    "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png",
+                                  ) as ImageProvider,
+                          ),
                           Positioned(
-                              bottom: -0,
-                              left: 160,
-                              child: IconButton(
-                                  onPressed: () {
-                                    showImagePickerOption(context);
-                                  },
-                                  icon: const Icon(Icons.add_a_photo))),
+                            bottom: 0,
+                            right: 10,
+                            child: IconButton(
+                              icon: const Icon(Icons.add_a_photo),
+                              onPressed: pickImageFromWeb,
+                            ),
+                          ),
                         ],
                       ),
                       const SizedBox(height: 15.0),
@@ -381,82 +379,16 @@ class _CompleteSignUpScreenState extends State<CompleteSignUpScreen> {
     );
   }
 
-  void showImagePickerOption(BuildContext context) {
-    showModalBottomSheet(
-        backgroundColor: const Color.fromARGB(255, 241, 243, 246),
-        context: context,
-        builder: (builder) {
-          return Padding(
-            padding: const EdgeInsets.all(18.0),
-            child: SizedBox(
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height / 4.5,
-              child: Row(
-                children: [
-                  Expanded(
-                    child: InkWell(
-                      onTap: () {
-                        _pickImageFromGallery();
-                      },
-                      child: const SizedBox(
-                        child: Column(
-                          children: [
-                            Icon(
-                              Icons.image,
-                              size: 70,
-                            ),
-                            Text("المعرض")
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    child: InkWell(
-                      onTap: () {
-                        _pickImageFromCamera();
-                      },
-                      child: const SizedBox(
-                        child: Column(
-                          children: [
-                            Icon(
-                              Icons.camera_alt,
-                              size: 70,
-                            ),
-                            Text("الكاميرا")
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          );
-        });
-  }
+  void pickImageFromWeb() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      type: FileType.image,
+      allowMultiple: false,
+    );
 
-  // Gallery
-  Future _pickImageFromGallery() async {
-    final returnImage =
-        await ImagePicker().pickImage(source: ImageSource.gallery);
-    if (returnImage == null) return;
-    setState(() {
-      selectedImage = File(returnImage.path);
-      _image = File(returnImage.path).readAsBytesSync();
-    });
-    Navigator.of(context).pop(); // close the modal sheet
-  }
-
-  // Camera
-  Future _pickImageFromCamera() async {
-    final returnImage =
-        await ImagePicker().pickImage(source: ImageSource.camera);
-    if (returnImage == null) return;
-    setState(() {
-      selectedImage = File(returnImage.path);
-      _image = File(returnImage.path).readAsBytesSync();
-    });
-    Navigator.of(context).pop();
+    if (result != null) {
+      setState(() {
+        _image = result.files.single.bytes;
+      });
+    }
   }
 }

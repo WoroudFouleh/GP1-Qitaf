@@ -232,8 +232,8 @@ class _EditProductionLineState extends State<EditProductionLine> {
                             borderRadius: BorderRadius.circular(10),
                             child: Image.memory(
                               _image!,
-                              width: 200, // تكبير عرض الصورة
-                              height: 150, // تكبير ارتفاع الصورة
+                              width: 400, // تكبير عرض الصورة
+                              height: 300, // تكبير ارتفاع الصورة
                               fit: BoxFit.cover,
                             ),
                           )
@@ -242,14 +242,14 @@ class _EditProductionLineState extends State<EditProductionLine> {
                                 const BorderRadius.all(Radius.circular(10)),
                             child: Image.asset(
                               "assets/images/q1.jpg",
-                              width: 250, // تكبير عرض الصورة
-                              height: 190, // تكبير ارتفاع الصورة
+                              width: 400, // تكبير عرض الصورة
+                              height: 300, // تكبير ارتفاع الصورة
                               fit: BoxFit.cover,
                             ),
                           ),
                     Positioned(
                       bottom: 0,
-                      left: 140, // تغيير موضع زر التعديل
+                      left: 370, // تغيير موضع زر التعديل
                       child: IconButton(
                         onPressed: () {
                           showImagePickerOption(context);

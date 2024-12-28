@@ -12,7 +12,8 @@ import 'package:login_page/screens/welcome_screen.dart';
 class ProfilePage extends StatefulWidget {
   final token;
   final userId;
-  const ProfilePage({required this.token, Key? key, this.userId}) : super(key: key);
+  const ProfilePage({required this.token, Key? key, this.userId})
+      : super(key: key);
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
@@ -296,7 +297,7 @@ class _ProfilePageState extends State<ProfilePage>
     return GridView.builder(
       itemCount: lands.length,
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
+        crossAxisCount: 3,
         crossAxisSpacing: 8,
         mainAxisSpacing: 8,
         childAspectRatio: 0.8,
@@ -342,7 +343,7 @@ class _ProfilePageState extends State<ProfilePage>
     return GridView.builder(
       itemCount: products.length,
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
+        crossAxisCount: 3,
         crossAxisSpacing: 8,
         mainAxisSpacing: 8,
         childAspectRatio: 0.8,
@@ -390,7 +391,7 @@ class _ProfilePageState extends State<ProfilePage>
     return GridView.builder(
       itemCount: lines.length,
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
+        crossAxisCount: 3,
         crossAxisSpacing: 8,
         mainAxisSpacing: 8,
         childAspectRatio: 0.8,
@@ -500,52 +501,73 @@ class _ProfilePageState extends State<ProfilePage>
 class RecipeCard extends StatelessWidget {
   final String title;
   final String thumbnailUrl;
-  final String publishDate; // إضافة الحقل الجديد
+  final String publishDate;
 
   const RecipeCard({
     required this.title,
     required this.thumbnailUrl,
-    required this.publishDate, // تمرير الحقل الجديد
+    required this.publishDate,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 4,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ClipRRect(
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(15)),
-            child: Image.memory(
-              base64Decode(thumbnailUrl),
-              height: 160,
-              width: double.infinity,
-              fit: BoxFit.cover,
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: const TextStyle(
-                      fontWeight: FontWeight.bold, fontSize: 16),
+    return SizedBox(
+      width: 100, // عرض العنصر
+      child: Card(
+        elevation: 6,
+        margin: const EdgeInsets.all(8), // تقليل الهوامش
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ClipRRect(
+              borderRadius:
+                  const BorderRadius.vertical(top: Radius.circular(15)),
+              child: AspectRatio(
+                aspectRatio: 1, // نسبة العرض إلى الارتفاع لجعل العنصر مربعًا
+                child: Image.memory(
+                  base64Decode(thumbnailUrl),
+                  width: double.infinity,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) => Container(
+                    color: Colors.grey[200],
+                    child: const Center(
+                      child: Icon(Icons.image_not_supported, size: 30),
+                    ),
+                  ),
                 ),
-                const SizedBox(height: 5),
-                Text(
-                  "تاريخ النشر: ${publishDate.toString().substring(0, 10)}",
-                  style: const TextStyle(fontSize: 15, color: Colors.grey),
-                ),
-              ],
+              ),
             ),
-          ),
-        ],
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 17,
+                    ),
+                    maxLines: 1, // تقليل عدد الأسطر
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 2), // تقليل المسافة بين النصوص
+                  Text(
+                    "تاريخ النشر: ${publishDate.toString().substring(0, 10)}",
+                    style: const TextStyle(
+                      fontSize: 15,
+                      color: Colors.grey,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

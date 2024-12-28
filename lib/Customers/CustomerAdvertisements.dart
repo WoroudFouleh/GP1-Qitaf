@@ -149,20 +149,26 @@ class _CustomerAdvertisementState extends State<CustomerAdvertisement> {
                             const SizedBox(height: 16),
 
                             // صورة الإعلان بعرض الشاشة
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(15),
-                              child: ad['image'] != null
-                                  ? Image.memory(
-                                      base64Decode(ad['image'])!,
-                                      width: double.infinity,
-                                      fit: BoxFit.cover,
-                                    )
-                                  : Image.asset(
-                                      'assets/images/p1.jpg',
-                                      width: double.infinity,
-                                      fit: BoxFit.cover,
-                                    ),
+                            // Image الإعلان بعرض الشاشة
+                            Center(
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(15),
+                                child: ad['image'] != null
+                                    ? Image.memory(
+                                        base64Decode(ad['image'])!,
+                                        width: 600, // Adjust width as needed
+                                        height: 400, // Adjust height as needed
+                                        fit: BoxFit.cover,
+                                      )
+                                    : Image.asset(
+                                        'assets/images/p1.jpg',
+                                        width: 600, // Adjust width as needed
+                                        height: 400, // Adjust height as needed
+                                        fit: BoxFit.cover,
+                                      ),
+                              ),
                             ),
+
                             const SizedBox(height: 16),
 
                             // زر انضم إلينا
@@ -180,8 +186,12 @@ class _CustomerAdvertisementState extends State<CustomerAdvertisement> {
                                   foregroundColor: Colors.white,
                                   backgroundColor: Color(0xFF556B2F),
                                   textStyle: const TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold),
+                                    fontSize: 24, // Larger font size
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 20,
+                                      horizontal: 40), // Larger padding
                                 ),
                                 child: Text(ad['buttonText']),
                               ),

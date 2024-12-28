@@ -7,6 +7,7 @@ import 'package:intl/intl.dart'; // لإضافة مكتبة تنسيق التو�
 import 'package:http/http.dart' as http;
 import 'config.dart';
 import 'dart:convert';
+import 'dart:html' as html; // استيراد html لدعم اختيار الملفات من الويب
 
 import 'package:login_page/screens/custom_drawer.dart';
 import 'package:login_page/screens/map_screen.dart';
@@ -329,26 +330,26 @@ class _AddLandState extends State<AddLand> {
 
                 const SizedBox(height: 20.0),
 
-                // زر إضافة الصورة
                 ElevatedButton(
                   onPressed: () {
-                    showImagePickerOption(context);
+                    _pickImageFromDevice(); // استخدام هذه الدالة لاختيار صورة من الجهاز مباشرة
                   },
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(
-                        vertical: 10, horizontal: 50), // تكبير حجم الزر
+                        vertical: 10, horizontal: 50),
                     backgroundColor: const Color.fromARGB(255, 18, 116, 22),
                   ),
                   child: const Text(
                     'إضافة صورة',
                     style: TextStyle(
-                      fontWeight: FontWeight.bold, // جعل النص غامق
-                      fontSize: 15, // تكبير حجم النص
-                      color: Colors.white, // لون النص أبيض
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15,
+                      color: Colors.white,
                     ),
                   ),
                 ),
                 const SizedBox(height: 25.0),
+
                 Row(
                   mainAxisAlignment:
                       MainAxisAlignment.spaceEvenly, // محاذاة الحقول بالتساوي
@@ -356,7 +357,8 @@ class _AddLandState extends State<AddLand> {
                     const SizedBox(width: 10), // مسافة بين الحقلين
                     // حقل إدخال اسم المحصول
                     SizedBox(
-                      width: 180, // عرض الحقل لاسم المحصول
+                      width: MediaQuery.of(context).size.width *
+                          0.4, // تعديل عرض الحقل لاسم المحصول بالنسبة لعرض الشاشة
                       child: TextFormField(
                         controller: _cropNameController, // الربط مع المتغير
                         textAlign:
@@ -391,7 +393,8 @@ class _AddLandState extends State<AddLand> {
                       ),
                     ),
                     SizedBox(
-                      width: 180, // عرض الحقل لاسم الأرض
+                      width: MediaQuery.of(context).size.width *
+                          0.4, // تعديل عرض الحقل لاسم الأرض بالنسبة لعرض الشاشة
                       child: TextFormField(
                         controller: _landNameController, // الربط مع المتغير
                         textAlign:
@@ -429,31 +432,23 @@ class _AddLandState extends State<AddLand> {
                 ),
 
                 const SizedBox(height: 25.0),
-                // City Dropdown
+
                 SizedBox(
-                  width: 300, // عرض الحاوية
+                  width: MediaQuery.of(context).size.width *
+                      0.8, // 80% من عرض الشاشة
                   child: Row(
                     children: [
-                      // زر إضافة الموقع
                       IconButton(
                         icon: const Icon(
-                          Icons.add_location_alt, // أيقونة لإضافة الموقع
+                          Icons.add_location_alt,
                           color: Color.fromARGB(255, 11, 108, 45),
                           size: 30,
                         ),
                         onPressed: () {
-                          // Navigator.push(
-                          //   context,
-                          //   MaterialPageRoute(
-                          //     builder: (context) =>
-                          //         MapScreen(), // استدعاء صفحة الخريطة
-                          //   ),
-                          // );
                           _navigateToMap();
                         },
                       ),
-                      const SizedBox(width: 10), // مسافة بين الزر والحقل
-                      // حقل اختيار المدينة
+                      const SizedBox(width: 10),
                       Expanded(
                         child: DropdownButtonFormField<String>(
                           value: selectedCity,
@@ -493,8 +488,10 @@ class _AddLandState extends State<AddLand> {
 
                 const SizedBox(height: 25.0),
                 // Street Field
+                // حقل وصف الموقع
                 SizedBox(
-                  width: 380, // تقليل عرض حقل تحديد الموقع
+                  width: MediaQuery.of(context).size.width *
+                      0.8, // عرض مناسب لحجم الشاشة
                   child: TextFormField(
                     controller: _streetController,
                     validator: (value) {
@@ -519,12 +516,13 @@ class _AddLandState extends State<AddLand> {
                 ),
                 const SizedBox(height: 25.0),
 
-                // حقل إدخال مساحة الأرض بالدونم وأجرة العامل بالساعة مع رمز الشيكل
+// حقل مساحة الأرض وأجرة العامل
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     SizedBox(
-                      width: 160, // عرض الحقل لمساحة الأرض
+                      width: MediaQuery.of(context).size.width *
+                          0.4, // تعديل عرض الحقل لمساحة الأرض بالنسبة لعرض الشاشة
                       child: TextFormField(
                         controller: _landAreaController, // الربط مع المتغير
                         textAlign: TextAlign.right,
@@ -548,7 +546,8 @@ class _AddLandState extends State<AddLand> {
                       ),
                     ),
                     SizedBox(
-                      width: 160, // عرض الحقل لأجرة العامل
+                      width: MediaQuery.of(context).size.width *
+                          0.4, // تعديل عرض الحقل لأجرة العامل بالنسبة لعرض الشاشة
                       child: TextFormField(
                         controller: _workerRateController, // الربط مع المتغير
                         textAlign: TextAlign.right,
@@ -574,11 +573,13 @@ class _AddLandState extends State<AddLand> {
                     ),
                   ],
                 ),
+
                 const SizedBox(height: 25.0),
 
-                // حقل إدخال عدد العمال
+// حقل إدخال عدد العمال
                 SizedBox(
-                  width: 350, // نفس عرض حقل اسم الأرض
+                  width: MediaQuery.of(context).size.width *
+                      0.8, // عرض مناسب لحجم الشاشة
                   child: TextFormField(
                     controller: _workersCountController, // الربط مع المتغير
                     textAlign: TextAlign.right,
@@ -601,8 +602,8 @@ class _AddLandState extends State<AddLand> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 25.0),
 
+                const SizedBox(height: 25.0),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
@@ -765,92 +766,25 @@ class _AddLandState extends State<AddLand> {
     );
   }
 
-  void showImagePickerOption(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      builder: (BuildContext context) {
-        return Container(
-          height: 150,
-          color: Colors.white,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              Expanded(
-                child: InkWell(
-                  onTap: () {
-                    _pickImageFromGallery();
-                  },
-                  child: const Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.image,
-                        color: Colors.green,
-                        size: 35,
-                      ),
-                      SizedBox(height: 5),
-                      Text(
-                        'من المعرض',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              ),
-              Expanded(
-                child: InkWell(
-                  onTap: () {
-                    _pickImageFromCamera();
-                  },
-                  child: const Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.camera,
-                        color: Colors.green,
-                        size: 35,
-                      ),
-                      SizedBox(height: 5),
-                      Text(
-                        'من الكاميرا',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
+  // دالة لاختيار الصورة من الجهاز مباشرة
+  void _pickImageFromDevice() async {
+    // إنشاء عنصر Input لاختيار الملفات
+    html.FileUploadInputElement uploadInput = html.FileUploadInputElement();
+    uploadInput.accept = 'image/*'; // تحديد أن الملفات المقبولة هي الصور فقط
+    uploadInput.click(); // محاكاة الضغط على الزر
 
-  _pickImageFromGallery() async {
-    final pickedFile =
-        await ImagePicker().pickImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      selectedImage = File(pickedFile.path);
-      _image = await selectedImage!.readAsBytes();
-      setState(() {});
-    }
-    Navigator.pop(context);
-  }
+    uploadInput.onChange.listen((e) async {
+      final files = uploadInput.files;
+      if (files!.isEmpty) return;
 
-  _pickImageFromCamera() async {
-    final pickedFile =
-        await ImagePicker().pickImage(source: ImageSource.camera);
-    if (pickedFile != null) {
-      selectedImage = File(pickedFile.path);
-      _image = await selectedImage!.readAsBytes();
-      setState(() {});
-    }
-    Navigator.pop(context);
+      final reader = html.FileReader();
+      reader.readAsArrayBuffer(files[0]);
+
+      reader.onLoadEnd.listen((e) {
+        setState(() {
+          _image = reader.result as Uint8List?;
+        });
+      });
+    });
   }
 }

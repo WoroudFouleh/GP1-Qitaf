@@ -1,5 +1,6 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:login_page/Customers/CustomerAdvertisements.dart';
 import 'package:login_page/Discussion/Home.dart';
 import 'package:login_page/screens/allInbox.dart';
 import 'package:login_page/screens/mainMap.dart';
@@ -14,7 +15,8 @@ import 'package:jwt_decoder/jwt_decoder.dart';
 class HomePage extends StatefulWidget {
   final token;
   final token2;
-  const HomePage({@required this.token, Key? key, this.token2}) : super(key: key);
+  const HomePage({@required this.token, Key? key, this.token2})
+      : super(key: key);
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -32,11 +34,14 @@ class _HomePageState extends State<HomePage> {
 
     // Initialize the pages here because widget.token is needed
     _pages = [
-      OwnerHome(token: widget.token,  userId: uid), // Pass the token correctly without const
+      OwnerHome(
+          token: widget.token,
+          userId: uid), // Pass the token correctly without const
       TabbedInboxScreen(userId: uid),
       OwnerAdd(token: widget.token),
       OwnerNotify(token: widget.token),
       HomeDiscussion(token: widget.token),
+      CustomerAdvertisement(token: widget.token),
     ];
   }
 
@@ -49,12 +54,15 @@ class _HomePageState extends State<HomePage> {
         buttonBackgroundColor: const Color.fromARGB(255, 33, 121, 31),
         color: const Color.fromARGB(255, 33, 121, 31),
         animationDuration: const Duration(milliseconds: 300),
+        height: 70, // زيادة الارتفاع ليناسب صفحة ويب
         items: const <Widget>[
-          Icon(Icons.home, size: 26, color: Colors.white),
-          Icon(Icons.message, size: 26, color: Colors.white),
-          Icon(Icons.add, size: 26, color: Colors.white),
-          Icon(Icons.notifications, size: 26, color: Colors.white),
-          Icon(Icons.dashboard_customize, size: 26, color: Colors.white),
+          Icon(Icons.home,
+              size: 30, color: Colors.white), // زيادة حجم الأيقونات
+          Icon(Icons.message, size: 30, color: Colors.white),
+          Icon(Icons.add, size: 30, color: Colors.white),
+          Icon(Icons.notifications, size: 30, color: Colors.white),
+          Icon(Icons.dashboard_customize, size: 30, color: Colors.white),
+          Icon(Icons.newspaper, size: 26, color: Colors.white),
         ],
         onTap: (index) {
           setState(() {

@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
@@ -235,42 +236,20 @@ class _CommentSectionState extends State<CommentSection> {
   }
 
   Future<void> _pickImage() async {
-    final ImagePicker picker = ImagePicker();
-    showModalBottomSheet(
-      context: context,
-      builder: (BuildContext context) {
-        return SafeArea(
-          child: Wrap(
-            children: [
-              ListTile(
-                leading: Icon(Icons.camera_alt),
-                title: Text('الكاميرا'),
-                onTap: () async {
-                  Navigator.pop(context);
-                  final image =
-                      await picker.pickImage(source: ImageSource.camera);
-                  setState(() {
-                    _pickedImage = image;
-                  });
-                },
-              ),
-              ListTile(
-                leading: Icon(Icons.photo),
-                title: Text('المعرض'),
-                onTap: () async {
-                  Navigator.pop(context);
-                  final image =
-                      await picker.pickImage(source: ImageSource.gallery);
-                  setState(() {
-                    _pickedImage = image;
-                  });
-                },
-              ),
-            ],
-          ),
-        );
-      },
+    // Use FilePicker to pick an image file
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      type: FileType.image, // Limit to image files
     );
+
+    if (result != null) {
+      // Get the picked file
+      PlatformFile file = result.files.first;
+
+      // Set the picked image
+      setState(() {
+        _pickedImage = XFile(file.path!);
+      });
+    }
   }
 
   void _addComment() {

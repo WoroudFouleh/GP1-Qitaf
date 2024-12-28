@@ -49,7 +49,8 @@ class LandPage extends StatefulWidget {
       required this.workerWages,
       required this.token,
       required this.landId,
-      required this.coordinates, required this.userId})
+      required this.coordinates,
+      required this.userId})
       : super(key: key);
 
   @override
@@ -148,37 +149,39 @@ class _LandPageState extends State<LandPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white, // لون الخلفية أبيض
+      backgroundColor: Colors.white, // White background color
       body: ListView(
         children: [
           const LandAppBar(),
           Padding(
-              padding: const EdgeInsets.all(16),
-              child: Image.memory(
-                base64Decode(widget.image),
-                fit: BoxFit.fill,
-                width: double.infinity,
-                height: 300,
-              )),
+            padding: const EdgeInsets.all(16),
+            child: Image.memory(
+              base64Decode(widget.image),
+              fit: BoxFit
+                  .contain, // لتناسب الصورة داخل المساحة الصغيرة دون أن يتم قطعها
+              width: 400, // تحديد عرض الصورة بشكل صغير
+              height: 400, // تحديد ارتفاع الصورة بشكل صغير
+            ),
+          ),
           Container(
             width: double.infinity,
             decoration: BoxDecoration(
               color: Colors.white,
               boxShadow: [
                 BoxShadow(
-                  color: Colors.blueAccent.withOpacity(0.5), // لمعان بسيط
+                  color: Colors.blueAccent.withOpacity(0.5), // Light glow
                   spreadRadius: 5,
                   blurRadius: 10,
-                  offset: const Offset(0, 3), // تحريك الظل لتمييز الصندوق
+                  offset: const Offset(0, 3), // Shadow offset for depth
                 ),
               ],
-              borderRadius: BorderRadius.circular(15), // لتحديد الحواف
+              borderRadius: BorderRadius.circular(15), // Rounded corners
             ),
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10),
               child: Column(
                 children: [
-                  // صورة المالك واسم الأرض الزراعية
+                  // Owner's name and land image section
                   Padding(
                     padding: const EdgeInsets.only(top: 30, bottom: 20),
                     child: Row(
@@ -188,20 +191,20 @@ class _LandPageState extends State<LandPage> {
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
                             Directionality(
-                              textDirection:
-                                  TextDirection.rtl, // تحديد اتجاه النص
+                              textDirection: TextDirection
+                                  .rtl, // Right-to-left text direction
                               child: Text(
-                                '$firstName $lastName', // اسم المالك
+                                '$firstName $lastName', // Owner's name
                                 style: const TextStyle(
-                                  fontSize: 20, // تكبير الخط
-                                  fontWeight: FontWeight.bold, // خط عريض
-                                  color: Color(0xFF556B2F), // لون زيتي
+                                  fontSize: 22, // Larger font size
+                                  fontWeight: FontWeight.bold,
+                                  color: Color(0xFF556B2F), // Olive green
                                   shadows: [
                                     Shadow(
                                       offset: Offset(0, 2),
                                       blurRadius: 3,
                                       color: Color.fromARGB(
-                                          255, 120, 183, 72), // لون اللمعان
+                                          255, 120, 183, 72), // Light glow
                                     ),
                                   ],
                                 ),
@@ -219,7 +222,7 @@ class _LandPageState extends State<LandPage> {
                         const SizedBox(width: 10),
                         GestureDetector(
                           onTap: () {
-                            // Navigate to the Profile2 page when the profile photo is tapped
+                            // Navigate to the Profile2 page when tapped
                             Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -235,7 +238,7 @@ class _LandPageState extends State<LandPage> {
                                   image: userProfileImage,
                                   email: email,
                                   postsCount: postsCount,
-                                ), // Replace Profile2Page with the actual name of your Profile2 page
+                                ),
                               ),
                             );
                           },
@@ -244,14 +247,14 @@ class _LandPageState extends State<LandPage> {
                                 ? Image.memory(
                                     base64Decode(userProfileImage),
                                     fit: BoxFit.cover,
-                                    width: 50.0,
-                                    height: 50.0,
+                                    width: 60.0,
+                                    height: 60.0,
                                   )
                                 : Image.asset(
                                     'assets/images/profile.png',
-                                    fit: BoxFit.fill,
-                                    width: 50.0,
-                                    height: 50.0,
+                                    fit: BoxFit.cover,
+                                    width: 60.0,
+                                    height: 60.0,
                                   ),
                           ),
                         ),
@@ -260,20 +263,19 @@ class _LandPageState extends State<LandPage> {
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
                             Directionality(
-                              textDirection:
-                                  TextDirection.rtl, // تحديد اتجاه النص
+                              textDirection: TextDirection.rtl,
                               child: Text(
-                                widget.landName, // اسم الأرض الزراعية
+                                widget.landName, // Land's name
                                 style: const TextStyle(
-                                  fontSize: 20, // تكبير الخط
-                                  fontWeight: FontWeight.bold, // خط عريض
-                                  color: Color(0xFF556B2F), // لون زيتي
+                                  fontSize: 22, // Larger font size
+                                  fontWeight: FontWeight.bold,
+                                  color: Color(0xFF556B2F), // Olive green
                                   shadows: [
                                     Shadow(
                                       offset: Offset(0, 2),
                                       blurRadius: 3,
                                       color: Color.fromARGB(
-                                          255, 129, 179, 79), // لون اللمعان
+                                          255, 129, 179, 79), // Light glow
                                     ),
                                   ],
                                 ),
@@ -284,7 +286,7 @@ class _LandPageState extends State<LandPage> {
                       ],
                     ),
                   ),
-                  // معلومات المحصول والموقع
+                  // Crop and location information
                   Padding(
                     padding: const EdgeInsets.only(top: 10, bottom: 20),
                     child: Row(
@@ -294,47 +296,36 @@ class _LandPageState extends State<LandPage> {
                           children: [
                             GestureDetector(
                               onTap: () {
-                                // final coordinates = LatLng(
-                                //   widget.coordinates['latitude']!,
-                                //   widget.coordinates['longitude']!,
-                                // );
-
-                                // Navigator.push(
-                                //   context,
-                                //   MaterialPageRoute(
-                                //     builder: (context) => MapScreen2(
-                                //       initialLocation: coordinates,
-                                //     ),
-                                //   ),
-                                // );
-                                _showCoordinatesOnMap();
+                                _showCoordinatesOnMap(); // Show map on tap
                               },
                               child: Text(
-                                widget.location, // الموقع
+                                widget.location, // Location name
                                 style: const TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.black,
                                   decoration: TextDecoration
-                                      .underline, // Add underline for emphasis
+                                      .underline, // Underlined text for emphasis
                                 ),
                               ),
                             ),
                             const SizedBox(width: 5),
                             const Text(
-                              ",", // الفاصلة
+                              ",", // Comma separator
                               style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black),
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                              ),
                             ),
                             const SizedBox(width: 5),
                             Text(
-                              widget.city, // المدينة
+                              widget.city, // City name
                               style: const TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black),
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                              ),
                             ),
                             const SizedBox(width: 10),
                             const Icon(Icons.location_on,
@@ -346,9 +337,10 @@ class _LandPageState extends State<LandPage> {
                             Text(
                               '                               ${widget.cropType}',
                               style: const TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black),
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                              ),
                             ),
                             const SizedBox(width: 10),
                             const Icon(Icons.apple, color: Color(0xFF556B2F)),
@@ -357,8 +349,7 @@ class _LandPageState extends State<LandPage> {
                       ],
                     ),
                   ),
-
-                  // معلومات المساحة وعدد العمال
+                  // Space and worker information
                   Padding(
                     padding: const EdgeInsets.only(top: 10, bottom: 20),
                     child: Row(
@@ -367,18 +358,20 @@ class _LandPageState extends State<LandPage> {
                         Row(
                           children: [
                             Text(
-                              widget.numOfWorkers.toString(), // الرقم 5
+                              widget.numOfWorkers.toString(),
                               style: const TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black),
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                              ),
                             ),
                             const Text(
-                              ":عدد العمال", // النص "عدد العمال"
+                              ":عدد العمال", // "Number of workers"
                               style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black),
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                              ),
                             ),
                             const SizedBox(width: 10),
                             const Icon(Icons.group, color: Color(0xFF556B2F)),
@@ -387,25 +380,28 @@ class _LandPageState extends State<LandPage> {
                         Row(
                           children: [
                             const Text(
-                              "           دونم", // النص "دونم"
+                              "           دونم", // "Dunum"
                               style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black),
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                              ),
                             ),
                             Text(
-                              " ${widget.landSpace.toString()} ", // الرقم 10
+                              " ${widget.landSpace.toString()} ",
                               style: const TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black),
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                              ),
                             ),
                             const Text(
-                              ":المساحة", // النص "المساحة"
+                              ":المساحة", // "Space"
                               style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black),
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                              ),
                             ),
                             const SizedBox(width: 10),
                             const Icon(Icons.landscape,
@@ -415,7 +411,7 @@ class _LandPageState extends State<LandPage> {
                       ],
                     ),
                   ),
-                  // معلومات تاريخ بداية ونهاية العمل
+                  // Work dates and times
                   Padding(
                     padding: const EdgeInsets.only(top: 10, bottom: 20),
                     child: Row(
@@ -424,11 +420,12 @@ class _LandPageState extends State<LandPage> {
                         Row(
                           children: [
                             Text(
-                              " أيام العمل : (${widget.startDate.toString().substring(0, 10)}) - (${widget.endDate.toString().substring(0, 10)}) ", // النص "نهاية العمل"
+                              " أيام العمل : (${widget.startDate.toString().substring(0, 10)}) - (${widget.endDate.toString().substring(0, 10)}) ",
                               style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black),
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                              ),
                             ),
                             const SizedBox(width: 10),
                             const Icon(Icons.calendar_today,
@@ -438,7 +435,7 @@ class _LandPageState extends State<LandPage> {
                       ],
                     ),
                   ),
-                  // معلومات ساعة بدء وانتهاء الدوام
+                  // Work hours
                   Padding(
                     padding: const EdgeInsets.only(top: 10, bottom: 20),
                     child: Row(
@@ -447,11 +444,12 @@ class _LandPageState extends State<LandPage> {
                         Row(
                           children: [
                             Text(
-                              "   ${widget.endTime} - ${widget.startTime} :أوقات العمل", // النص "انتهاء الدوام"
+                              "   ${widget.endTime} - ${widget.startTime} :أوقات العمل", // "Work hours"
                               style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black),
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                              ),
                             ),
                             const SizedBox(width: 10),
                             const Icon(Icons.access_time,
@@ -461,7 +459,7 @@ class _LandPageState extends State<LandPage> {
                       ],
                     ),
                   ),
-                  // إضافة المعلومات الأخرى أو الأزرار
+                  // Add other information or buttons as needed
                 ],
               ),
             ),

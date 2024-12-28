@@ -199,6 +199,8 @@ class _OrderWidgetState extends State<OrderWidget> {
           ),
         ),
         Row(
+          mainAxisAlignment:
+              MainAxisAlignment.end, // محاذاة الأيقونة والنصوص إلى اليمين
           children: [
             IconButton(
               icon: const Icon(
@@ -207,19 +209,13 @@ class _OrderWidgetState extends State<OrderWidget> {
                 size: 40,
               ),
               onPressed: () {
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(
-                //     builder: (context) =>
-                //         MapScreen(), // استدعاء صفحة الخريطة
-                //   ),
-                // );
                 _navigateToMap();
               },
             ),
             const SizedBox(width: 10.0),
             Container(
-              margin: const EdgeInsets.only(top: 20),
+              margin: const EdgeInsets.only(
+                  top: 20, right: 20), // إضافة فراغ من اليمين
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
               decoration: BoxDecoration(
                 color: Colors.white,
@@ -228,10 +224,12 @@ class _OrderWidgetState extends State<OrderWidget> {
               width: 320,
               child: TextFormField(
                 controller: addressController,
-                textAlign: TextAlign.right,
+                textAlign: TextAlign.right, // محاذاة النص إلى اليمين
+                textDirection:
+                    TextDirection.rtl, // تحديد اتجاه النص من اليمين لليسار
                 decoration: const InputDecoration(
                   border: InputBorder.none,
-                  hintText: " عنوان الاستلام",
+                  hintText: "عنوان الاستلام",
                   hintStyle: TextStyle(
                     fontSize: 20,
                     color: Color(0xFF355E3B),
@@ -239,29 +237,32 @@ class _OrderWidgetState extends State<OrderWidget> {
                 ),
               ),
             ),
-            // مسافة بين القائمة والزر
-          ],
-        ),
-        Container(
-          margin: const EdgeInsets.only(left: 15, top: 20),
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(10),
-          ),
-          width: 370,
-          child: TextFormField(
-            controller: phoneController,
-            textAlign: TextAlign.right,
-            decoration: const InputDecoration(
-              border: InputBorder.none,
-              hintText: "رقم الهاتف",
-              hintStyle: TextStyle(
-                fontSize: 20,
-                color: Color(0xFF355E3B),
+            const SizedBox(width: 10.0),
+            Container(
+              margin: const EdgeInsets.only(
+                  top: 20, right: 20), // إضافة فراغ من اليمين
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              width: 320,
+              child: TextFormField(
+                controller: phoneController,
+                textAlign: TextAlign.right, // محاذاة النص إلى اليمين
+                textDirection:
+                    TextDirection.rtl, // تحديد اتجاه النص من اليمين لليسار
+                decoration: const InputDecoration(
+                  border: InputBorder.none,
+                  hintText: "رقم الهاتف",
+                  hintStyle: TextStyle(
+                    fontSize: 20,
+                    color: Color(0xFF355E3B),
+                  ),
+                ),
               ),
             ),
-          ),
+          ],
         ),
         const SizedBox(height: 20),
         Container(

@@ -57,7 +57,8 @@ class LinePage extends StatefulWidget {
       required this.lineRate,
       required this.price,
       required this.quantityUnit,
-      required this.coordinates, required this.userId});
+      required this.coordinates,
+      required this.userId});
 
   @override
   State<LinePage> createState() => _LinePageState();
@@ -159,13 +160,15 @@ class _LinePageState extends State<LinePage> {
         children: [
           const LineAppBar(),
           Padding(
-              padding: const EdgeInsets.all(16),
-              child: Image.memory(
-                base64Decode(widget.image),
-                fit: BoxFit.fill,
-                width: double.infinity,
-                height: 250,
-              )),
+            padding: const EdgeInsets.all(16),
+            child: Image.memory(
+              base64Decode(widget.image),
+              fit: BoxFit
+                  .contain, // لتناسب الصورة داخل المساحة الصغيرة دون أن يتم قطعها
+              width: 400, // تحديد عرض الصورة بشكل صغير
+              height: 400, // تحديد ارتفاع الصورة بشكل صغير
+            ),
+          ),
           Container(
             width: double.infinity,
             decoration: BoxDecoration(
@@ -181,12 +184,13 @@ class _LinePageState extends State<LinePage> {
               borderRadius: BorderRadius.circular(15), // لتحديد الحواف
             ),
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
+              padding: const EdgeInsets.symmetric(
+                  horizontal: 30), // زيادة المسافة لتناسب الويب
               child: Column(
                 children: [
                   // صورة المالك واسم خط الإنتاج
                   Padding(
-                    padding: const EdgeInsets.only(top: 30, bottom: 20),
+                    padding: const EdgeInsets.only(top: 30, bottom: 30),
                     child: Row(
                       mainAxisAlignment:
                           MainAxisAlignment.end, // محاذاة العناصر إلى اليمين
@@ -201,7 +205,7 @@ class _LinePageState extends State<LinePage> {
                               child: Text(
                                 '${firstName} ${lastName}', // اسم خط الإنتاج
                                 style: const TextStyle(
-                                  fontSize: 20, // تكبير الخط
+                                  fontSize: 24, // تكبير الخط
                                   fontWeight: FontWeight.bold, // خط عريض
                                   color: Color(0xFF556B2F), // لون زيتي
                                   shadows: [
@@ -218,14 +222,13 @@ class _LinePageState extends State<LinePage> {
                             Text(
                               widget.ownerUsername,
                               style: const TextStyle(
-                                fontSize: 14,
+                                fontSize: 16,
                                 color: Colors.grey,
                               ),
                             ),
                           ],
                         ),
-                        const SizedBox(width: 10),
-                        const SizedBox(width: 10),
+                        const SizedBox(width: 20),
                         GestureDetector(
                           onTap: () {
                             // Navigate to the Profile2 page when the profile photo is tapped
@@ -244,17 +247,18 @@ class _LinePageState extends State<LinePage> {
                                   image: userProfileImage,
                                   email: email,
                                   postsCount: postsCount,
-                                ), // Replace Profile2Page with the actual name of your Profile2 page
+                                ),
                               ),
                             );
                           },
                           child: ClipOval(
-                              child: Image.memory(
-                            base64Decode(userProfileImage),
-                            fit: BoxFit.cover,
-                            width: 50.0,
-                            height: 50.0,
-                          )),
+                            child: Image.memory(
+                              base64Decode(userProfileImage),
+                              fit: BoxFit.cover,
+                              width: 60.0, // زيادة حجم الصورة الشخصية
+                              height: 60.0, // زيادة حجم الصورة الشخصية
+                            ),
+                          ),
                         ),
                         const Spacer(),
                         Column(
@@ -267,7 +271,7 @@ class _LinePageState extends State<LinePage> {
                               child: Text(
                                 widget.lineName, // اسم خط الإنتاج
                                 style: const TextStyle(
-                                  fontSize: 19, // تكبير الخط
+                                  fontSize: 22, // تكبير الخط
                                   fontWeight: FontWeight.bold, // خط عريض
                                   color: Color(0xFF556B2F), // لون زيتي
                                   shadows: [
@@ -328,7 +332,7 @@ class _LinePageState extends State<LinePage> {
                     child: Text(
                       widget.description,
                       style: const TextStyle(
-                        fontSize: 16,
+                        fontSize: 18, // زيادة حجم النص
                         color: Colors.black,
                         fontWeight: FontWeight.w400,
                       ),
@@ -345,7 +349,7 @@ class _LinePageState extends State<LinePage> {
                         Text(
                           "عدد ساعات جهوزية الطلب: ${widget.preparationTime} ${widget.preparationUnit}  ", // ساعات الجهوزية
                           style: const TextStyle(
-                            fontSize: 16,
+                            fontSize: 18, // تكبير حجم الخط
                             fontWeight: FontWeight.bold,
                             color: Colors.black,
                           ),
@@ -370,7 +374,7 @@ class _LinePageState extends State<LinePage> {
                               child: Text(
                                 widget.location, // الموقع
                                 style: const TextStyle(
-                                  fontSize: 16,
+                                  fontSize: 18,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.black,
                                   decoration: TextDecoration
@@ -382,7 +386,7 @@ class _LinePageState extends State<LinePage> {
                             const Text(
                               ",", // الفاصلة
                               style: TextStyle(
-                                  fontSize: 16,
+                                  fontSize: 18,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.black),
                             ),
@@ -390,7 +394,7 @@ class _LinePageState extends State<LinePage> {
                             Text(
                               widget.city, // المدينة
                               style: const TextStyle(
-                                  fontSize: 16,
+                                  fontSize: 18,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.black),
                             ),
@@ -404,7 +408,7 @@ class _LinePageState extends State<LinePage> {
                             Text(
                               '                               ${widget.cropType}',
                               style: const TextStyle(
-                                  fontSize: 16,
+                                  fontSize: 18,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.black),
                             ),
@@ -416,7 +420,6 @@ class _LinePageState extends State<LinePage> {
                     ),
                   ),
                   // أيام الأسبوع مع أيقونة التقويم
-                  // أيام الأسبوع مع أيقونة التقويم
                   Padding(
                     padding: const EdgeInsets.only(top: 10, bottom: 20),
                     child: Row(
@@ -427,7 +430,7 @@ class _LinePageState extends State<LinePage> {
                           child: Text(
                             "أيام العمل: ${widget.days.join('، ')}", // عرض الأيام المفصولة بفاصلة
                             style: const TextStyle(
-                              fontSize: 16,
+                              fontSize: 18, // زيادة حجم النص
                               fontWeight: FontWeight.bold,
                               color: Colors.black,
                             ),
@@ -452,7 +455,7 @@ class _LinePageState extends State<LinePage> {
                         Text(
                           "وقت الدوام: ${widget.startTime.toString().substring(10, 15)} - ${widget.endTime.toString().substring(10, 15)} ", // وقت الدوام
                           style: const TextStyle(
-                            fontSize: 16,
+                            fontSize: 18, // تكبير حجم الخط
                             fontWeight: FontWeight.bold,
                             color: Colors.black,
                           ),
@@ -467,23 +470,24 @@ class _LinePageState extends State<LinePage> {
             ),
           ),
           LineBottonBar(
-              price: widget.price,
-              quantityUnit: widget.quantityUnit,
-              lineName: widget.lineName,
-              lineId: widget.lineId,
-              lineRate: widget.lineRate,
-              location: widget.location,
-              city: widget.city,
-              cropType: widget.cropType,
-              startTime: widget.startTime,
-              endTime: widget.endTime,
-              days: widget.days,
-              description: widget.description,
-              preparationTime: widget.preparationTime,
-              preparationUnit: widget.preparationUnit,
-              image: widget.image,
-              token: widget.token,
-              ownerUsername: widget.ownerUsername),
+            price: widget.price,
+            quantityUnit: widget.quantityUnit,
+            lineName: widget.lineName,
+            lineId: widget.lineId,
+            lineRate: widget.lineRate,
+            location: widget.location,
+            city: widget.city,
+            cropType: widget.cropType,
+            startTime: widget.startTime,
+            endTime: widget.endTime,
+            days: widget.days,
+            description: widget.description,
+            preparationTime: widget.preparationTime,
+            preparationUnit: widget.preparationUnit,
+            image: widget.image,
+            token: widget.token,
+            ownerUsername: widget.ownerUsername,
+          ),
         ],
       ),
     );

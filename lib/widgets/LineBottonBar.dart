@@ -40,20 +40,21 @@ class LineBottonBar extends StatelessWidget {
       required this.endTime,
       required this.token,
       required this.ownerUsername});
-
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 70,
-      padding: const EdgeInsets.symmetric(horizontal: 20),
+      height: 90, // زيادة الارتفاع ليتناسب مع الويب
+      padding: const EdgeInsets.symmetric(
+          horizontal: 40), // زيادة المسافة الجانبية للويب
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(15), // تعديل الحواف لتناسب الويب
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.5),
-            spreadRadius: 3,
-            blurRadius: 10,
+            color:
+                Colors.grey.withOpacity(0.3), // تقليل كثافة الظل قليلاً للويب
+            spreadRadius: 5,
+            blurRadius: 15,
             offset: const Offset(0, 3),
           ),
         ],
@@ -90,22 +91,24 @@ class LineBottonBar extends StatelessWidget {
               );
             },
             style: ButtonStyle(
-              backgroundColor: WidgetStateProperty.all(
+              backgroundColor: MaterialStateProperty.all(
                 const Color(0xFF556B2F), // لون كبسة زيتي
               ),
-              padding: WidgetStateProperty.all(
-                const EdgeInsets.symmetric(vertical: 13, horizontal: 15),
+              padding: MaterialStateProperty.all(
+                const EdgeInsets.symmetric(
+                    vertical: 15, horizontal: 20), // زيادة الحجم على الويب
               ),
-              shape: WidgetStateProperty.all<RoundedRectangleBorder>(
+              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                 RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
+                  borderRadius:
+                      BorderRadius.circular(25), // تعديل الزوايا لتناسب الويب
                 ),
               ),
             ),
             label: const Text(
               "إضافة حجز",
               style: TextStyle(
-                fontSize: 16,
+                fontSize: 18, // زيادة الحجم على الويب
                 fontWeight: FontWeight.bold,
                 color: Colors.white, // لون النص أبيض
               ),
@@ -113,6 +116,7 @@ class LineBottonBar extends StatelessWidget {
             icon: const Icon(
               Icons.add_circle_outline, // أيقونة تدل على إضافة حجز
               color: Colors.white, // لون الأيقونة أبيض
+              size: 30, // زيادة حجم الأيقونة
             ),
           ),
           // Price on the right with separate currency and weight text
@@ -122,34 +126,34 @@ class LineBottonBar extends StatelessWidget {
               Text(
                 quantityUnit, // نص الوزن
                 style: TextStyle(
-                  fontSize: 18, // حجم الخط أقل من السعر
+                  fontSize: 20, // حجم الخط أكبر
                   color: Color(0xFF7C7C7C), // لون أقل شدة
                 ),
               ),
-              SizedBox(width: 5), // إضافة مسافة بين السلاش و"كغم"
+              SizedBox(width: 10), // زيادة المسافة بين السلاش و"كغم"
               Text(
                 "/", // السلاش
                 style: TextStyle(
-                  fontSize: 18, // حجم الخط للسلاش
+                  fontSize: 20, // حجم الخط للسلاش
                   color: Color(0xFF7C7C7C), // لون أقل شدة
                 ),
               ),
-              SizedBox(width: 5), // إضافة مسافة بين السلاش والرقم
+              SizedBox(width: 10), // إضافة مسافة بين السلاش والرقم
               // Price
               Text(
                 price.toString(), // الرقم فقط
                 style: TextStyle(
-                  fontSize: 25,
+                  fontSize: 30, // زيادة حجم النص للويب
                   fontWeight: FontWeight.bold,
                   color: Color(0xFF556B2F), // لون الرقم زيتي
                 ),
               ),
-              SizedBox(width: 5), // إضافة مسافة بين الرقم والعملة
+              SizedBox(width: 10), // إضافة مسافة بين الرقم والعملة
               // Currency
               Text(
                 "₪", // العملة
                 style: TextStyle(
-                  fontSize: 20, // حجم الخط للعملة
+                  fontSize: 24, // حجم الخط للعملة أكبر
                   fontWeight: FontWeight.bold,
                   color: Color(0xFF556B2F), // لون العملة زيتي
                 ),

@@ -419,92 +419,103 @@ class _BookingWidgetState extends State<BookingWidget> {
                 ],
               ),
             ),
-
-            Container(
-              margin: const EdgeInsets.only(left: 15, top: 10),
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              width: 370,
-              child: TextFormField(
-                controller: phoneController,
-                textAlign: TextAlign.right,
-                decoration: const InputDecoration(
-                  border: InputBorder.none,
-                  hintText: "رقم الهاتف",
-                  hintStyle: TextStyle(
-                    fontSize: 20,
-                    color: Color(0xFF556B2F),
-                    inherit: true, // التأكد من التناسق
+            Center(
+              // لتوسيط الحقول في الصفحة
+              child: Container(
+                margin: const EdgeInsets.only(top: 20),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                width: MediaQuery.of(context).size.width *
+                    0.8, // العرض 80% من الشاشة
+                child: TextFormField(
+                  controller: phoneController,
+                  textAlign: TextAlign.right,
+                  decoration: const InputDecoration(
+                    border: InputBorder.none,
+                    hintText: "رقم الهاتف",
+                    hintStyle: TextStyle(
+                      fontSize: 18,
+                      color: Color(0xFF556B2F),
+                      inherit: true,
+                    ),
                   ),
                 ),
               ),
             ),
 
-            Container(
-              margin: const EdgeInsets.only(left: 15, top: 20),
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              width: 370,
-              child: Row(
-                mainAxisAlignment:
-                    MainAxisAlignment.end, // لترتيب العناصر من اليمين لليسار
-                children: [
-                  const Text(
-                    "كيلو",
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Color(0xFF355E3B),
-                      inherit: true, // التأكد من التناسق
+            Center(
+              // لتوسيط الحقول في الصفحة
+              child: Container(
+                margin: const EdgeInsets.only(top: 20),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                width: MediaQuery.of(context).size.width *
+                    0.8, // العرض 80% من الشاشة
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    const Text(
+                      "كيلو",
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Color(0xFF355E3B),
+                      ),
                     ),
-                  ),
-                  Expanded(
-                    child: TextFormField(
-                      controller: quantityController,
-                      textAlign: TextAlign.right,
-                      decoration: const InputDecoration(
-                        border: InputBorder.none,
-                        hintText: " الكميّة ",
-                        hintStyle: TextStyle(
-                          fontSize: 20,
-                          color: Color(0xFF556B2F),
-                          inherit: true, // التأكد من التناسق
+                    Expanded(
+                      child: TextFormField(
+                        controller: quantityController,
+                        textAlign: TextAlign.right,
+                        decoration: const InputDecoration(
+                          border: InputBorder.none,
+                          hintText: " الكميّة ",
+                          hintStyle: TextStyle(
+                            fontSize: 18,
+                            color: Color(0xFF556B2F),
+                            inherit: true,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 10),
-            Container(
-              margin: const EdgeInsets.only(left: 15, top: 10, bottom: 20),
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              width: 370,
-              child: TextFormField(
-                controller: cropController,
-                textAlign: TextAlign.right,
-                decoration: const InputDecoration(
-                  border: InputBorder.none,
-                  hintText: "الثمار",
-                  hintStyle: TextStyle(
-                    fontSize: 20,
-                    color: Color(0xFF556B2F),
-                    inherit: true, // التأكد من التناسق
-                  ),
+                  ],
                 ),
               ),
             ),
 
+            Center(
+              // لتوسيط الحقول في الصفحة
+              child: Container(
+                margin: const EdgeInsets.only(top: 20, bottom: 20),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                width: MediaQuery.of(context).size.width *
+                    0.8, // العرض 80% من الشاشة
+                child: TextFormField(
+                  controller: cropController,
+                  textAlign: TextAlign.right,
+                  decoration: const InputDecoration(
+                    border: InputBorder.none,
+                    hintText: "الثمار",
+                    hintStyle: TextStyle(
+                      fontSize: 18,
+                      color: Color(0xFF556B2F),
+                      inherit: true,
+                    ),
+                  ),
+                ),
+              ),
+            ),
             SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -512,7 +523,7 @@ class _BookingWidgetState extends State<BookingWidget> {
                   Center(
                     child: SizedBox(
                       width: MediaQuery.of(context).size.width *
-                          0.9, // عرض الزر بالكامل
+                          0.8, // العرض 80% من الشاشة
                       child: ElevatedButton(
                         onPressed: () async {
                           DateTime? pickedDate = await showDatePicker(
@@ -533,13 +544,14 @@ class _BookingWidgetState extends State<BookingWidget> {
                               ? 'حدد تاريخ الحجز'
                               : DateFormat('yyyy-MM-dd').format(_startDate!),
                           style: const TextStyle(
-                              fontSize: 18,
+                              fontSize: 20,
                               color: Color.fromARGB(255, 26, 115, 12)),
                         ),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.white,
                           foregroundColor: Color(0xFF556B2F),
                           side: BorderSide(color: Color(0xFF556B2F), width: 2),
+                          padding: const EdgeInsets.symmetric(vertical: 15),
                         ),
                       ),
                     ),
@@ -547,7 +559,8 @@ class _BookingWidgetState extends State<BookingWidget> {
                   const SizedBox(height: 10),
                   Center(
                     child: SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.9,
+                      width: MediaQuery.of(context).size.width *
+                          0.8, // العرض 80% من الشاشة
                       child: ElevatedButton(
                         onPressed: () {
                           getBooked();
@@ -555,19 +568,17 @@ class _BookingWidgetState extends State<BookingWidget> {
                             _showAvailableTimes();
                           }
                         },
-
-                        //_showAvailableTimes,
                         child: const Text(
                           "إضافة موعد",
                           style: TextStyle(
-                            fontSize: 18,
+                            fontSize: 20,
                             color: Colors.white,
                           ),
                         ),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Color(0xFF556B2F),
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 28, vertical: 12),
+                              horizontal: 40, vertical: 14),
                         ),
                       ),
                     ),

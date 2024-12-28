@@ -99,17 +99,20 @@ class _LandBottonBarState extends State<LandBottonBar> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 70,
-      padding: const EdgeInsets.symmetric(horizontal: 20),
+      height: 80, // Increased height for better web readability
+      padding: const EdgeInsets.symmetric(
+          horizontal: 30), // Adjusted horizontal padding for web
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(10),
+        borderRadius:
+            BorderRadius.circular(15), // Slightly more rounded corners
         boxShadow: [
           BoxShadow(
             color: Colors.grey.withOpacity(0.5),
-            spreadRadius: 3,
-            blurRadius: 10,
-            offset: const Offset(0, 3),
+            spreadRadius:
+                4, // Increased spread radius for a more prominent shadow
+            blurRadius: 15, // Increased blur radius
+            offset: const Offset(0, 5), // Adjusted offset to match web feel
           ),
         ],
       ),
@@ -125,18 +128,21 @@ class _LandBottonBarState extends State<LandBottonBar> {
                 const Color(0xFF556B2F),
               ),
               padding: WidgetStateProperty.all(
-                const EdgeInsets.symmetric(vertical: 13, horizontal: 15),
+                const EdgeInsets.symmetric(
+                    vertical: 15,
+                    horizontal: 20), // Adjusted padding for bigger buttons
               ),
               shape: WidgetStateProperty.all<RoundedRectangleBorder>(
                 RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
+                  borderRadius: BorderRadius.circular(
+                      25), // Larger rounded corners for web-friendly design
                 ),
               ),
             ),
             label: const Text(
               "طلب الإنضمام إلى العمل",
               style: TextStyle(
-                fontSize: 16,
+                fontSize: 18, // Larger font for web readability
                 fontWeight: FontWeight.bold,
                 color: Colors.white,
               ),
@@ -151,32 +157,32 @@ class _LandBottonBarState extends State<LandBottonBar> {
               const Text(
                 "ساعة",
                 style: TextStyle(
-                  fontSize: 18,
+                  fontSize: 20, // Slightly larger font for web
                   color: Color(0xFF7C7C7C),
                 ),
               ),
-              const SizedBox(width: 5),
+              const SizedBox(width: 10),
               const Text(
                 "/",
                 style: TextStyle(
-                  fontSize: 18,
+                  fontSize: 20, // Slightly larger font for web
                   color: Color(0xFF7C7C7C),
                 ),
               ),
-              const SizedBox(width: 5),
+              const SizedBox(width: 10),
               Text(
                 widget.workersWages.toString(),
                 style: const TextStyle(
-                  fontSize: 25,
+                  fontSize: 30, // Increased font size for better readability
                   fontWeight: FontWeight.bold,
                   color: Color(0xFF556B2F),
                 ),
               ),
-              const SizedBox(width: 5),
+              const SizedBox(width: 10),
               const Text(
                 "₪",
                 style: TextStyle(
-                  fontSize: 20,
+                  fontSize: 25, // Larger font for currency symbol
                   fontWeight: FontWeight.bold,
                   color: Color(0xFF556B2F),
                 ),

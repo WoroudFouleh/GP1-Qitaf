@@ -15,6 +15,8 @@ class ItemBottonBar extends StatelessWidget {
   final String productId;
   final String username;
   final String ownerusername;
+  final String productCity;
+  final Map<String, double> productCoordinates;
   ItemBottonBar({
     Key? key,
     required this.productPrice,
@@ -25,6 +27,8 @@ class ItemBottonBar extends StatelessWidget {
     required this.profilePhotoBase64,
     required this.productId,
     required this.ownerusername,
+    required this.productCity,
+    required this.productCoordinates,
   })  : username = JwtDecoder.decode(token)['username'] ?? 'Unknown User',
         super(key: key);
 
@@ -39,7 +43,12 @@ class ItemBottonBar extends StatelessWidget {
         "productId": productId,
         "price": (quantity * productPrice),
         "quantity": quantity,
-        "quantityType": quantityType
+        "quantityType": quantityType,
+        "productCity": productCity,
+        "productCoordinates": {
+          "lat": productCoordinates['lat'], // Add latitude
+          "lng": productCoordinates['lng'], // Add longitude
+        },
       };
 
       // Make the POST request
@@ -69,8 +78,9 @@ class ItemBottonBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width; // عرض الشاشة
     return Container(
-      height: 70,
+      height: 80, // ارتفاع أكبر قليلاً للويب
       padding: const EdgeInsets.symmetric(horizontal: 20),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -91,13 +101,16 @@ class ItemBottonBar extends StatelessWidget {
           ElevatedButton.icon(
             onPressed: addItemToCart,
             style: ButtonStyle(
-              backgroundColor: WidgetStateProperty.all(
+              backgroundColor: MaterialStateProperty.all(
                 const Color.fromARGB(255, 21, 80, 13), // لون كبسة زيتي
               ),
-              padding: WidgetStateProperty.all(
-                const EdgeInsets.symmetric(vertical: 13, horizontal: 15),
+              padding: MaterialStateProperty.all(
+                EdgeInsets.symmetric(
+                  vertical: 15, // زيادة ارتفاع الزر
+                  horizontal: screenWidth * 0.02, // عرض الزر ديناميكي
+                ),
               ),
-              shape: WidgetStateProperty.all<RoundedRectangleBorder>(
+              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                 RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20),
                 ),
@@ -107,10 +120,10 @@ class ItemBottonBar extends StatelessWidget {
               CupertinoIcons.cart_badge_plus,
               color: Colors.white, // لون الأيقونة أبيض
             ),
-            label: const Text(
+            label: Text(
               "إضافة إلى سلة المشتريات",
               style: TextStyle(
-                fontSize: 16,
+                fontSize: screenWidth * 0.012, // ضبط حجم النص ديناميكياً
                 fontWeight: FontWeight.bold,
                 color: Colors.white, // لون النص أبيض
               ),
@@ -122,9 +135,9 @@ class ItemBottonBar extends StatelessWidget {
               // Weight text
               Text(
                 quantityType, // نص الوزن
-                style: const TextStyle(
-                  fontSize: 18, // حجم الخط أقل من السعر
-                  color: Color(0xFF7C7C7C), // لون أقل شدة
+                style: TextStyle(
+                  fontSize: screenWidth * 0.014, // حجم الخط ديناميكي
+                  color: const Color(0xFF7C7C7C), // لون أقل شدة
                 ),
               ),
               const SizedBox(width: 5), // إضافة مسافة بين السلاش و"كغم"
@@ -139,10 +152,11 @@ class ItemBottonBar extends StatelessWidget {
               // Price
               Text(
                 productPrice.toString(), // الرقم فقط
-                style: const TextStyle(
-                  fontSize: 25,
+                style: TextStyle(
+                  fontSize: screenWidth * 0.02, // حجم الخط ديناميكي
                   fontWeight: FontWeight.bold,
-                  color: Color.fromARGB(255, 21, 80, 13), // لون الرقم زيتي
+                  color:
+                      const Color.fromARGB(255, 21, 80, 13), // لون الرقم زيتي
                 ),
               ),
               const SizedBox(width: 5), // إضافة مسافة بين الرقم والعملة

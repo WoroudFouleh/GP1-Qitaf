@@ -1,34 +1,37 @@
-import 'dart:io';
+import 'dart:html' as html; // لتطبيق الويب
+import 'dart:io'; // للأنظمة الأخرى
+import 'dart:typed_data';
+import 'package:file_picker/file_picker.dart';
 import 'package:http/http.dart' as http;
-import 'package:login_page/Discussion/Home.dart';
-import 'package:login_page/screens/config.dart';
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:login_page/Discussion/Home.dart';
 import 'dart:convert';
+
+import 'package:login_page/screens/config.dart';
 
 class PostComposer extends StatefulWidget {
   final String token;
   const PostComposer({required this.token, Key? key}) : super(key: key);
+
   @override
   _PostComposerState createState() => _PostComposerState();
 }
 
 class _PostComposerState extends State<PostComposer> {
   final TextEditingController _postController = TextEditingController();
-  XFile? _pickedImage;
+  Uint8List? _pickedImage; // لحفظ بيانات الصورة
   late String firstName;
   late String lastName;
   late String username;
   late String writerImage;
+
   @override
   void initState() {
     super.initState();
 
     // Decode the token using jwt_decoder and extract necessary fields
     Map<String, dynamic> jwtDecoderToken = JwtDecoder.decode(widget.token);
-    print(jwtDecoderToken);
     username = jwtDecoderToken['username'] ?? 'No First Name';
     firstName = jwtDecoderToken['firstName'] ?? 'No First Name';
     lastName = jwtDecoderToken['lastName'] ?? 'No Last Name';
@@ -37,15 +40,12 @@ class _PostComposerState extends State<PostComposer> {
 
   void registerPost() async {
     try {
-      // Validate the input fields
       if (_postController.text.isNotEmpty) {
         String? encodedImage;
         if (_pickedImage != null) {
-          final File imageFile = File(_pickedImage!.path);
-          final List<int> imageBytes = await imageFile.readAsBytes();
-          encodedImage = base64Encode(imageBytes);
+          encodedImage = base64Encode(_pickedImage!); // Use Uint8List directly
         }
-        // Create request body
+
         var reqBody = {
           'username': username,
           "firstName": firstName,
@@ -56,7 +56,7 @@ class _PostComposerState extends State<PostComposer> {
         };
 
         var response = await http.post(
-          Uri.parse(puplishPost), // Ensure this URL matches your backend route
+          Uri.parse(puplishPost), // Backend URL
           headers: {
             "Content-Type": "application/json",
           },
@@ -66,70 +66,40 @@ class _PostComposerState extends State<PostComposer> {
         if (response.statusCode == 201) {
           var jsonResponse = jsonDecode(response.body);
           if (jsonResponse['status']) {
-            // showNotification('تم إضافة الأرض بنجاح');
-            print("post added successfuly");
-            // _publishPost();
+            print("Post added successfully");
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(
                 builder: (context) => HomeDiscussion(token: widget.token),
               ),
             );
-
-            // Optionally clear fields or navigate away
           } else {
-            print('حدث خطأ أثناء إضافة الأرض');
+            print('Error: ${jsonResponse['message']}');
           }
         } else {
-          var errorResponse = jsonDecode(response.body);
-          print("here");
-          print('حدث خطأ: ${errorResponse['message'] ?? response.statusCode}');
+          print('Error: ${response.body}');
         }
       } else {
-        print('يرجى ملء جميع الحقول');
+        print('Please fill all fields');
       }
     } catch (e) {
-      print('حدث خطأ: $e');
+      print('Error: $e');
     }
   }
 
   Future<void> _pickImage() async {
-    final ImagePicker picker = ImagePicker();
-    showModalBottomSheet(
-      context: context,
-      builder: (BuildContext context) {
-        return SafeArea(
-          child: Wrap(
-            children: [
-              ListTile(
-                leading: Icon(Icons.camera_alt),
-                title: Text('الكاميرا'),
-                onTap: () async {
-                  Navigator.pop(context);
-                  final image =
-                      await picker.pickImage(source: ImageSource.camera);
-                  setState(() {
-                    _pickedImage = image;
-                  });
-                },
-              ),
-              ListTile(
-                leading: Icon(Icons.photo),
-                title: Text('المعرض'),
-                onTap: () async {
-                  Navigator.pop(context);
-                  final image =
-                      await picker.pickImage(source: ImageSource.gallery);
-                  setState(() {
-                    _pickedImage = image;
-                  });
-                },
-              ),
-            ],
-          ),
-        );
-      },
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      type: FileType.image,
+      withData: true,
     );
+
+    if (result != null) {
+      setState(() {
+        _pickedImage = result.files.single.bytes; // Use bytes directly
+      });
+    } else {
+      print('No image selected');
+    }
   }
 
   @override
@@ -140,21 +110,20 @@ class _PostComposerState extends State<PostComposer> {
         borderRadius: BorderRadius.circular(15),
       ),
       elevation: 5,
-      shadowColor:
-          const Color.fromARGB(255, 113, 149, 48), // اللون الأخضر للتوهج
+      shadowColor: const Color.fromARGB(255, 113, 149, 48),
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15),
           border: Border.all(
-              color: const Color.fromARGB(255, 120, 181, 42).withOpacity(0.7),
-              width: 2), // الحدود الخضراء
+            color: const Color.fromARGB(255, 120, 181, 42).withOpacity(0.7),
+            width: 2,
+          ),
           boxShadow: [
             BoxShadow(
-              color: const Color.fromARGB(255, 234, 244, 234)
-                  .withOpacity(0.6), // اللون الأخضر المتوهج
+              color: const Color.fromARGB(255, 234, 244, 234).withOpacity(0.6),
               spreadRadius: 5,
               blurRadius: 15,
-              offset: Offset(0, 3), // موضع التوهج
+              offset: Offset(0, 3),
             ),
           ],
         ),
@@ -163,7 +132,7 @@ class _PostComposerState extends State<PostComposer> {
           child: Column(
             children: [
               Row(
-                mainAxisAlignment: MainAxisAlignment.end, // المحاذاة من اليمين
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   const SizedBox(width: 10),
                   CircleAvatar(
@@ -178,7 +147,7 @@ class _PostComposerState extends State<PostComposer> {
                         hintText: "ماذا يدور في ذهنك؟",
                         border: InputBorder.none,
                       ),
-                      textDirection: TextDirection.rtl, // النص من اليمين لليسار
+                      textDirection: TextDirection.rtl,
                     ),
                   ),
                   IconButton(
@@ -189,19 +158,19 @@ class _PostComposerState extends State<PostComposer> {
               ),
               const SizedBox(height: 10),
               if (_pickedImage != null)
-                Image.file(
-                  File(_pickedImage!.path),
+                Image.memory(
+                  _pickedImage!, // Use Uint8List directly
                   height: 150,
-                  width: double.infinity,
+                  width: 150,
                   fit: BoxFit.cover,
                 ),
               ElevatedButton(
                 onPressed: registerPost,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.green[800],
-                  minimumSize: Size(double.infinity, 45), // عرض الزر بالكامل
+                  minimumSize: const Size(double.infinity, 45),
                 ),
-                child: Text(
+                child: const Text(
                   "نشر",
                   style: TextStyle(
                       color: Colors.white, fontWeight: FontWeight.bold),

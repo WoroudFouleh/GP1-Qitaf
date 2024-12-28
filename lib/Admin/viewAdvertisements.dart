@@ -152,14 +152,14 @@ class _ViewAdvertisementState extends State<ViewAdvertisement> {
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
           textAlign: TextAlign.right,
         ),
-        backgroundColor: Color(0xFF556B2F),
+        backgroundColor: const Color(0xFF556B2F),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Navigator.pop(context),
         ),
       ),
       body: isLoading
-          ? const Center(child: CircularProgressIndicator()) // Show loader
+          ? const Center(child: CircularProgressIndicator())
           : advertisements.isEmpty
               ? const Center(
                   child: Text(
@@ -169,7 +169,7 @@ class _ViewAdvertisementState extends State<ViewAdvertisement> {
                 )
               : ListView.builder(
                   padding: const EdgeInsets.all(16.0),
-                  itemCount: advertisements.length, // عدد الإعلانات
+                  itemCount: advertisements.length,
                   itemBuilder: (context, index) {
                     final ad = advertisements[index];
 
@@ -179,13 +179,13 @@ class _ViewAdvertisementState extends State<ViewAdvertisement> {
                         borderRadius: BorderRadius.circular(15),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.white
-                                .withOpacity(0.6), // توهج داخلي أبيض
+                            color: Colors.white.withOpacity(0.6),
                             spreadRadius: 5,
                             blurRadius: 10,
                           ),
                         ],
-                        border: Border.all(color: Color(0xFF556B2F), width: 2),
+                        border: Border.all(
+                            color: const Color(0xFF556B2F), width: 2),
                       ),
                       child: Padding(
                         padding: const EdgeInsets.all(16.0),
@@ -202,7 +202,6 @@ class _ViewAdvertisementState extends State<ViewAdvertisement> {
                                     if (value == 'edit') {
                                       adText = ad['text'];
                                       imageBytes = base64Decode(ad['image']);
-
                                       _showEditDialog(ad['_id'], ad['text']);
                                     } else if (value == 'delete') {
                                       _showDeleteDialog(ad['_id']);
@@ -233,7 +232,7 @@ class _ViewAdvertisementState extends State<ViewAdvertisement> {
                                     ClipRRect(
                                       borderRadius: BorderRadius.circular(8),
                                       child: Image.asset(
-                                        'assets/images/trees.jpeg', // تعديل المسار للصور
+                                        'assets/images/trees.jpeg',
                                         height: 50,
                                         width: 50,
                                         fit: BoxFit.cover,
@@ -263,24 +262,31 @@ class _ViewAdvertisementState extends State<ViewAdvertisement> {
                             ),
                             const SizedBox(height: 16),
 
-                            // صورة الإعلان بعرض الشاشة
+                            // صورة الإعلان بحجم مناسب مع ظهورها بالكامل
                             ClipRRect(
                               borderRadius: BorderRadius.circular(15),
-                              child: ad['image'] != null
-                                  ? Image.memory(
-                                      base64Decode(ad['image'])!,
-                                      width: double.infinity,
-                                      fit: BoxFit.cover,
-                                    )
-                                  : Image.asset(
-                                      'assets/images/p1.jpg',
-                                      width: double.infinity,
-                                      fit: BoxFit.cover,
-                                    ),
+                              child: Container(
+                                height: 400, // تحديد ارتفاع الصورة
+                                width: double.infinity,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(15),
+                                ),
+                                child: ad['image'] != null
+                                    ? Image.memory(
+                                        base64Decode(ad['image'])!,
+                                        fit: BoxFit
+                                            .contain, // تناسب الصورة بالكامل
+                                      )
+                                    : Image.asset(
+                                        'assets/images/p1.jpg',
+                                        fit: BoxFit
+                                            .contain, // تناسب الصورة بالكامل
+                                      ),
+                              ),
                             ),
                             const SizedBox(height: 16),
 
-                            // زر انضم إلينا
+                            // زر انضم إلينا بحجم أكبر
                             Center(
                               child: ElevatedButton(
                                 onPressed: () {
@@ -293,10 +299,14 @@ class _ViewAdvertisementState extends State<ViewAdvertisement> {
                                 },
                                 style: ElevatedButton.styleFrom(
                                   foregroundColor: Colors.white,
-                                  backgroundColor: Color(0xFF556B2F),
+                                  backgroundColor: const Color(0xFF556B2F),
                                   textStyle: const TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold),
+                                      fontSize: 18,
+                                      fontWeight:
+                                          FontWeight.bold), // تكبير النص
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 21,
+                                      horizontal: 40), // زيادة الحشوة
                                 ),
                                 child: Text(ad['buttonText']),
                               ),

@@ -154,8 +154,8 @@ class _RequestDeliveryState extends State<RequestDelivery> {
               // الصورة المربعة
               Center(
                 child: Container(
-                  width: 450,
-                  height: 200,
+                  width: 500,
+                  height: 300,
                   decoration: BoxDecoration(
                     shape: BoxShape.rectangle,
                     borderRadius: BorderRadius.circular(10),
@@ -515,32 +515,35 @@ class _RequestDeliveryState extends State<RequestDelivery> {
                           }
                         }
                       },
-                      child: ElevatedButton(
-                        onPressed: () {
-                          _submitForm();
-                          // handle form submission
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF556B2F),
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 12.0), // تقليل المسافة داخل الزر
-                          shape: RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.circular(10), // زوايا مستديرة
+                      // Submit Button
+                      child: Center(
+                        child: ElevatedButton(
+                          onPressed: () {
+                            _submitForm();
+                            // handle form submission
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF556B2F),
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 12.0), // تقليل المسافة داخل الزر
+                            shape: RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.circular(10), // زوايا مستديرة
+                            ),
+                            textStyle: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold), // النص بولد
+                            minimumSize: const Size(400, 50), // تقليل حجم الزر
                           ),
-                          textStyle: const TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold), // النص بولد
-                          minimumSize: const Size(400, 50), // تقليل حجم الزر
-                        ),
-                        child: const Text(
-                          '  إرسال الطلب ',
-                          style: TextStyle(
-                            color: Colors.white,
+                          child: const Text(
+                            '  إرسال الطلب ',
+                            style: TextStyle(
+                              color: Colors.white,
+                            ),
                           ),
                         ),
                       ),
-                    )
+                    ),
                   ],
                 ),
               ),

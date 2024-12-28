@@ -452,153 +452,165 @@ class _PostCardState extends State<PostCard> {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: const EdgeInsets.all(10),
-      elevation: 5,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15),
-      ),
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(15),
-          border: Border.all(
-            color: const Color.fromARGB(255, 120, 181, 42).withOpacity(0.7),
-            width: 2,
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: const Color.fromARGB(255, 243, 247, 243).withOpacity(0.7),
-              spreadRadius: 2,
-              blurRadius: 5,
-            ),
-          ],
+    return Center(
+      child: ConstrainedBox(
+        constraints: BoxConstraints(
+          maxWidth: 1200, // تحديد أقصى عرض للبوست
         ),
-        padding: const EdgeInsets.all(10.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // معلومات المستخدم
-            Row(
-              textDirection: TextDirection.rtl,
-              children: [
-                CircleAvatar(
-                  backgroundImage: MemoryImage(base64Decode(widget.userImage)),
-                  radius: 25,
+        child: Card(
+          margin: const EdgeInsets.all(10),
+          elevation: 5,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15),
+          ),
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(15),
+              border: Border.all(
+                color: const Color.fromARGB(255, 120, 181, 42).withOpacity(0.7),
+                width: 2,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color:
+                      const Color.fromARGB(255, 243, 247, 243).withOpacity(0.7),
+                  spreadRadius: 2,
+                  blurRadius: 5,
                 ),
-                const SizedBox(width: 10),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      widget.userName,
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    Text(
-                      getElapsedTime(widget.createdAt), // Display elapsed time
-                      style: TextStyle(fontSize: 12, color: Colors.grey),
-                    ),
-                  ],
-                ),
-                Spacer(),
-                if (widget.postUsername == username)
-                  IconButton(
-                    icon: Icon(Icons.more_vert),
-                    onPressed: _showPostOptions,
-                  ),
               ],
             ),
-            const SizedBox(height: 10),
-            Divider(),
-            // محتوى المنشور
-            Align(
-              alignment: Alignment.centerRight,
-              child: Text(
-                widget.postText,
-                style: TextStyle(fontSize: 16),
-              ),
-            ),
-            // Check if there is a post image
-            if (widget.postImage != null && widget.postImage!.isNotEmpty)
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 10.0),
-                child: SizedBox(
-                  width: double.infinity, // Set the width to fill the parent
-                  height: 200.0, // Specify the desired height for the image
-                  child: Image.memory(
-                    base64Decode(widget.postImage!),
-                    fit: BoxFit
-                        .cover, // Ensures the image covers the specified size
-                  ),
-                ),
-              ),
-
-            Divider(),
-
-            // شريط التفاعلات الإجمالية
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            padding: const EdgeInsets.all(10.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // معلومات المستخدم
                 Row(
+                  textDirection: TextDirection.rtl,
                   children: [
-                    Icon(Icons.comment, color: Colors.grey),
-                    const SizedBox(width: 5),
-                    Text('${widget.comments.length}',
-                        style: TextStyle(fontWeight: FontWeight.bold)),
+                    CircleAvatar(
+                      backgroundImage:
+                          MemoryImage(base64Decode(widget.userImage)),
+                      radius: 25,
+                    ),
                     const SizedBox(width: 10),
-                    Icon(Icons.thumb_up, color: Colors.green),
-                    const SizedBox(width: 5),
-                    Text('$likes',
-                        style: TextStyle(fontWeight: FontWeight.bold)),
-                    const SizedBox(width: 10),
-                    Icon(Icons.star, color: Colors.yellow),
-                    const SizedBox(width: 5),
-                    Text('$interested',
-                        style: TextStyle(fontWeight: FontWeight.bold)),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          widget.userName,
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        Text(
+                          getElapsedTime(
+                              widget.createdAt), // Display elapsed time
+                          style: TextStyle(fontSize: 12, color: Colors.grey),
+                        ),
+                      ],
+                    ),
+                    Spacer(),
+                    if (widget.postUsername == username)
+                      IconButton(
+                        icon: Icon(Icons.more_vert),
+                        onPressed: _showPostOptions,
+                      ),
                   ],
+                ),
+                const SizedBox(height: 10),
+                Divider(),
+                // محتوى المنشور
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: Text(
+                    widget.postText,
+                    style: TextStyle(fontSize: 16),
+                    textAlign: TextAlign.right,
+                  ),
+                ),
+                // صورة المنشور
+                if (widget.postImage != null && widget.postImage!.isNotEmpty)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10.0),
+                    child: Center(
+                      child: SizedBox(
+                        width: 600, // تحديد العرض
+                        height: 600, // تحديد الارتفاع
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: Image.memory(
+                            base64Decode(widget.postImage!),
+                            fit: BoxFit.contain, // لضمان عرض الصورة بالكامل
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                Divider(),
+                // شريط التفاعلات الإجمالية
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        Icon(Icons.comment, color: Colors.grey),
+                        const SizedBox(width: 5),
+                        Text('${widget.comments.length}',
+                            style: TextStyle(fontWeight: FontWeight.bold)),
+                        const SizedBox(width: 10),
+                        Icon(Icons.thumb_up, color: Colors.green),
+                        const SizedBox(width: 5),
+                        Text('$likes',
+                            style: TextStyle(fontWeight: FontWeight.bold)),
+                        const SizedBox(width: 10),
+                        Icon(Icons.star, color: Colors.yellow),
+                        const SizedBox(width: 5),
+                        Text('$interested',
+                            style: TextStyle(fontWeight: FontWeight.bold)),
+                      ],
+                    ),
+                  ],
+                ),
+                Divider(),
+                // التفاعلات
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    _reactionButton(
+                        'like', Icons.thumb_up, Colors.green, likes),
+                    _reactionButton(
+                        'interested', Icons.star, Colors.amber, interested),
+                  ],
+                ),
+                Divider(),
+                // قسم التعليقات
+                CommentSection(
+                  postId: widget.postId,
+                  token: widget.token,
+                  comments: widget.comments,
+                  onAddComment: (String text, String image) {
+                    setState(() {
+                      widget.comments.add({
+                        'text': text,
+                        'image': image,
+                        'userName': 'محمد علي', // اسم صاحب التعليق (مؤقت)
+                        'userImage':
+                            'assets/images/profile.png', // صورة صاحب التعليق (مؤقت)
+                      });
+                    });
+                  },
+                  onDeleteComment: (int index) {
+                    setState(() {
+                      widget.comments.removeAt(index);
+                    });
+                  },
+                  onEditComment: (int index, String updatedText) {
+                    setState(() {
+                      widget.comments[index]['text'] = updatedText;
+                    });
+                  },
                 ),
               ],
             ),
-
-            Divider(),
-
-            // التفاعلات
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                _reactionButton('like', Icons.thumb_up, Colors.green, likes),
-                _reactionButton(
-                    'interested', Icons.star, Colors.amber, interested),
-              ],
-            ),
-            Divider(),
-            // قسم التعليقات
-            CommentSection(
-              postId: widget.postId,
-              token: widget.token,
-              comments: widget.comments,
-              onAddComment: (String text, String image) {
-                setState(() {
-                  widget.comments.add({
-                    'text': text,
-                    'image': image,
-                    'userName': 'محمد علي', // اسم صاحب التعليق (مؤقت)
-                    'userImage':
-                        'assets/images/profile.png', // صورة صاحب التعليق (مؤقت)
-                  });
-                });
-              },
-              onDeleteComment: (int index) {
-                setState(() {
-                  widget.comments.removeAt(index);
-                });
-              },
-              onEditComment: (int index, String updatedText) {
-                setState(() {
-                  widget.comments[index]['text'] = updatedText;
-                });
-              },
-            ),
-          ],
+          ),
         ),
       ),
     );

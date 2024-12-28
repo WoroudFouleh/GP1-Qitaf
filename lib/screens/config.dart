@@ -1,4 +1,4 @@
-const url = 'http://192.168.1.11:3000/';
+const url = 'http://192.168.1.5:3000/';
 final registration = "${url}api/users/register";
 final login = "${url}api/users/login";
 final forgotPass = "${url}api/users/forgotPass";

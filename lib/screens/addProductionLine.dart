@@ -6,6 +6,7 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'dart:html' as html; // استيراد html لدعم اختيار الملفات من الويب
 
 import 'package:login_page/screens/custom_drawer.dart';
 import 'package:login_page/screens/map_screen.dart'; // To handle JSON decoding
@@ -287,18 +288,21 @@ class _AddProductionLineState extends State<AddProductionLine> {
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
-                  showImagePickerOption(context);
+                  _pickImageFromDevice(); // استخدام هذه الدالة لاختيار صورة من الجهاز مباشرة
                 },
                 style: ElevatedButton.styleFrom(
                   padding:
                       const EdgeInsets.symmetric(vertical: 10, horizontal: 50),
                   backgroundColor: const Color.fromARGB(255, 18, 116, 22),
                 ),
-                child: const Text('إضافة صورة',
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 15,
-                        color: Colors.white)),
+                child: const Text(
+                  'إضافة صورة',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 15,
+                    color: Colors.white,
+                  ),
+                ),
               ),
               const SizedBox(height: 25),
 
@@ -609,76 +613,25 @@ class _AddProductionLineState extends State<AddProductionLine> {
     );
   }
 
-  void showImagePickerOption(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      builder: (BuildContext context) {
-        return Container(
-          height: 150,
-          color: Colors.white,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              Expanded(
-                child: InkWell(
-                  onTap: () {
-                    _pickImageFromGallery();
-                  },
-                  child: const Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.image, color: Colors.green, size: 35),
-                      SizedBox(height: 5),
-                      Text('من المعرض',
-                          style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.bold)),
-                    ],
-                  ),
-                ),
-              ),
-              Expanded(
-                child: InkWell(
-                  onTap: () {
-                    _pickImageFromCamera();
-                  },
-                  child: const Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.camera, color: Colors.green, size: 35),
-                      SizedBox(height: 5),
-                      Text('من الكاميرا',
-                          style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.bold)),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
+// دالة لاختيار الصورة من الجهاز مباشرة
+  void _pickImageFromDevice() async {
+    // إنشاء عنصر Input لاختيار الملفات
+    html.FileUploadInputElement uploadInput = html.FileUploadInputElement();
+    uploadInput.accept = 'image/*'; // تحديد أن الملفات المقبولة هي الصور فقط
+    uploadInput.click(); // محاكاة الضغط على الزر
 
-  void _pickImageFromGallery() async {
-    final pickedFile =
-        await ImagePicker().pickImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      selectedImage = File(pickedFile.path);
-      _image = await selectedImage!.readAsBytes();
-      setState(() {});
-    }
-    Navigator.pop(context);
-  }
+    uploadInput.onChange.listen((e) async {
+      final files = uploadInput.files;
+      if (files!.isEmpty) return;
 
-  void _pickImageFromCamera() async {
-    final pickedFile =
-        await ImagePicker().pickImage(source: ImageSource.camera);
-    if (pickedFile != null) {
-      selectedImage = File(pickedFile.path);
-      _image = await selectedImage!.readAsBytes();
-      setState(() {});
-    }
-    Navigator.pop(context);
+      final reader = html.FileReader();
+      reader.readAsArrayBuffer(files[0]);
+
+      reader.onLoadEnd.listen((e) {
+        setState(() {
+          _image = reader.result as Uint8List?;
+        });
+      });
+    });
   }
 }

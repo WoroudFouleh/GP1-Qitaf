@@ -25,6 +25,8 @@ class ItemPage extends StatefulWidget {
   final String preparationTime;
   final String preparationUnit;
   final String ownerUsername;
+  final String productCity;
+  final Map<String, double> productCoordinates;
 
   const ItemPage(
       {Key? key,
@@ -41,7 +43,10 @@ class ItemPage extends StatefulWidget {
       required this.username,
       required this.preparationTime,
       required this.preparationUnit,
-      required this.ownerUsername, required this.userId})
+      required this.ownerUsername,
+      required this.userId,
+      required this.productCity,
+      required this.productCoordinates})
       : super(key: key);
 
   @override
@@ -124,20 +129,29 @@ class _ItemPageState extends State<ItemPage> {
 
   @override
   Widget build(BuildContext context) {
-    // double ratee = widget.productRate.toDouble();
     return Scaffold(
       backgroundColor: Colors.white,
       body: ListView(
         children: [
           const ItemAppBar(),
           Padding(
-              padding: const EdgeInsets.all(16),
-              child: Image.memory(
-                base64Decode(widget.profilePhotoBase64),
-                height: 300,
-                width: double.infinity,
-                fit: BoxFit.fill,
-              )),
+            padding: const EdgeInsets.all(16),
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                double imageWidth =
+                    constraints.maxWidth * 0.6; // عرض الصورة بنسبة 60%
+                double imageHeight =
+                    constraints.maxWidth * 0.4; // ارتفاع الصورة بنسبة 40%
+                return Image.memory(
+                  base64Decode(widget.profilePhotoBase64),
+                  height: imageHeight,
+                  width: imageWidth,
+                  fit: BoxFit
+                      .contain, // يضمن عرض الصورة بالكامل في المساحة الصغيرة
+                );
+              },
+            ),
+          ),
           Container(
             width: double.infinity,
             decoration: BoxDecoration(
@@ -178,7 +192,7 @@ class _ItemPageState extends State<ItemPage> {
                                   image: userProfileImage,
                                   email: email,
                                   postsCount: postsCount,
-                                ), // Navigate to profile page
+                                ),
                               ),
                             );
                           },
@@ -188,25 +202,19 @@ class _ItemPageState extends State<ItemPage> {
                                 '$firstName $lastName',
                                 textAlign: TextAlign.right,
                                 style: const TextStyle(
-                                  fontSize: 16,
+                                  fontSize: 18,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
                               const SizedBox(width: 10),
                               ClipOval(
-                                  child: Image.memory(
-                                base64Decode(userProfileImage),
-                                fit: BoxFit.cover,
-                                width: 40.0,
-                                height: 40.0,
-                              )
-                                  // : Image.asset(
-                                  //     'assets/images/profile.png',
-                                  //     fit: BoxFit.cover,
-                                  //     width: 50.0,
-                                  //     height: 50.0,
-                                  //   ),
-                                  ),
+                                child: Image.memory(
+                                  base64Decode(userProfileImage),
+                                  fit: BoxFit.cover,
+                                  width: 50.0,
+                                  height: 50.0,
+                                ),
+                              ),
                             ],
                           ),
                         ),
@@ -234,7 +242,7 @@ class _ItemPageState extends State<ItemPage> {
                         Text(
                           widget.productName,
                           style: TextStyle(
-                            fontSize: 23,
+                            fontSize: 26, // Adjusted font size for web
                             fontWeight: FontWeight.bold,
                             color: const Color.fromARGB(255, 21, 80, 13),
                             shadows: [
@@ -415,7 +423,7 @@ class _ItemPageState extends State<ItemPage> {
                               ),
                             ),
                           ],
-                        )
+                        ),
                       ],
                     ),
                   ),
@@ -459,7 +467,9 @@ class _ItemPageState extends State<ItemPage> {
           productName: widget.productName,
           profilePhotoBase64: widget.profilePhotoBase64,
           token: widget.token,
-          productId: widget.productId),
+          productId: widget.productId,
+          productCity: widget.productCity,
+          productCoordinates: widget.productCoordinates),
     );
   }
 }

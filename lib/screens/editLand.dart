@@ -437,8 +437,8 @@ class _EditLandState extends State<EditLand> {
                                 ? Image.memory(
                                     _image!,
                                     fit: BoxFit.cover,
-                                    width: 200.0,
-                                    height: 150.0,
+                                    width: 400.0,
+                                    height: 300.0,
                                   )
                                 : Image.asset('assets/images/lands.jpg'),
                           )
@@ -449,14 +449,14 @@ class _EditLandState extends State<EditLand> {
                                 ? Image.memory(
                                     base64Decode(widget.image!),
                                     fit: BoxFit.cover,
-                                    width: 250.0,
-                                    height: 190.0,
+                                    width: 400.0,
+                                    height: 300.0,
                                   )
                                 : Image.asset('assets/images/lands.jpg'),
                           ),
                     Positioned(
                       bottom: 0,
-                      left: 200, // تغيير موضع زر التعديل
+                      left: 370, // تغيير موضع زر التعديل
                       child: IconButton(
                         onPressed: () {
                           showImagePickerOption(context);

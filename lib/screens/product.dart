@@ -13,7 +13,8 @@ import 'package:jwt_decoder/jwt_decoder.dart';
 class ProductsPage extends StatefulWidget {
   final String token;
   final String userId;
-  const ProductsPage({required this.token, Key? key, required this.userId}) : super(key: key);
+  const ProductsPage({required this.token, Key? key, required this.userId})
+      : super(key: key);
 
   @override
   _ProductsPageState createState() => _ProductsPageState();
@@ -369,10 +370,10 @@ class _ProductsPageState extends State<ProductsPage> {
                             physics: const NeverScrollableScrollPhysics(),
                             gridDelegate:
                                 const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2,
-                              childAspectRatio: 0.72,
-                              mainAxisSpacing: 10.0,
-                              crossAxisSpacing: 10.0,
+                              crossAxisCount: 3,
+                              childAspectRatio: 0.05,
+                              mainAxisSpacing: 5.0,
+                              crossAxisSpacing: 5.0,
                             ),
                             itemCount: products.length,
                             itemBuilder: (context, index) {
@@ -385,30 +386,38 @@ class _ProductsPageState extends State<ProductsPage> {
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) => ItemPage(
-                                          userId: widget.userId,
-                                            type: 1,
-                                            productName: product['name'],
-                                            productDescription:
-                                                product['description'],
-                                            productPrice: product['price'],
-                                            profilePhotoBase64: product[
-                                                'image'], // Assuming image is base64
-                                            quantityType:
-                                                product['quantityType'],
-                                            quantityAvailable:
-                                                product['quantity'],
-                                            token: widget.token,
-                                            productId: product['_id'],
-                                            productRate:
-                                                (product['rate'] as num)
-                                                    .toDouble(),
-                                            username: product['username'],
-                                            preparationTime:
-                                                product['preparationTime'],
-                                            preparationUnit:
-                                                product['preparationTimeUnit'],
-                                            ownerUsername:
-                                                product['username'])),
+                                              userId: widget.userId,
+                                              type: 1,
+                                              productName: product['name'],
+                                              productDescription:
+                                                  product['description'],
+                                              productPrice: product['price'],
+                                              profilePhotoBase64: product[
+                                                  'image'], // Assuming image is base64
+                                              quantityType:
+                                                  product['quantityType'],
+                                              quantityAvailable:
+                                                  product['quantity'],
+                                              token: widget.token,
+                                              productId: product['_id'],
+                                              productRate:
+                                                  (product['rate'] as num)
+                                                      .toDouble(),
+                                              username: product['username'],
+                                              preparationTime:
+                                                  product['preparationTime'],
+                                              preparationUnit: product[
+                                                  'preparationTimeUnit'],
+                                              ownerUsername:
+                                                  product['username'],
+                                              productCity: product['city'],
+                                              productCoordinates: {
+                                                'lat': product['coordinates']
+                                                    ['lat'],
+                                                'lng': product['coordinates']
+                                                    ['lng']
+                                              },
+                                            )),
                                   );
                                 },
                                 child: ItemWidget(
@@ -568,10 +577,10 @@ class _ProductsPageState extends State<ProductsPage> {
                             physics: const NeverScrollableScrollPhysics(),
                             gridDelegate:
                                 const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2,
-                              childAspectRatio: 0.72,
-                              mainAxisSpacing: 10.0,
-                              crossAxisSpacing: 10.0,
+                              crossAxisCount: 3,
+                              childAspectRatio: 0.05,
+                              mainAxisSpacing: 5.0,
+                              crossAxisSpacing: 5.0,
                             ),
                             itemCount: products2.length,
                             itemBuilder: (context, index) {
@@ -585,27 +594,31 @@ class _ProductsPageState extends State<ProductsPage> {
                                     MaterialPageRoute(
                                       builder: (context) => ItemPage(
                                         userId: widget.userId,
-                                          type: 2,
-                                          productName: product2['name'],
-                                          productDescription:
-                                              product2['description'],
-                                          productPrice: product2['price'],
-                                          profilePhotoBase64: product2[
-                                              'image'], // Assuming image is base64
-                                          quantityType:
-                                              product2['quantityType'],
-                                          quantityAvailable:
-                                              product2['quantity'],
-                                          token: widget.token,
-                                          productId: product2['_id'],
-                                          productRate: (product2['rate'] as num)
-                                              .toDouble(),
-                                          username: product2['username'],
-                                          preparationTime:
-                                              product2['preparationTime'],
-                                          preparationUnit:
-                                              product2['preparationTimeUnit'],
-                                          ownerUsername: product2['username']),
+                                        type: 2,
+                                        productName: product2['name'],
+                                        productDescription:
+                                            product2['description'],
+                                        productPrice: product2['price'],
+                                        profilePhotoBase64: product2[
+                                            'image'], // Assuming image is base64
+                                        quantityType: product2['quantityType'],
+                                        quantityAvailable: product2['quantity'],
+                                        token: widget.token,
+                                        productId: product2['_id'],
+                                        productRate: (product2['rate'] as num)
+                                            .toDouble(),
+                                        username: product2['username'],
+                                        preparationTime:
+                                            product2['preparationTime'],
+                                        preparationUnit:
+                                            product2['preparationTimeUnit'],
+                                        ownerUsername: product2['username'],
+                                        productCity: product2['city'],
+                                        productCoordinates: {
+                                          'lat': product2['coordinates']['lat'],
+                                          'lng': product2['coordinates']['lng']
+                                        },
+                                      ),
                                     ),
                                   );
                                 },
@@ -622,7 +635,6 @@ class _ProductsPageState extends State<ProductsPage> {
                         ],
                       ),
                     ),
-
                     // Tab content for "منتج غير غذائي"
 
                     SingleChildScrollView(
@@ -742,7 +754,7 @@ class _ProductsPageState extends State<ProductsPage> {
                             margin:
                                 const EdgeInsets.only(right: 10, bottom: 10),
                             child: const Text(
-                              "أجدد المحاصيل",
+                              "أجدد المنتجات الغير غذائية",
                               style: TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,
@@ -767,10 +779,10 @@ class _ProductsPageState extends State<ProductsPage> {
                             physics: const NeverScrollableScrollPhysics(),
                             gridDelegate:
                                 const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2,
-                              childAspectRatio: 0.72,
-                              mainAxisSpacing: 10.0,
-                              crossAxisSpacing: 10.0,
+                              crossAxisCount: 3,
+                              childAspectRatio: 0.05,
+                              mainAxisSpacing: 5.0,
+                              crossAxisSpacing: 5.0,
                             ),
                             itemCount: products3.length,
                             itemBuilder: (context, index) {
@@ -782,31 +794,39 @@ class _ProductsPageState extends State<ProductsPage> {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) => ItemPage(
-                                        userId: widget.userId,
-                                          type: 3,
-
-                                          productName: product3['name'],
-                                          productDescription:
-                                              product3['description'],
-                                          productPrice: product3['price'],
-                                          profilePhotoBase64: product3[
-                                              'image'], // Assuming image is base64
-                                          quantityType:
-                                              product3['quantityType'],
-                                          quantityAvailable:
-                                              product3['quantity'],
-                                          token: widget.token,
-                                          productId: product3['_id'],
-                                          productRate: (product3['rate'] as num)
-                                              .toDouble(),
-                                          username: product3['username'],
-                                          preparationTime:
-                                              product3['preparationTime'],
-                                          preparationUnit:
-                                              product3['preparationTimeUnit'],
-                                          ownerUsername: product3['username']),
-                                    ),
+                                        builder: (context) => ItemPage(
+                                              userId: widget.userId,
+                                              type: 1,
+                                              productName: product3['name'],
+                                              productDescription:
+                                                  product3['description'],
+                                              productPrice: product3['price'],
+                                              profilePhotoBase64: product3[
+                                                  'image'], // Assuming image is base64
+                                              quantityType:
+                                                  product3['quantityType'],
+                                              quantityAvailable:
+                                                  product3['quantity'],
+                                              token: widget.token,
+                                              productId: product3['_id'],
+                                              productRate:
+                                                  (product3['rate'] as num)
+                                                      .toDouble(),
+                                              username: product3['username'],
+                                              preparationTime:
+                                                  product3['preparationTime'],
+                                              preparationUnit: product3[
+                                                  'preparationTimeUnit'],
+                                              ownerUsername:
+                                                  product3['username'],
+                                              productCity: product3['city'],
+                                              productCoordinates: {
+                                                'lat': product3['coordinates']
+                                                    ['lat'],
+                                                'lng': product3['coordinates']
+                                                    ['lng']
+                                              },
+                                            )),
                                   );
                                 },
                                 child: Item3Widget(

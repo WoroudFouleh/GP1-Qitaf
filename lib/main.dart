@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:login_page/Auth/test.dart';
 import 'package:login_page/screens/LandPage.dart';
 import 'package:login_page/screens/details.dart';
+import 'package:login_page/screens/map_screen.dart';
 import 'package:login_page/screens/navigate.dart';
 import 'package:login_page/screens/previousOrders.dart';
 import 'package:login_page/screens/production_line.dart';
