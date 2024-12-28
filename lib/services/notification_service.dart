@@ -1,3 +1,5 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -87,12 +89,14 @@ class NotificationService {
         notification.body,
         NotificationDetails(
           android: AndroidNotificationDetails(
-              'high_importance_channel', " High Importance Notifications",
-              channelDescription:
-                  'This channel is used for important notifications',
-              importance: Importance.high,
-              priority: Priority.high,
-              icon: '@mipmap/ic_launcher'),
+            'high_importance_channel', " High Importance Notifications",
+            channelDescription:
+                'This channel is used for important notifications',
+            importance: Importance.high,
+            priority: Priority.high,
+            //icon: 'icon_notification'
+            largeIcon: DrawableResourceAndroidBitmap('adminn'),
+          ),
         ),
         payload: message.data.toString(),
       );
@@ -124,5 +128,70 @@ class NotificationService {
   Future<void> subscribeToTopic(String topic) async {
     await FirebaseMessaging.instance.subscribeToTopic(topic);
     print("cubscribed to: $topic");
+  }
+
+  Future<void> sendNotification(String title, String body) async {
+    String accessToken =
+        "ya29.c.c0ASRK0GaK7n7hz9kYiGQvqvH1ZUUcGQjQ7fhUNuLSlOBRoI74MhGnbUqUQu3jgq_-Ll6KYqdrmYyAaD3H82fsrgz1G8VhdIeO7M5lUECJi4GwuIKcuISsiWokY39TtUwYyZpaM6harX2mHfDMxahxd5i4r50kgCZvYda9i2o6bIKn0YzBUvWHAA6Q3y6yr0GetSdxd5vO9hEJV1qQf-oRvVW5atp3tO_ssF_vxz8VA3flVM6y5NEYpeHFerFrnmz9SwKIHhNN7GZdMYoXv7QUoBRjZfNbupbS1bLlZvJDtc9PYgPnGJYVi-Rnf_qCujSB_26IdDmkfOmIzbZBRXDjuX_Ktda_jgsiLSB0kZJ9YY_-5O6UA2U32wH383Dcbq62hOpgfw45pQsdsO6JJmbenUFr2iy2s4297VJ6Bv5f8YkbRSbRsMO-Xmc0hjFSXMreJ8Rbqahqq-BfBauMwsW1gFyrnt7kzijmx5mWFc-iVIWjXl4gVo-7w0xOYrXo2Q18ShhZnFrBSBx9r0ysOO8ykFd525amXi_glhQbRtknF8WvcqyfmgI7SmZuSqOF6-5FsZwy5ilZfdVelUzineZQm2Mkcoux6Okd5g7wWWYJ7mcx2ck9J-l84MkojebSIZlQF-7UM9y6Y759S8BpjY5XgfWlujfYwwwIf7jQsUMpMMBzI07p1gsqOWa7ueZseQB10ulkIQjZSeY8ViyjF52OlX4gpr0n5OIk2vc48dFwJZkXzYrcouzU-9qzfwemotvkoYwRt-kjB2W0-_kbaZva_fnvaXZB5O5rMowsY8JrWXW33RVmvzUFhF7kMq7tqh-WldmhXtOJJr52Ot4mfdUQnjO9s1b1Fyhr4F3BkaQZwSsz9ybRZaaZ5nsV8iVqZS7_R5kghqj9IoyX0voBQsROR4MWYJRqXgwoZ7gl0-x1kUORpSxRw_oggUkUJoXqvnf03Qwfff77tQBFFtzpSSOcQqBgoW0fzYnJUF6jiRXypYbFwczcVr0QoWF";
+    var messagePayload = {
+      'message': {
+        'topic': "all_devices",
+        'notification': {'title': title, 'body': body},
+        'data': {'type': 'chat'},
+        'android': {
+          'priority': "high",
+          'notification': {'channel_id': "high_importance_channel"}
+        }
+      }
+    };
+    final url =
+        'https://fcm.googleapis.com/v1/projects/messageapp-75f3c/messages:send';
+    final headers = {
+      'Authorization': 'Bearer $accessToken',
+      'Content-type': 'application/json'
+    };
+    final response = await http.post(
+      Uri.parse(url),
+      headers: headers,
+      body: jsonEncode(messagePayload),
+    );
+    if (response.statusCode == 200) {
+      print('Notification sent successfully');
+    } else {
+      print('Error sending notification: ${response.body}');
+    }
+  }
+
+  Future<void> sendNotificationToSpecific(
+      String? target, String title, String body) async {
+    String accessToken =
+        "ya29.c.c0ASRK0GaK7n7hz9kYiGQvqvH1ZUUcGQjQ7fhUNuLSlOBRoI74MhGnbUqUQu3jgq_-Ll6KYqdrmYyAaD3H82fsrgz1G8VhdIeO7M5lUECJi4GwuIKcuISsiWokY39TtUwYyZpaM6harX2mHfDMxahxd5i4r50kgCZvYda9i2o6bIKn0YzBUvWHAA6Q3y6yr0GetSdxd5vO9hEJV1qQf-oRvVW5atp3tO_ssF_vxz8VA3flVM6y5NEYpeHFerFrnmz9SwKIHhNN7GZdMYoXv7QUoBRjZfNbupbS1bLlZvJDtc9PYgPnGJYVi-Rnf_qCujSB_26IdDmkfOmIzbZBRXDjuX_Ktda_jgsiLSB0kZJ9YY_-5O6UA2U32wH383Dcbq62hOpgfw45pQsdsO6JJmbenUFr2iy2s4297VJ6Bv5f8YkbRSbRsMO-Xmc0hjFSXMreJ8Rbqahqq-BfBauMwsW1gFyrnt7kzijmx5mWFc-iVIWjXl4gVo-7w0xOYrXo2Q18ShhZnFrBSBx9r0ysOO8ykFd525amXi_glhQbRtknF8WvcqyfmgI7SmZuSqOF6-5FsZwy5ilZfdVelUzineZQm2Mkcoux6Okd5g7wWWYJ7mcx2ck9J-l84MkojebSIZlQF-7UM9y6Y759S8BpjY5XgfWlujfYwwwIf7jQsUMpMMBzI07p1gsqOWa7ueZseQB10ulkIQjZSeY8ViyjF52OlX4gpr0n5OIk2vc48dFwJZkXzYrcouzU-9qzfwemotvkoYwRt-kjB2W0-_kbaZva_fnvaXZB5O5rMowsY8JrWXW33RVmvzUFhF7kMq7tqh-WldmhXtOJJr52Ot4mfdUQnjO9s1b1Fyhr4F3BkaQZwSsz9ybRZaaZ5nsV8iVqZS7_R5kghqj9IoyX0voBQsROR4MWYJRqXgwoZ7gl0-x1kUORpSxRw_oggUkUJoXqvnf03Qwfff77tQBFFtzpSSOcQqBgoW0fzYnJUF6jiRXypYbFwczcVr0QoWF";
+    var messagePayload = {
+      'message': {
+        'token': target,
+        'notification': {'title': title, 'body': body},
+        'data': {'type': 'chat'},
+        'android': {
+          'priority': "high",
+          'notification': {'channel_id': "high_importance_channel"}
+        }
+      }
+    };
+    final url =
+        'https://fcm.googleapis.com/v1/projects/messageapp-75f3c/messages:send';
+    final headers = {
+      'Authorization': 'Bearer $accessToken',
+      'Content-type': 'application/json'
+    };
+    final response = await http.post(
+      Uri.parse(url),
+      headers: headers,
+      body: jsonEncode(messagePayload),
+    );
+    if (response.statusCode == 200) {
+      print('Notification sent successfully');
+    } else {
+      print('Error sending notification: ${response.body}');
+    }
   }
 }

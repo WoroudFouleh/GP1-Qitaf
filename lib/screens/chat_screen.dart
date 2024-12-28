@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'dart:math'; // Import the math library for random number generation
+import 'dart:math';
+
+import 'package:login_page/services/notification_service.dart'; // Import the math library for random number generation
 
 class ChatScreen extends StatefulWidget {
   final String currentUserId;
@@ -30,6 +32,35 @@ class _ChatScreenState extends State<ChatScreen> {
       random.nextInt(256), // Random blue value
       1, // Full opacity
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    initializeNotificationService();
+  }
+
+  void initializeNotificationService() async {
+    await NotificationService.instance.initialize();
+  }
+
+  Future<String> _getReceiverToken(String receiverId) async {
+    try {
+      var userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(receiverId)
+          .get();
+      if (userDoc.exists) {
+        return userDoc[
+            'fcmToken']; // assuming the FCM token is stored under 'fcmToken' field
+      } else {
+        throw Exception('Receiver not found');
+      }
+    } catch (e) {
+      print("Error retrieving token: $e");
+      return '';
+    }
   }
 
   // Function to delete the message from Firestore
@@ -389,7 +420,29 @@ class _ChatScreenState extends State<ChatScreen> {
                             },
                             SetOptions(merge: true),
                           );
+                          var senderDoc = await FirebaseFirestore.instance
+                              .collection('users')
+                              .doc(widget.currentUserId)
+                              .get();
 
+                          String firstName = senderDoc['name'] ??
+                              'غير معروف'; // Default to 'غير معروف' if name not found
+                          String lastName = senderDoc['familyName'] ?? '';
+                          String senderFullName = '$firstName $lastName';
+
+                          // Get the receiver's FCM token
+                          String receiverToken =
+                              await _getReceiverToken(widget.otherUserId);
+
+                          if (receiverToken.isNotEmpty) {
+                            // Send the notification with the sender's full name
+                            await NotificationService.instance
+                                .sendNotificationToSpecific(
+                              receiverToken,
+                              'رسالة جديدة من $senderFullName', // Title with full name
+                              message, // Message content
+                            );
+                          }
                           _messageController.clear();
                         },
                       ),

@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:login_page/Admin/Admin.dart';
 
@@ -12,6 +13,7 @@ import 'package:login_page/screens/forget_password_screen.dart';
 //import 'package:login_page/screens/forget_password_screen.dart';
 //import 'package:login_page/screens/opcode.dart';
 import 'package:login_page/screens/signup_screen.dart';
+import 'package:login_page/services/notification_service.dart';
 
 import 'package:login_page/widgets/custom_scaffold.dart';
 import 'package:http/http.dart' as http;
@@ -45,6 +47,7 @@ class _SigninScreenState extends State<SigninScreen> {
   void initState() {
     super.initState();
     initSharedPref();
+    initializeNotificationService();
   }
 
   void initSharedPref() async {
@@ -56,6 +59,11 @@ class _SigninScreenState extends State<SigninScreen> {
     _usernameController.dispose();
     _passController.dispose();
     super.dispose();
+  }
+
+// Initialize the notification service
+  void initializeNotificationService() async {
+    await NotificationService.instance.initialize();
   }
 
   void showNotification(String message,
@@ -79,9 +87,12 @@ class _SigninScreenState extends State<SigninScreen> {
   void loginUser() async {
     try {
       var myToken2;
+      String? fcmToken; // Declare variable for FCM token
+
       if (_usernameController.text.isNotEmpty &&
           _passController.text.isNotEmpty) {
         bool firebaseLoginSuccess = false;
+
         // Check for hardcoded admin credentials
         if (_usernameController.text == "admin" &&
             _passController.text == "admin") {
@@ -106,7 +117,9 @@ class _SigninScreenState extends State<SigninScreen> {
           );
           return;
         }
+
         try {
+          // Firebase login
           UserCredential firebaseUser = await FirebaseAuth.instance
               .signInWithEmailAndPassword(
                   email: _usernameController.text,
@@ -115,18 +128,28 @@ class _SigninScreenState extends State<SigninScreen> {
           if (firebaseUser.user != null) {
             myToken2 = await firebaseUser.user!.getIdToken();
 
+            // Get the FCM token
+            fcmToken = await FirebaseMessaging.instance.getToken();
+
             User? firebaseUser2 = FirebaseAuth.instance.currentUser;
-            String userId = firebaseUser2?.uid ?? ''; // احصل على الـ UID
-            if (myToken2 != null) {
+            String userId = firebaseUser2?.uid ?? ''; // Get the UID
+
+            if (fcmToken != null) {
+              // Update Firestore with FCM token
               await FirebaseFirestore.instance
                   .collection('users')
                   .doc(userId)
                   .update({
-                'fcmToken': myToken2,
+                'fcmToken': fcmToken,
               });
             }
+            await NotificationService.instance.sendNotificationToSpecific(
+              await FirebaseMessaging.instance.getToken(),
+              'Login Successful',
+              'Welcome back to the app!',
+            );
             showNotification('تم تسجيل الدخول عبر Firebase بنجاح');
-            firebaseLoginSuccess = true; // Mark Firebase login as successful
+            firebaseLoginSuccess = true;
           }
         } catch (e) {
           showNotification('خطأ في تسجيل الدخول عبر Firebase',
@@ -150,7 +173,7 @@ class _SigninScreenState extends State<SigninScreen> {
           if (jsonResponse['status']) {
             var myToken = jsonResponse['token'];
             var userType = jsonResponse['userType'];
-            //var deliveryToken = jsonResponse['']
+
             print('User Type from API: $userType'); // Log userType to debug
             await prefs.setString('token', myToken);
             showNotification('تم تسجيل الدخول بنجاح');
