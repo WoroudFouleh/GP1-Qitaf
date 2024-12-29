@@ -1,9 +1,12 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert'; // To handle JSON decoding
 import 'package:login_page/screens/config.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:login_page/services/notification_service.dart';
 
 class LandBottonBar extends StatefulWidget {
   final String token;
@@ -37,10 +40,47 @@ class _LandBottonBarState extends State<LandBottonBar> {
   late String workerCity;
   late String workerGender;
   late double userRate;
+  late String ownerfirstName = "";
+  late String ownerlastName = "";
+  late String ownerFcmToken = "";
+  late String ownerId = "";
+  late String owneremail = "";
+
+  void fetchUser() async {
+    print("Sending username: ${widget.ownerUserName}");
+
+    try {
+      final response = await http.get(
+        Uri.parse('$getUser/${widget.ownerUserName}'),
+        headers: {'Content-Type': 'application/json'},
+      );
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        if (data['status'] == true) {
+          final userInfo = data['data'];
+          setState(() {
+            ownerfirstName = userInfo['firstName'] ?? "";
+            ownerlastName = userInfo['lastName'] ?? "";
+
+            owneremail = userInfo['email'] ?? "";
+          });
+        } else {
+          print("Error fetching user: ${data['message']}");
+        }
+      } else {
+        print("Failed to load user: ${response.statusCode}");
+      }
+    } catch (e) {
+      print("An error occurred: $e");
+    }
+  }
 
   @override
   void initState() {
     super.initState();
+    fetchUser();
+    initializeNotificationService();
     Map<String, dynamic> jwtDecoderToken = JwtDecoder.decode(widget.token);
     print(jwtDecoderToken);
     workerUserName = jwtDecoderToken['username'] ?? 'No username';
@@ -50,6 +90,34 @@ class _LandBottonBarState extends State<LandBottonBar> {
     workerLastname = jwtDecoderToken['lastName'] ?? 'No gender';
     workerProfileImage = jwtDecoderToken['profilePhoto'] ?? 'No gender';
     userRate = jwtDecoderToken['rate'] ?? 0.0;
+  }
+
+  void initializeNotificationService() async {
+    await NotificationService.instance.initialize();
+  }
+
+  Future<void> fetchOwnerFcmToken() async {
+    try {
+      // Query Firestore for a user with the same email as the owner
+      final querySnapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .where('email', isEqualTo: owneremail)
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        final userDoc = querySnapshot.docs.first;
+        setState(() {
+          ownerFcmToken = userDoc['fcmToken'] ?? "";
+          ownerId = userDoc.id; // Get the FCM token
+        });
+        print("Owner's FCM token: $ownerFcmToken");
+        print("Owner's document ID: $ownerId");
+      } else {
+        print("No user found with the email: $owneremail");
+      }
+    } catch (e) {
+      print("Error fetching FCM token: $e");
+    }
   }
 
   void sendWorkRequest() async {
@@ -84,6 +152,17 @@ class _LandBottonBarState extends State<LandBottonBar> {
         var jsonResponse = jsonDecode(response.body);
         if (jsonResponse['status']) {
           print('Request sent successfully');
+          await NotificationService.instance.sendNotificationToSpecific(
+            ownerFcmToken,
+            'طلب عمل جديد في أرض  ',
+            'اضغط لمراجعة الطلب .${widget.landName}طلب عمل جديد في ',
+          );
+          await NotificationService.instance.saveNotificationToFirebase(
+              ownerFcmToken,
+              'طلب عمل جديد في أرض  ',
+              '.${widget.landName}طلب عمل جديد في ',
+              ownerId,
+              'workRequest');
         } else {
           print('Error sending request: ${jsonResponse['message']}');
         }

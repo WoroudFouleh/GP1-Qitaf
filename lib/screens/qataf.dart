@@ -10,7 +10,8 @@ import 'package:jwt_decoder/jwt_decoder.dart';
 class QatafPage extends StatefulWidget {
   final String token;
   final String userId;
-  const QatafPage({required this.token, Key? key, required this.userId}) : super(key: key);
+  const QatafPage({required this.token, Key? key, required this.userId})
+      : super(key: key);
 
   @override
   State<QatafPage> createState() => _QatafPageState();
@@ -225,7 +226,6 @@ class _QatafPageState extends State<QatafPage> {
                       context,
                       MaterialPageRoute(
                         builder: (context) => LandPage(
-                          userId: widget.userId,
                           token: widget.token,
                           landName: land['landName'],
                           image: land['image'],
@@ -245,6 +245,7 @@ class _QatafPageState extends State<QatafPage> {
                             'lat': land['coordinates']['lat'],
                             'lng': land['coordinates']['lng']
                           },
+                          userId: widget.userId,
                         ),
                       ),
                     );

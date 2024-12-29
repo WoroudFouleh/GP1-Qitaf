@@ -143,11 +143,17 @@ class _SigninScreenState extends State<SigninScreen> {
                 'fcmToken': fcmToken,
               });
             }
-            await NotificationService.instance.sendNotificationToSpecific(
-                await FirebaseMessaging.instance.getToken(),
-                'Login Successful',
-                'Welcome back to the app!',
-                userId);
+            // await NotificationService.instance.sendNotificationToSpecific(
+            //   await FirebaseMessaging.instance.getToken(),
+            //   'Login Successful',
+            //   'Welcome back to the app!',
+            // );
+            // await NotificationService.instance.saveNotificationToFirebase(
+            //     await FirebaseMessaging.instance.getToken(),
+            //     'تم تسجيل الدخول',
+            //     'أهلا بك في قطاف!',
+            //     userId,
+            //     'chat');
             showNotification('تم تسجيل الدخول عبر Firebase بنجاح');
             firebaseLoginSuccess = true;
           }

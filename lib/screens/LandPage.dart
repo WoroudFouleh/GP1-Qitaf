@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -49,7 +48,8 @@ class LandPage extends StatefulWidget {
       required this.workerWages,
       required this.token,
       required this.landId,
-      required this.coordinates, required this.userId})
+      required this.coordinates,
+      required this.userId})
       : super(key: key);
 
   @override
@@ -216,7 +216,7 @@ class _LandPageState extends State<LandPage> {
                             ),
                           ],
                         ),
-                        const SizedBox(width: 10),
+                        const SizedBox(width: 3),
                         GestureDetector(
                           onTap: () {
                             // Navigate to the Profile2 page when the profile photo is tapped
@@ -240,20 +240,12 @@ class _LandPageState extends State<LandPage> {
                             );
                           },
                           child: ClipOval(
-                            child: userProfileImage != null
-                                ? Image.memory(
-                                    base64Decode(userProfileImage),
-                                    fit: BoxFit.cover,
-                                    width: 50.0,
-                                    height: 50.0,
-                                  )
-                                : Image.asset(
-                                    'assets/images/profile.png',
-                                    fit: BoxFit.fill,
-                                    width: 50.0,
-                                    height: 50.0,
-                                  ),
-                          ),
+                              child: Image.memory(
+                            base64Decode(userProfileImage),
+                            fit: BoxFit.cover,
+                            width: 50.0,
+                            height: 50.0,
+                          )),
                         ),
                         const Spacer(),
                         Column(
@@ -336,7 +328,7 @@ class _LandPageState extends State<LandPage> {
                                   fontWeight: FontWeight.bold,
                                   color: Colors.black),
                             ),
-                            const SizedBox(width: 10),
+                            const SizedBox(width: 5),
                             const Icon(Icons.location_on,
                                 color: Color(0xFF556B2F)),
                           ],
@@ -344,7 +336,7 @@ class _LandPageState extends State<LandPage> {
                         Row(
                           children: [
                             Text(
-                              '                               ${widget.cropType}',
+                              '                          ${widget.cropType}',
                               style: const TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
@@ -407,7 +399,7 @@ class _LandPageState extends State<LandPage> {
                                   fontWeight: FontWeight.bold,
                                   color: Colors.black),
                             ),
-                            const SizedBox(width: 10),
+                            const SizedBox(width: 5),
                             const Icon(Icons.landscape,
                                 color: Color(0xFF556B2F)),
                           ],
@@ -430,7 +422,7 @@ class _LandPageState extends State<LandPage> {
                                   fontWeight: FontWeight.bold,
                                   color: Colors.black),
                             ),
-                            const SizedBox(width: 10),
+                            const SizedBox(width: 5),
                             const Icon(Icons.calendar_today,
                                 color: Color(0xFF556B2F)),
                           ],

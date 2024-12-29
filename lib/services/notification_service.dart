@@ -133,7 +133,7 @@ class NotificationService {
 
   Future<void> sendNotification(String title, String body) async {
     String accessToken =
-        "ya29.c.c0ASRK0GY21_24KrfwlrUIWqCCLN070Mfv33PnUR_0fBSK80O09uB9XE-6ofuP2ehV6zUnjM7k-_5rP89jh719myaUqAcHFiBV2vgmDlcwMgSW54oQTZOB3J8YQUWmXcD_Z6YCgn4sQ3BiADgdf5Bku4bh_C81B7QX-no_cIymNvnER-chVciT55xUFWbhhXtjItWdnZqAY7XmrZiHJ9yPR1yPiCR7kQspXexyD0vKxsFoApVe51IO-UrDufEHjcCuNdiLdXvq-0AMI6aoLY6IKCvsrgeG1xH40IKKT6GoOhpNDorNrEVj6Fu7Hp02ewy3ySBp2LHV9Q4gJ5nWUdy-E8xclwcnPoFrNyuIkICbXzVQYcylxClbMtEXG385Dl1n9pu7FdcapUaZQclM3-n7Oxt1dVBSz8tOa1Fd2Uaa1rut1V6992caWgSms_ozOVIww9R_BSU-XrbSwat-X24eJUolBykR4_FM9RInvr8VteBqiMckqB5q3YXuV-lt9yi1-s6JV2IgteUxciYy7jSBZRbwm-h0gMxMlSc1MsJfXSYVRj3UXWS00wY4Vz_3S9kibe1-SjwSrX-1O3eR4X_qv5m0iox5eyu46qcX8W50eU7VJhJnOiF8pUVm3Zys9Xuvdsl2flq6OVfpt_dRX4jxsrFxfMRu1pYV0jYQFZfh7tMQrV0OMRthtF6ueJB3WX37sr9O8vks_U1qy8k-cepbhuawrUlk-mXpwm7m59zuR0Z0fjVdl8xpFlx87mZyUik88a4jrj2oqUpwt2nq3ygnu3oU47-6sR444rhkzpc8UlvdombWayWnSX5jW5Qae2p0M1UQugQWVZwBuYvYolvaee1v93kiS9dQb81j592dY8s63m7dr6q8hRO4awBUcJfx-bv2B0dqgd6Ycl37ue-X1oi787ZujY1SjeMZOafy-w9lFISrv18qMbS5x8yhXsVfR29UXem7vFl_YflWSo3iJhpB9vOWZFgYIU779252IR9wBJkpWUOf3-8";
+        "ya29.c.c0ASRK0GZuQpGKeonZTOEs7LGrgjM_ZFfd3tnzlO1rIZK_KbWl8NUl1i7RDaY2Z7UurNwFMFQMiUw_hK4Ru8KgGyV907Xq8PDqM9MUKeI9FlVTpcPSM2b8_yJdOk6d2lloIkQwpHU_QkrByL32Rhu55PdbqJk5WTi3QO0B6a269h-krI3lKFW3DKIiGAmSzmnO8442pzd7oBGrdus7RNkkFKAZxmWGn5rEuVX9E0th8I-1qLIYsWjt9HyaLJGUa-h5622wvKIQ4ADKESEQPCr_H_1M00zA6R-GseJFKVxlfbbTIbEKOJNer-CMi1kal0RWhU5Xlm16HGMEhbbYCBQfyZdvxVx5GPY8OqqIcsARwd5LiPWPBCPUDi0L384Kq5Vdlf34UU9rnhQrFQngmUrhSBoy_x3f8Brm2ngpsyQZj12hI3ZqvsOlI2-jxy8xxyIv6rct5tvauJjzvu4S1Id5MawFX9Sw89-tX0QWeYm49MbBZJSQe_Ogup3jhIJZh5aQ6kmxYSu65g_v-i-_6M_JtBOm2aJFgQ8wOopgyqgv-4ew3YnamJuzyckBSxVMeY8_22lW18dmMFpreFwI8SZZWaJlecxg-WFXne6ldoZoe39Ql3r6UZ1Uety0FWBiF66pngwOSUsZ_w_rS07nzORm6ic5e8Mc_On4qXvlnxVeau59a713so7O_kpistdVRa_6Zbj2uM6vtXSj96V22o53xRl9W9QMOY5jx6J9rzVsYmRRYbVZ1wlqIszvgS58YWrRnqnhvlt3YpV2F2wUUjcZkyRdXY6W6r0tI_1F2mqzlW9Fgm8qtucYqFJqq8Wt2whrhekQi7mVmdlqqzUSa8yrkBvSg4iyJnq7-YZbBYlnbM1lo6xZZm6ah6BVR3-urzkr19eVRmXpz8mtcaRRVcoM2twjMosIrXdMp8njjiXpuu-2lIMvQldSssWb0rYj2dgRbS05-ubFcvl24Vs9-X26Sbcbqbho3Mn0-7-kX0RqIMV5clS9ztck-v5";
     var messagePayload = {
       'message': {
         'topic': "all_devices",
@@ -164,9 +164,9 @@ class NotificationService {
   }
 
   Future<void> sendNotificationToSpecific(
-      String? target, String title, String body, String userId) async {
+      String? target, String title, String body) async {
     String accessToken =
-        "ya29.c.c0ASRK0GY21_24KrfwlrUIWqCCLN070Mfv33PnUR_0fBSK80O09uB9XE-6ofuP2ehV6zUnjM7k-_5rP89jh719myaUqAcHFiBV2vgmDlcwMgSW54oQTZOB3J8YQUWmXcD_Z6YCgn4sQ3BiADgdf5Bku4bh_C81B7QX-no_cIymNvnER-chVciT55xUFWbhhXtjItWdnZqAY7XmrZiHJ9yPR1yPiCR7kQspXexyD0vKxsFoApVe51IO-UrDufEHjcCuNdiLdXvq-0AMI6aoLY6IKCvsrgeG1xH40IKKT6GoOhpNDorNrEVj6Fu7Hp02ewy3ySBp2LHV9Q4gJ5nWUdy-E8xclwcnPoFrNyuIkICbXzVQYcylxClbMtEXG385Dl1n9pu7FdcapUaZQclM3-n7Oxt1dVBSz8tOa1Fd2Uaa1rut1V6992caWgSms_ozOVIww9R_BSU-XrbSwat-X24eJUolBykR4_FM9RInvr8VteBqiMckqB5q3YXuV-lt9yi1-s6JV2IgteUxciYy7jSBZRbwm-h0gMxMlSc1MsJfXSYVRj3UXWS00wY4Vz_3S9kibe1-SjwSrX-1O3eR4X_qv5m0iox5eyu46qcX8W50eU7VJhJnOiF8pUVm3Zys9Xuvdsl2flq6OVfpt_dRX4jxsrFxfMRu1pYV0jYQFZfh7tMQrV0OMRthtF6ueJB3WX37sr9O8vks_U1qy8k-cepbhuawrUlk-mXpwm7m59zuR0Z0fjVdl8xpFlx87mZyUik88a4jrj2oqUpwt2nq3ygnu3oU47-6sR444rhkzpc8UlvdombWayWnSX5jW5Qae2p0M1UQugQWVZwBuYvYolvaee1v93kiS9dQb81j592dY8s63m7dr6q8hRO4awBUcJfx-bv2B0dqgd6Ycl37ue-X1oi787ZujY1SjeMZOafy-w9lFISrv18qMbS5x8yhXsVfR29UXem7vFl_YflWSo3iJhpB9vOWZFgYIU779252IR9wBJkpWUOf3-8";
+        "ya29.c.c0ASRK0GZuQpGKeonZTOEs7LGrgjM_ZFfd3tnzlO1rIZK_KbWl8NUl1i7RDaY2Z7UurNwFMFQMiUw_hK4Ru8KgGyV907Xq8PDqM9MUKeI9FlVTpcPSM2b8_yJdOk6d2lloIkQwpHU_QkrByL32Rhu55PdbqJk5WTi3QO0B6a269h-krI3lKFW3DKIiGAmSzmnO8442pzd7oBGrdus7RNkkFKAZxmWGn5rEuVX9E0th8I-1qLIYsWjt9HyaLJGUa-h5622wvKIQ4ADKESEQPCr_H_1M00zA6R-GseJFKVxlfbbTIbEKOJNer-CMi1kal0RWhU5Xlm16HGMEhbbYCBQfyZdvxVx5GPY8OqqIcsARwd5LiPWPBCPUDi0L384Kq5Vdlf34UU9rnhQrFQngmUrhSBoy_x3f8Brm2ngpsyQZj12hI3ZqvsOlI2-jxy8xxyIv6rct5tvauJjzvu4S1Id5MawFX9Sw89-tX0QWeYm49MbBZJSQe_Ogup3jhIJZh5aQ6kmxYSu65g_v-i-_6M_JtBOm2aJFgQ8wOopgyqgv-4ew3YnamJuzyckBSxVMeY8_22lW18dmMFpreFwI8SZZWaJlecxg-WFXne6ldoZoe39Ql3r6UZ1Uety0FWBiF66pngwOSUsZ_w_rS07nzORm6ic5e8Mc_On4qXvlnxVeau59a713so7O_kpistdVRa_6Zbj2uM6vtXSj96V22o53xRl9W9QMOY5jx6J9rzVsYmRRYbVZ1wlqIszvgS58YWrRnqnhvlt3YpV2F2wUUjcZkyRdXY6W6r0tI_1F2mqzlW9Fgm8qtucYqFJqq8Wt2whrhekQi7mVmdlqqzUSa8yrkBvSg4iyJnq7-YZbBYlnbM1lo6xZZm6ah6BVR3-urzkr19eVRmXpz8mtcaRRVcoM2twjMosIrXdMp8njjiXpuu-2lIMvQldSssWb0rYj2dgRbS05-ubFcvl24Vs9-X26Sbcbqbho3Mn0-7-kX0RqIMV5clS9ztck-v5";
     var messagePayload = {
       'message': {
         'token': target,
@@ -191,15 +191,22 @@ class NotificationService {
     );
     if (response.statusCode == 200) {
       print('Notification sent successfully');
-      await FirebaseFirestore.instance.collection('notifications').add({
-        'title': title,
-        'body': body,
-        'timestamp': FieldValue.serverTimestamp(),
-        'isRead': false,
-        'userId': userId,
-      });
+      //saveNotificationToFirebase(target, title, body, userId, page);
     } else {
       print('Error sending notification: ${response.body}');
     }
+  }
+
+  Future<void> saveNotificationToFirebase(String? target, String title,
+      String body, String userId, String page) async {
+    await FirebaseFirestore.instance.collection('notifications').add({
+      'title': title,
+      'body': body,
+      'timestamp': FieldValue.serverTimestamp(),
+      'isRead': false,
+      'userId': userId,
+      'page': page
+    });
+    print('Notification saved successfully');
   }
 }

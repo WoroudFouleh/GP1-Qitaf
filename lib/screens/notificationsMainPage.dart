@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/intl.dart';
+import 'package:login_page/screens/OwnerWorking.dart';
+import 'package:login_page/screens/allInbox.dart'; // Required for formatting relative time.
 
 class NotificationsPage extends StatefulWidget {
   final String currentUserId;
-
-  const NotificationsPage({Key? key, required this.currentUserId})
+  final String token;
+  const NotificationsPage(
+      {Key? key, required this.currentUserId, required this.token})
       : super(key: key);
 
   @override
@@ -26,21 +30,70 @@ class _NotificationsPageState extends State<NotificationsPage> {
 
   // Fetch notifications for the current user
   Stream<QuerySnapshot> _fetchNotifications() {
-    print("1Fetching notifications for userId: ${widget.currentUserId}");
     return FirebaseFirestore.instance
         .collection('notifications')
-        .where('userId', isEqualTo: widget.currentUserId) // Query by userId
-        .orderBy('timestamp', descending: true) // Order by timestamp
-        .snapshots(); // Stream the snapshots
+        .where('userId', isEqualTo: widget.currentUserId)
+        .orderBy('timestamp', descending: true)
+        .snapshots();
+  }
+
+  // Helper function to calculate relative time
+  String _getRelativeTime(DateTime timestamp) {
+    final now = DateTime.now();
+    final difference = now.difference(timestamp);
+
+    if (difference.inDays > 1) {
+      return DateFormat('EEEE', 'ar').format(timestamp); // e.g., "الاثنين"
+    } else if (difference.inDays == 1) {
+      return "البارحة";
+    } else if (difference.inHours >= 1) {
+      return "منذ ${difference.inHours} ساعات";
+    } else if (difference.inMinutes >= 1) {
+      return "منذ ${difference.inMinutes} دقائق";
+    } else {
+      return "الآن";
+    }
+  }
+
+  // Function to handle navigation based on the "page" field
+  void _navigateToPage(String page, {String? userId}) {
+    if (page == 'chat') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => TabbedInboxScreen(
+                  userId: widget.currentUserId,
+                )),
+      );
+    } else if (page == 'workRequest') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => OwnerWorkingPage(
+                  token: widget.token,
+                  userId: widget.currentUserId,
+                )),
+      );
+    } else {
+      print("Unknown page: $page");
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    print("2Fetching notifications for userId: ${widget.currentUserId}");
     return Scaffold(
       appBar: AppBar(
-        title: const Text("الاشعارات"),
-        backgroundColor: Color.fromARGB(255, 65, 139, 67),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            const Text(
+              "الإشعارات",
+              style: TextStyle(color: Colors.white, fontSize: 20),
+            ),
+            const Icon(Icons.notifications, color: Colors.white),
+          ],
+        ),
+        backgroundColor: const Color.fromARGB(255, 65, 139, 67),
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: _fetchNotifications(),
@@ -60,16 +113,16 @@ class _NotificationsPageState extends State<NotificationsPage> {
             itemBuilder: (context, index) {
               var notification = notifications[index];
               bool isRead = notification['isRead'] ?? false;
+              DateTime timestamp =
+                  (notification['timestamp'] as Timestamp).toDate();
+              String page = notification['page'] ?? '';
 
               return GestureDetector(
                 onTap: () {
-                  // Mark notification as read when tapped
                   if (!isRead) {
                     _markAsRead(notification.id);
                   }
-
-                  // Navigate to the desired screen (optional)
-                  // For example, navigate to the chat or other details screen.
+                  _navigateToPage(page, userId: widget.currentUserId);
                 },
                 child: Container(
                   margin:
@@ -78,28 +131,46 @@ class _NotificationsPageState extends State<NotificationsPage> {
                   decoration: BoxDecoration(
                     color: isRead
                         ? Colors.white
-                        : Color.fromARGB(255, 246, 255,
-                            226), // Light green background for unread notifications
+                        : Colors.grey.shade300, // Darker grey for unread.
                     borderRadius: BorderRadius.circular(8),
                     border: Border.all(
                       color: Colors.grey.shade300,
                     ),
                   ),
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.end, // Right align.
                     children: [
-                      Text(
-                        notification['title'],
-                        style: TextStyle(
-                          fontWeight:
-                              isRead ? FontWeight.normal : FontWeight.bold,
-                          fontSize: 16,
-                          color: Colors.black,
-                        ),
+                      Row(
+                        children: [
+                          const SizedBox(
+                              width: 8), // Add spacing for alignment.
+                          if (!isRead) // Show dot only for unread notifications.
+                            const Icon(
+                              Icons.circle,
+                              size: 10,
+                              color: Colors.red,
+                            ),
+                          const SizedBox(
+                              width: 5), // Space between dot and title.
+                          Expanded(
+                            child: Text(
+                              "${notification['title'] ?? ''}",
+                              textAlign: TextAlign.right,
+                              style: TextStyle(
+                                fontWeight: isRead
+                                    ? FontWeight.normal
+                                    : FontWeight.bold,
+                                fontSize: 16,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                       const SizedBox(height: 5),
                       Text(
-                        notification['body'],
+                        notification['body'] ?? '',
+                        textAlign: TextAlign.right,
                         style: TextStyle(
                           fontSize: 14,
                           color: Colors.black.withOpacity(0.7),
@@ -107,9 +178,8 @@ class _NotificationsPageState extends State<NotificationsPage> {
                       ),
                       const SizedBox(height: 5),
                       Text(
-                        (notification['timestamp'] as Timestamp)
-                            .toDate()
-                            .toString(),
+                        _getRelativeTime(timestamp),
+                        textAlign: TextAlign.right,
                         style: TextStyle(
                           fontSize: 12,
                           color: Colors.grey,

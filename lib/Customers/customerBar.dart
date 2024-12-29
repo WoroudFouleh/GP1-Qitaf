@@ -42,7 +42,7 @@ class _CustomerBarState extends State<CustomerBar> {
       ), // Pass the token correctly without const
       TabbedInboxScreen(userId: uid),
 
-      NotificationsPage(currentUserId: uid),
+      NotificationsPage(currentUserId: uid, token: widget.token),
       HomeDiscussion(token: widget.token),
       CustomerAdvertisement(token: widget.token),
     ];

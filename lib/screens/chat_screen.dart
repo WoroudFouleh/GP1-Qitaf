@@ -438,10 +438,12 @@ class _ChatScreenState extends State<ChatScreen> {
                             // Send the notification with the sender's full name
                             await NotificationService.instance
                                 .sendNotificationToSpecific(
-                                    receiverToken,
-                                    senderFullName, // Title with full name
-                                    message, // Message content
-                                    widget.otherUserId);
+                              receiverToken,
+                              senderFullName, // Title with full name
+                              message, // Message content
+                              // widget.otherUserId,
+                              //'chat'
+                            );
                           }
                           _messageController.clear();
                         },
