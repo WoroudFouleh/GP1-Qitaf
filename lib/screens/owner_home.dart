@@ -146,20 +146,7 @@ class _OwnerHomeState extends State<OwnerHome> {
                 ),
                 const SizedBox(height: 20),
                 // القائمة
-                buildCustomListItem(
-                  'قطف أراضي زراعية',
-                  'فرص عمل بقطف أراضي زراعية',
-                  const AssetImage('assets/images/lands.jpg'),
-                  () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => QatafPage(
-                            token: widget.token, userId: widget.userId),
-                      ),
-                    );
-                  },
-                ),
+
                 buildCustomListItem(
                   'منتجات زراعية',
                   'شراء منتجات زراعية بأنواعها',

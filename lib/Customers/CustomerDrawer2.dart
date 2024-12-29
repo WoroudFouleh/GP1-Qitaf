@@ -1,6 +1,7 @@
 import 'dart:convert'; // For base64 decoding
 import 'package:flutter/material.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:login_page/Customers/CustomerProfile.dart';
 import 'package:login_page/screens/CustomerWork.dart';
 import 'package:login_page/screens/MyBooking.dart';
 import 'package:login_page/screens/OwnerBooking.dart';
@@ -12,7 +13,7 @@ import 'package:login_page/screens/previousOrders.dart';
 
 class CustomDrawer2 extends StatefulWidget {
   final token;
-  
+
   const CustomDrawer2({required this.token, Key? key}) : super(key: key);
 
   @override
@@ -85,7 +86,7 @@ class _CustomDrawer2State extends State<CustomDrawer2> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => ProfilePage(
+                    builder: (context) => CustomerProfile(
                           token: widget.token,
                         )),
               );

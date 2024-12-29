@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:login_page/Customers/CustomerAdvertisements.dart';
 import 'package:login_page/Customers/CustomerHome.dart';
 import 'package:login_page/Discussion/Home.dart';
+import 'package:login_page/screens/allInbox.dart';
 import 'package:login_page/screens/mainMap.dart';
 import 'package:login_page/screens/map_screen.dart';
 import 'package:login_page/screens/owner_home.dart';
@@ -15,7 +16,8 @@ import 'package:jwt_decoder/jwt_decoder.dart';
 class CustomerBar extends StatefulWidget {
   final token;
   final token2;
-  const CustomerBar({@required this.token, Key? key, this.token2}) : super(key: key);
+  const CustomerBar({@required this.token, Key? key, this.token2})
+      : super(key: key);
 
   @override
   State<CustomerBar> createState() => _CustomerBarState();
@@ -29,13 +31,14 @@ class _CustomerBarState extends State<CustomerBar> {
   void initState() {
     super.initState();
     Map<String, dynamic> jwtDecoderToken = JwtDecoder.decode(widget.token);
-String uid = JwtDecoder.decode(widget.token2)['user_id'];
+    String uid = JwtDecoder.decode(widget.token2)['user_id'];
     // Initialize the pages here because widget.token is needed
     _pages = [
       CustomerHome(
-          token: widget.token, userId: uid,), // Pass the token correctly without const
-      OwnerChat(token: widget.token),
-
+        token: widget.token,
+        userId: uid,
+      ), // Pass the token correctly without const
+      TabbedInboxScreen(userId: uid),
       OwnerNotify(token: widget.token),
       HomeDiscussion(token: widget.token),
       CustomerAdvertisement(token: widget.token),
