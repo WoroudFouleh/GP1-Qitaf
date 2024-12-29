@@ -1,7 +1,11 @@
+import 'dart:convert';
+
 import 'package:another_carousel_pro/another_carousel_pro.dart';
 import 'package:flutter/material.dart';
 import 'package:login_page/Customers/CustomerDrawer2.dart';
+import 'package:http/http.dart' as http;
 
+import 'package:login_page/screens/config.dart';
 import 'package:login_page/screens/product.dart';
 import 'package:login_page/screens/production_line.dart';
 import 'package:login_page/screens/qataf.dart';
@@ -9,7 +13,8 @@ import 'package:login_page/screens/qataf.dart';
 class CustomerHome extends StatefulWidget {
   final String token;
   final String userId;
-  const CustomerHome({required this.token, Key? key, required this.userId}) : super(key: key);
+  const CustomerHome({required this.token, Key? key, required this.userId})
+      : super(key: key);
 
   @override
   State<CustomerHome> createState() => _CustomerHomeState();
@@ -18,6 +23,37 @@ class CustomerHome extends StatefulWidget {
 class _CustomerHomeState extends State<CustomerHome> {
   int currentSlider = 0;
   int selectedIndex = 0;
+  List<dynamic> advertisements = [];
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchAdvertisements(); // Fetch ads when the widget initializes
+  }
+
+  Future<void> fetchAdvertisements() async {
+    final response = await http.get(
+      Uri.parse(getMainAds),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    );
+    print("response: ${response.body}");
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      if (data['status'] == true) {
+        setState(() {
+          advertisements = data['ads'];
+          isLoading = false; // Update the lands list with the response data
+        });
+      } else {
+        print("Error fetching lands: ${data['message']}");
+      }
+    } else {
+      print("Failed to load lands: ${response.statusCode}");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,8 +81,9 @@ class _CustomerHomeState extends State<CustomerHome> {
             ),
           ),
         ),
-        endDrawer:
-            CustomDrawer2(token: widget.token), // استخدام الـ CustomDrawer هنا
+        endDrawer: CustomDrawer2(
+            token: widget.token,
+            userId: widget.userId), // استخدام الـ CustomDrawer هنا
 
         body: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -66,24 +103,36 @@ class _CustomerHomeState extends State<CustomerHome> {
                 ),
                 const SizedBox(height: 20),
                 // إضافة حواف دائرية لصور السلايدر
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(15.0), // زوايا دائرية
-                  child: SizedBox(
-                    height: 230,
-                    width: double.infinity,
-                    child: AnotherCarousel(
-                      images: const [
-                        AssetImage("assets/images/1.jpg"),
-                        AssetImage("assets/images/2.jpg"),
-                        AssetImage("assets/images/3.jpg"),
-                        AssetImage("assets/images/4.jpg"),
-                        AssetImage("assets/images/5.jpg"),
-                      ],
-                      dotSize: 3,
-                      indicatorBgPadding: 5.0,
-                    ),
-                  ),
-                ),
+                isLoading
+                    ? const Center(child: CircularProgressIndicator())
+                    : advertisements.isEmpty
+                        ? const Text(
+                            'لا توجد إعلانات متاحة حاليًا.',
+                            style: TextStyle(fontSize: 16, color: Colors.grey),
+                          )
+                        : ClipRRect(
+                            borderRadius: BorderRadius.circular(15.0),
+                            child: SizedBox(
+                              height: 230,
+                              width: double.infinity,
+                              child: AnotherCarousel(
+                                images: advertisements.map((ad) {
+                                  if (ad['image'] != null) {
+                                    try {
+                                      return MemoryImage(
+                                          base64Decode(ad['image']));
+                                    } catch (e) {
+                                      print('Error decoding image: $e');
+                                    }
+                                  }
+                                  return const AssetImage(
+                                      'assets/images/placeholder.jpg');
+                                }).toList(),
+                                dotSize: 3,
+                                indicatorBgPadding: 5.0,
+                              ),
+                            ),
+                          ),
                 const SizedBox(height: 20),
                 // إضافة نص صغير فوق القائمة
                 const Align(
@@ -106,7 +155,8 @@ class _CustomerHomeState extends State<CustomerHome> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => QatafPage(token: widget.token, userId: widget.userId),
+                        builder: (context) => QatafPage(
+                            token: widget.token, userId: widget.userId),
                       ),
                     );
                   },
@@ -119,7 +169,8 @@ class _CustomerHomeState extends State<CustomerHome> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => ProductsPage(token: widget.token, userId: widget.userId),
+                        builder: (context) => ProductsPage(
+                            token: widget.token, userId: widget.userId),
                       ),
                     );
                   },
@@ -132,8 +183,8 @@ class _CustomerHomeState extends State<CustomerHome> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) =>
-                            ProductionLinesPage(token: widget.token, userId: widget.userId),
+                        builder: (context) => ProductionLinesPage(
+                            token: widget.token, userId: widget.userId),
                       ),
                     );
                   },

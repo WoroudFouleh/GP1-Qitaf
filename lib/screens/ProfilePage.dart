@@ -12,7 +12,8 @@ import 'package:login_page/screens/welcome_screen.dart';
 class ProfilePage extends StatefulWidget {
   final token;
   final userId;
-  const ProfilePage({required this.token, Key? key, this.userId}) : super(key: key);
+  const ProfilePage({required this.token, Key? key, this.userId})
+      : super(key: key);
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
@@ -230,6 +231,65 @@ class _ProfilePageState extends State<ProfilePage>
             Text(
               username,
               style: TextStyle(fontSize: 16, color: Colors.grey),
+            ),
+            const SizedBox(height: 15.0),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(Icons.star, color: Colors.amber),
+                const SizedBox(width: 5),
+                const Text(
+                  'التقييم:  ',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(width: 5),
+                const Text(
+                  '4.5  ',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(width: 20),
+                const Icon(Icons.score, color: Colors.blue),
+                const SizedBox(width: 5),
+                const Text(
+                  '  عدد النقاط:',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(width: 5),
+                const Text(
+                  '120  ',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const Icon(Icons.score,
+                    color: Color.fromARGB(255, 91, 179, 14)),
+                const SizedBox(width: 5),
+                const Text(
+                  '  عدد المنشورات:',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(width: 5),
+                const Text(
+                  '6  ',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
             ),
             const SizedBox(height: 20),
             TabBar(

@@ -57,7 +57,8 @@ class LinePage extends StatefulWidget {
       required this.lineRate,
       required this.price,
       required this.quantityUnit,
-      required this.coordinates, required this.userId});
+      required this.coordinates,
+      required this.userId});
 
   @override
   State<LinePage> createState() => _LinePageState();
@@ -162,9 +163,9 @@ class _LinePageState extends State<LinePage> {
               padding: const EdgeInsets.all(16),
               child: Image.memory(
                 base64Decode(widget.image),
-                fit: BoxFit.fill,
                 width: double.infinity,
                 height: 250,
+                fit: BoxFit.fill,
               )),
           Container(
             width: double.infinity,
@@ -224,7 +225,6 @@ class _LinePageState extends State<LinePage> {
                             ),
                           ],
                         ),
-                        const SizedBox(width: 10),
                         const SizedBox(width: 10),
                         GestureDetector(
                           onTap: () {

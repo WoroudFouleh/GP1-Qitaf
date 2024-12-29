@@ -141,21 +141,119 @@ class _MapScreen2State extends State<MapScreen2> {
           context: context,
           builder: (context) {
             return AlertDialog(
-              title: Text('معلومات الطريق'),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
+              shape: RoundedRectangleBorder(
+                borderRadius:
+                    BorderRadius.circular(15.0), // لجعل الزوايا مستديرة
+              ),
+              title: Row(
+                mainAxisAlignment: MainAxisAlignment.end, // العنوان إلى اليمين
                 children: [
-                  Text('الوقت المقدر للوصول: $duration'),
-                  Text('المسافة: $distance'),
+                  Text(
+                    'معلومات الطريق',
+                    style: TextStyle(
+                      color: Colors.black87,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.right,
+                  ),
+                  SizedBox(width: 8),
+                  Icon(Icons.directions,
+                      color: Color(0xFF556B2F)), // أيقونة العنوان
                 ],
               ),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment:
+                    CrossAxisAlignment.end, // النص يبدأ من اليمين
+                children: [
+                  Row(
+                    mainAxisAlignment:
+                        MainAxisAlignment.end, // الأيقونة إلى اليمين
+                    children: [
+                      Expanded(
+                        child: Text(
+                          ':الوقت المقدر للوصول',
+                          textAlign: TextAlign.right,
+                          style: TextStyle(fontSize: 16),
+                        ),
+                      ),
+                      SizedBox(width: 8),
+                      Icon(Icons.timer,
+                          color: Color(0xFF556B2F)), // أيقونة الوقت
+                    ],
+                  ),
+                  SizedBox(height: 4),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end, // النص على اليمين
+                    children: [
+                      Expanded(
+                        child: Text(
+                          '$duration',
+                          textAlign: TextAlign.right,
+                          style:
+                              TextStyle(fontSize: 16, color: Colors.grey[700]),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 12),
+                  Row(
+                    mainAxisAlignment:
+                        MainAxisAlignment.end, // الأيقونة إلى اليمين
+                    children: [
+                      Expanded(
+                        child: Text(
+                          ':االمسافة',
+                          textAlign: TextAlign.right,
+                          style: TextStyle(fontSize: 16),
+                        ),
+                      ),
+                      SizedBox(width: 8),
+                      Icon(Icons.map,
+                          color: Color(0xFF556B2F)), // أيقونة المسافة
+                    ],
+                  ),
+                  SizedBox(height: 4),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end, // النص على اليمين
+                    children: [
+                      Expanded(
+                        child: Text(
+                          '$distance',
+                          textAlign: TextAlign.right,
+                          style:
+                              TextStyle(fontSize: 16, color: Colors.grey[700]),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              actionsAlignment: MainAxisAlignment.spaceBetween, // ترتيب الأزرار
               actions: [
                 TextButton(
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
-                  child: Text('إغلاق'),
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(
+                        Color(0xFF556B2F)), // لون الزر أخضر
+                    foregroundColor: MaterialStateProperty.all(
+                        Colors.white), // لون النص أبيض
+                    shape: MaterialStateProperty.all(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.close, size: 18), // أيقونة الإغلاق
+                      SizedBox(width: 4),
+                      Text('إغلاق'),
+                    ],
+                  ),
                 ),
               ],
             );

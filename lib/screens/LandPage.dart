@@ -32,7 +32,7 @@ class LandPage extends StatefulWidget {
   final Map<String, double> coordinates;
 
   const LandPage(
-      {Key? key,
+      {super.key,
       required this.city,
       required this.landName,
       required this.landSpace,
@@ -49,8 +49,7 @@ class LandPage extends StatefulWidget {
       required this.token,
       required this.landId,
       required this.coordinates,
-      required this.userId})
-      : super(key: key);
+      required this.userId});
 
   @override
   State<LandPage> createState() => _LandPageState();
@@ -72,46 +71,40 @@ class _LandPageState extends State<LandPage> {
   @override
   void initState() {
     super.initState();
+    print("userid ${widget.userId}");
 
+    print("image ${widget.image}");
     fetchUser();
   }
 
   void fetchUser() async {
-    print("Sending username: ${widget.username}");
-
     try {
       final response = await http.get(
-        Uri.parse(
-            '$getUser/${widget.username}'), // Send the URL without the username
+        Uri.parse('$getUser/${widget.username}'),
         headers: {'Content-Type': 'application/json'},
-        // Send the username in the body
       );
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         if (data['status'] == true) {
           final userInfo = data['data'];
-          //print("User info: $userInfo"); // Assuming the user info is in 'data'
-          setState(() {
-            firstName = userInfo['firstName']; // Extract first name
-            lastName = userInfo['lastName']; // Extract last name
-            userProfileImage = userInfo['profilePhoto'];
-            // Extract profile photo URL
-            phoneNum = userInfo['phoneNumber'];
-            email = userInfo['email'];
-            code = userInfo['phoneCode'];
-            city = userInfo['city'];
-            location = userInfo['street'];
-            postsCount = userInfo['postNumber'];
-          });
-        } else {
-          print("Error fetching items: ${data['message']}");
+          if (mounted) {
+            setState(() {
+              firstName = userInfo['firstName'];
+              lastName = userInfo['lastName'];
+              userProfileImage = userInfo['profilePhoto'];
+              phoneNum = userInfo['phoneNumber'];
+              email = userInfo['email'];
+              code = userInfo['phoneCode'];
+              city = userInfo['city'];
+              location = userInfo['street'];
+              postsCount = userInfo['postNumber'];
+            });
+          }
         }
-      } else {
-        print("Failed to load items: ${response.statusCode}");
       }
     } catch (e) {
-      print("An error occurred: $e");
+      print("Error fetching user: $e");
     }
   }
 
@@ -156,9 +149,9 @@ class _LandPageState extends State<LandPage> {
               padding: const EdgeInsets.all(16),
               child: Image.memory(
                 base64Decode(widget.image),
-                fit: BoxFit.fill,
                 width: double.infinity,
                 height: 300,
+                fit: BoxFit.fill,
               )),
           Container(
             width: double.infinity,

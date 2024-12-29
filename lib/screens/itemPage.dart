@@ -43,7 +43,10 @@ class ItemPage extends StatefulWidget {
       required this.username,
       required this.preparationTime,
       required this.preparationUnit,
-      required this.ownerUsername, required this.userId, required this.productCity, required this.productCoordinates})
+      required this.ownerUsername,
+      required this.userId,
+      required this.productCity,
+      required this.productCoordinates})
       : super(key: key);
 
   @override
@@ -463,8 +466,7 @@ class _ItemPageState extends State<ItemPage> {
           token: widget.token,
           productId: widget.productId,
           productCity: widget.productCity,
-          productCoordinates: widget.productCoordinates
-                                                ),
+          productCoordinates: widget.productCoordinates),
     );
   }
 }

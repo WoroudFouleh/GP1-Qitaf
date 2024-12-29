@@ -11,7 +11,8 @@ import 'package:login_page/screens/config.dart';
 class OwnerHome extends StatefulWidget {
   final String token;
   final String userId;
-  const OwnerHome({required this.token, Key? key, required this.userId}) : super(key: key);
+  const OwnerHome({required this.token, Key? key, required this.userId})
+      : super(key: key);
 
   @override
   State<OwnerHome> createState() => _OwnerHomeState();
@@ -78,10 +79,9 @@ class _OwnerHomeState extends State<OwnerHome> {
             ),
           ),
         ),
-        endDrawer:
-            CustomDrawer(token: widget.token,
-             userId: widget.userId
-            ), // استخدام الـ CustomDrawer هنا
+        endDrawer: CustomDrawer(
+            token: widget.token,
+            userId: widget.userId), // استخدام الـ CustomDrawer هنا
 
         body: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -145,20 +145,7 @@ class _OwnerHomeState extends State<OwnerHome> {
                 ),
                 const SizedBox(height: 10),
                 // عرض القائمة بعد السلايدر
-                buildCustomListItem(
-                  'قطف أراضي زراعية',
-                  'فرص عمل بقطف أراضي زراعية',
-                  const AssetImage('assets/images/lands.jpg'),
-                  () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => QatafPage(token: widget.token,
-                         userId: widget.userId),
-                      ),
-                    );
-                  },
-                ),
+
                 buildCustomListItem(
                   'منتجات زراعية',
                   'شراء منتجات زراعية بأنواعها',
@@ -167,8 +154,8 @@ class _OwnerHomeState extends State<OwnerHome> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => ProductsPage(token: widget.token,
-                         userId: widget.userId),
+                        builder: (context) => ProductsPage(
+                            token: widget.token, userId: widget.userId),
                       ),
                     );
                   },
@@ -181,9 +168,8 @@ class _OwnerHomeState extends State<OwnerHome> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) =>
-                            ProductionLinesPage(token: widget.token,
-                             userId: widget.userId),
+                        builder: (context) => ProductionLinesPage(
+                            token: widget.token, userId: widget.userId),
                       ),
                     );
                   },

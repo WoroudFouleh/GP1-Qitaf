@@ -33,13 +33,13 @@ class LandBottonBar extends StatefulWidget {
 }
 
 class _LandBottonBarState extends State<LandBottonBar> {
-  late String workerUserName;
+  late String workerUserName = "";
   late String workerFirstname = "";
   late String workerLastname = "";
   late String workerProfileImage = "";
-  late String workerCity;
-  late String workerGender;
-  late double userRate;
+  late String workerCity = "";
+  late String workerGender = "";
+  late int userRate;
   late String ownerfirstName = "";
   late String ownerlastName = "";
   late String ownerFcmToken = "";

@@ -249,29 +249,45 @@ class _SigninScreenState extends State<SigninScreen> {
               textAlign: TextAlign.right,
             ),
             actions: [
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  _handleAccountSelection('customer', myToken, myToken2);
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor:
-                      Color.fromARGB(255, 52, 125, 54), // Green background
-                  foregroundColor: Colors.white, // White text color
-                ),
-                child: const Text('زبون'),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  _handleAccountSelection('delivery', deliveryToken, myToken2);
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color.fromARGB(
-                      255, 52, 125, 54), // Green background
-                  foregroundColor: Colors.white, // White text color
-                ),
-                child: const Text('توصيل'),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Expanded(
+                    child: ElevatedButton.icon(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                        _handleAccountSelection('customer', myToken, myToken2);
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color.fromARGB(255, 52, 125, 54),
+                        foregroundColor: Colors.white,
+                        fixedSize:
+                            const Size.fromHeight(50), // Ensures equal height
+                      ),
+                      icon: const Icon(Icons.person, size: 18), // Customer icon
+                      label: const Text('زبون'),
+                    ),
+                  ),
+                  const SizedBox(width: 10), // Adds spacing between buttons
+                  Expanded(
+                    child: ElevatedButton.icon(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                        _handleAccountSelection(
+                            'delivery', deliveryToken, myToken2);
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color.fromARGB(255, 52, 125, 54),
+                        foregroundColor: Colors.white,
+                        fixedSize:
+                            const Size.fromHeight(50), // Ensures equal height
+                      ),
+                      icon: const Icon(Icons.delivery_dining,
+                          size: 18), // Delivery icon
+                      label: const Text('توصيل'),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),

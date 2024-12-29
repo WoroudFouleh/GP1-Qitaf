@@ -67,6 +67,9 @@ final getLineStatistic = "${url}api/productionLines/getLineStatistics";
 final getProducStatistic = "${url}api/products/getProductsStatistics";
 final getUserStatistic = "${url}api/users/getUserStatistics";
 final getAllStatistic = "${url}api/statistics/getAllStatistics";
+final getAllLands = "${url}api/statistics/getAllLands";
+final getAllLines = "${url}api/statistics/getAllLines";
+final getAllProducts = "${url}api/statistics/getAllProducts";
 //////////////Advertisements
 final addMainAd = "${url}api/mainAds/addMainAd";
 final deleteMainAd = "${url}api/mainAds/deleteMainAd";

@@ -122,11 +122,13 @@ class _DeliveryRequestsPageState extends State<DeliveryRequestsPage> {
         String password = data['password'];
 
         // Show username and password to the admin (or handle however you like)
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Username: $username\nPassword: $password')),
-        );
-        _showAcceptDialog(username, password, firstName, lastName, requestId,
-            email, location, phone, license);
+        // ScaffoldMessenger.of(context).showSnackBar(
+        //   SnackBar(content: Text('Username: $username\nPassword: $password')),
+        // );
+        registerDeliveryMan(username, email, password, firstName, lastName,
+            location, phone, license);
+        // _showAcceptDialog(username, password, firstName, lastName, requestId,
+        //     email, location, phone, license);
 
         // You can also send the credentials to the user via SMS/email or save them in the database
       } else {
