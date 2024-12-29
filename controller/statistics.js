@@ -25,4 +25,30 @@ exports.getOverallStatistics = async (req, res) => {
       res.status(500).json({ message: "Server error", error });
     }
   };
-  
+  exports.getAllLands = async (req, res) => {
+      try {
+        const lands = await Land.find();
+        res.status(200).json({ status: true,lands });
+      } catch (error) {
+        console.error('Error fetching delivery men:', error);
+        res.status(500).json({status: false, message: 'Internal Server Error' });
+      }
+    };
+    exports.getAllLines = async (req, res) => {
+      try {
+        const lines = await ProductionLine.find();
+        res.status(200).json({ status: true,lines });
+      } catch (error) {
+        console.error('Error fetching delivery men:', error);
+        res.status(500).json({status: false, message: 'Internal Server Error' });
+      }
+    };
+    exports.getAllProducts = async (req, res) => {
+      try {
+        const products = await Product.find();
+        res.status(200).json({ status: true,products });
+      } catch (error) {
+        console.error('Error fetching delivery men:', error);
+        res.status(500).json({status: false, message: 'Internal Server Error' });
+      }
+    };
