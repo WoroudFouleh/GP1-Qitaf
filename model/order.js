@@ -14,6 +14,9 @@ const orderSchema = new mongoose.Schema({
   orderDate: { type: Date, default: Date.now },
   totalPrice: { type: Number, required: true },
   status: { type: String, enum: ['مستلم', 'غير مستلم'], default: 'غير مستلم' },
+ deliveryType:{
+type: String, enum: ['fast', 'slow'], default: 'slow'
+ },
   items: [
     {
       ownerusername: {
