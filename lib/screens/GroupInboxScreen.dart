@@ -60,10 +60,7 @@ class _GroupInboxScreenState extends State<GroupInboxScreen> {
             ),
           ),
           child: StreamBuilder<QuerySnapshot>(
-            stream: FirebaseFirestore.instance
-                .collection('groups')
-                .where('members', arrayContains: widget.userId)
-                .snapshots(),
+            stream: FirebaseFirestore.instance.collection('groups').snapshots(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator());
@@ -73,7 +70,16 @@ class _GroupInboxScreenState extends State<GroupInboxScreen> {
                 return const Center(child: Text('لا توجد مجموعات.'));
               }
 
-              var groups = snapshot.data!.docs;
+              var groups = snapshot.data!.docs.where((doc) {
+                var members = List<String>.from(doc['members'] ?? []);
+                var createdBy = doc['createdBy'] ?? '';
+                return members.contains(widget.userId) ||
+                    createdBy == widget.userId;
+              }).toList();
+
+              if (groups.isEmpty) {
+                return const Center(child: Text('لا توجد مجموعات.'));
+              }
 
               return ListView.separated(
                 itemCount: groups.length,

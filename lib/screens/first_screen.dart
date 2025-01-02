@@ -4,6 +4,7 @@ import 'package:login_page/Discussion/Home.dart';
 import 'package:login_page/screens/allInbox.dart';
 import 'package:login_page/screens/mainMap.dart';
 import 'package:login_page/screens/map_screen.dart';
+import 'package:login_page/screens/notificationsMainPage.dart';
 import 'package:login_page/screens/owner_home.dart';
 import 'package:login_page/screens/owner_add.dart';
 import 'package:login_page/screens/owner_chat.dart';
@@ -14,7 +15,8 @@ import 'package:jwt_decoder/jwt_decoder.dart';
 class HomePage extends StatefulWidget {
   final token;
   final token2;
-  const HomePage({@required this.token, Key? key, this.token2}) : super(key: key);
+  const HomePage({@required this.token, Key? key, this.token2})
+      : super(key: key);
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -32,10 +34,15 @@ class _HomePageState extends State<HomePage> {
 
     // Initialize the pages here because widget.token is needed
     _pages = [
-      OwnerHome(token: widget.token,  userId: uid), // Pass the token correctly without const
+      OwnerHome(
+          token: widget.token,
+          userId: uid), // Pass the token correctly without const
       TabbedInboxScreen(userId: uid),
       OwnerAdd(token: widget.token),
-      OwnerNotify(token: widget.token),
+      NotificationsPage(
+        token: widget.token,
+        currentUserId: uid,
+      ),
       HomeDiscussion(token: widget.token),
     ];
   }

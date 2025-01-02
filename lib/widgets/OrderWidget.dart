@@ -26,6 +26,7 @@ class OrderWidget extends StatefulWidget {
 
 class _OrderWidgetState extends State<OrderWidget> {
   String selectedPaymentMethod = 'cash';
+  String selectedDeliveryMethod = 'slow';
   final TextEditingController addressController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
   late String username;
@@ -58,6 +59,7 @@ class _OrderWidgetState extends State<OrderWidget> {
           "lat": locationCoordinates!.latitude,
           "lng": locationCoordinates!.longitude,
         },
+        "deliveryType": selectedDeliveryMethod
       };
 
       // Send the request to your backend API
@@ -268,6 +270,31 @@ class _OrderWidgetState extends State<OrderWidget> {
           margin: const EdgeInsets.only(right: 15, bottom: 10),
           alignment: Alignment.centerRight,
           child: const Text(
+            "طريقة التوصيل",
+            style: TextStyle(
+              fontSize: 22,
+              color: Color(0xFF355E3B),
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+        DeliveryOptionContainer(
+          context,
+          icon: Icons.fast_forward,
+          title: "توصيل سريع",
+          value: 'fast',
+        ),
+        DeliveryOptionContainer(
+          context,
+          icon: Icons.delivery_dining,
+          title: "توصيل عادي - قطع منفردة",
+          value: 'slow',
+        ),
+        const SizedBox(height: 20),
+        Container(
+          margin: const EdgeInsets.only(right: 15, bottom: 10),
+          alignment: Alignment.centerRight,
+          child: const Text(
             "طريقة الدفع",
             style: TextStyle(
               fontSize: 22,
@@ -359,6 +386,52 @@ class _OrderWidgetState extends State<OrderWidget> {
           onChanged: (value) {
             setState(() {
               selectedPaymentMethod = value!;
+            });
+          },
+          activeColor: const Color(0xFF355E3B),
+        ),
+      ),
+    );
+  }
+
+  Widget DeliveryOptionContainer(BuildContext context,
+      {IconData? icon,
+      String? imagePath,
+      required String title,
+      required String value}) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFF355E3B).withOpacity(0.2),
+            spreadRadius: 3,
+            blurRadius: 5,
+          ),
+        ],
+      ),
+      child: ListTile(
+        title: Text(
+          title,
+          textAlign: TextAlign.right,
+          style: const TextStyle(
+            fontSize: 18,
+            color: Color(0xFF355E3B),
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        trailing: icon != null
+            ? Icon(icon, color: const Color(0xFF355E3B))
+            : Image.asset(imagePath!, width: 40),
+        leading: Radio<String>(
+          value: value,
+          groupValue: selectedDeliveryMethod,
+          onChanged: (value) {
+            setState(() {
+              selectedDeliveryMethod = value!;
             });
           },
           activeColor: const Color(0xFF355E3B),

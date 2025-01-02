@@ -4,7 +4,8 @@ import 'package:login_page/screens/LandPage.dart';
 import 'package:login_page/screens/details.dart';
 import 'package:login_page/screens/navigate.dart';
 import 'package:login_page/screens/notificationScreem.dart';
-
+import 'package:intl/intl.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:login_page/screens/previousOrders.dart';
 import 'package:login_page/screens/production_line.dart';
 import 'package:login_page/screens/profile2.dart';
@@ -24,6 +25,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   await NotificationService.instance.initialize();
+  await initializeDateFormatting('ar', null);
   //FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   runApp(const MyApp());
 }

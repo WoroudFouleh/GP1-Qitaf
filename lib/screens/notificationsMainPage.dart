@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
+import 'package:login_page/screens/CustomerWork.dart';
 import 'package:login_page/screens/OwnerWorking.dart';
 import 'package:login_page/screens/allInbox.dart'; // Required for formatting relative time.
 
@@ -30,6 +31,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
 
   // Fetch notifications for the current user
   Stream<QuerySnapshot> _fetchNotifications() {
+    print(widget.currentUserId);
     return FirebaseFirestore.instance
         .collection('notifications')
         .where('userId', isEqualTo: widget.currentUserId)
@@ -74,8 +76,30 @@ class _NotificationsPageState extends State<NotificationsPage> {
                   userId: widget.currentUserId,
                 )),
       );
+    } else if (page == 'workDecision') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => CustomerWorkPage(
+                  token: widget.token,
+                  userId: widget.currentUserId,
+                )),
+      );
     } else {
       print("Unknown page: $page");
+    }
+  }
+
+  Widget _getNotificationIcon(String page) {
+    switch (page) {
+      case 'chat':
+        return Icon(Icons.chat, color: Colors.blue, size: 24);
+      case 'workRequest':
+        return Icon(Icons.work, color: Colors.green, size: 24);
+      case 'workDecision':
+        return Icon(Icons.assignment_turned_in, color: Colors.orange, size: 24);
+      default:
+        return Icon(Icons.notifications, color: Colors.grey, size: 24);
     }
   }
 
@@ -129,42 +153,45 @@ class _NotificationsPageState extends State<NotificationsPage> {
                       const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                   padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
-                    color: isRead
-                        ? Colors.white
-                        : Colors.grey.shade300, // Darker grey for unread.
+                    color: isRead ? Colors.white : Colors.grey.shade300,
                     borderRadius: BorderRadius.circular(8),
-                    border: Border.all(
-                      color: Colors.grey.shade300,
-                    ),
+                    border: Border.all(color: Colors.grey.shade300),
                   ),
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.end, // Right align.
+                    crossAxisAlignment:
+                        CrossAxisAlignment.end, // Align text to the right
                     children: [
                       Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          const SizedBox(
-                              width: 8), // Add spacing for alignment.
-                          if (!isRead) // Show dot only for unread notifications.
+                          // Icon next to the title
+                          Row(
+                            children: [
+                              // _getNotificationIcon(
+                              //     page), // The icon for the notification
+                              // Space between icon and title
+                              Text(
+                                "${notification['title'] ?? ''}",
+                                textAlign: TextAlign.right,
+                                style: TextStyle(
+                                  fontWeight: isRead
+                                      ? FontWeight.normal
+                                      : FontWeight.bold,
+                                  fontSize: 16,
+                                  color: Colors.black,
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              _getNotificationIcon(
+                                  page), // The icon for the notification
+                            ],
+                          ),
+                          if (!isRead) // Show red dot for unread notifications
                             const Icon(
                               Icons.circle,
                               size: 10,
                               color: Colors.red,
                             ),
-                          const SizedBox(
-                              width: 5), // Space between dot and title.
-                          Expanded(
-                            child: Text(
-                              "${notification['title'] ?? ''}",
-                              textAlign: TextAlign.right,
-                              style: TextStyle(
-                                fontWeight: isRead
-                                    ? FontWeight.normal
-                                    : FontWeight.bold,
-                                fontSize: 16,
-                                color: Colors.black,
-                              ),
-                            ),
-                          ),
                         ],
                       ),
                       const SizedBox(height: 5),

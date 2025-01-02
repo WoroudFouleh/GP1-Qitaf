@@ -47,8 +47,6 @@ class _LandBottonBarState extends State<LandBottonBar> {
   late String owneremail = "";
 
   void fetchUser() async {
-    print("Sending username: ${widget.ownerUserName}");
-
     try {
       final response = await http.get(
         Uri.parse('$getUser/${widget.ownerUserName}'),
@@ -62,9 +60,11 @@ class _LandBottonBarState extends State<LandBottonBar> {
           setState(() {
             ownerfirstName = userInfo['firstName'] ?? "";
             ownerlastName = userInfo['lastName'] ?? "";
-
             owneremail = userInfo['email'] ?? "";
           });
+
+          // Fetch owner FCM token after updating owneremail
+          fetchOwnerFcmToken();
         } else {
           print("Error fetching user: ${data['message']}");
         }
@@ -81,6 +81,7 @@ class _LandBottonBarState extends State<LandBottonBar> {
     super.initState();
     fetchUser();
     initializeNotificationService();
+
     Map<String, dynamic> jwtDecoderToken = JwtDecoder.decode(widget.token);
     print(jwtDecoderToken);
     workerUserName = jwtDecoderToken['username'] ?? 'No username';
@@ -90,6 +91,7 @@ class _LandBottonBarState extends State<LandBottonBar> {
     workerLastname = jwtDecoderToken['lastName'] ?? 'No gender';
     workerProfileImage = jwtDecoderToken['profilePhoto'] ?? 'No gender';
     userRate = jwtDecoderToken['rate'] ?? 0.0;
+    // fetchOwnerFcmToken();
   }
 
   void initializeNotificationService() async {
@@ -98,6 +100,7 @@ class _LandBottonBarState extends State<LandBottonBar> {
 
   Future<void> fetchOwnerFcmToken() async {
     try {
+      print("on fetch");
       // Query Firestore for a user with the same email as the owner
       final querySnapshot = await FirebaseFirestore.instance
           .collection('users')
@@ -155,12 +158,12 @@ class _LandBottonBarState extends State<LandBottonBar> {
           await NotificationService.instance.sendNotificationToSpecific(
             ownerFcmToken,
             'طلب عمل جديد في أرض  ',
-            'اضغط لمراجعة الطلب .${widget.landName}طلب عمل جديد في ',
+            '. طلب عمل جديد في ${widget.landName}',
           );
           await NotificationService.instance.saveNotificationToFirebase(
               ownerFcmToken,
               'طلب عمل جديد في أرض  ',
-              '.${widget.landName}طلب عمل جديد في ',
+              'طلب عمل جديد في "${widget.landName}". اضغط لمراجعة الطلب',
               ownerId,
               'workRequest');
         } else {

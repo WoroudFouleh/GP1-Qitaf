@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:math';
 
+import 'package:login_page/services/notification_service.dart';
+
 class GroupChatScreen extends StatefulWidget {
   final String currentUserId;
   final String groupId;
@@ -62,6 +64,42 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
     }, SetOptions(merge: true));
 
     _messageController.clear();
+
+    // Sending notifications to all group members except the sender
+    try {
+      // Fetch sender's full name
+      var senderDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(widget.currentUserId)
+          .get();
+
+      var senderName =
+          "${senderDoc['name']} ${senderDoc['familyName']}"; // Sender's full name
+
+      // Fetch FCM tokens for group members
+      var membersSnapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .where(FieldPath.documentId, whereIn: widget.members)
+          .get();
+
+      for (var member in membersSnapshot.docs) {
+        var memberId = member.id;
+        if (memberId != widget.currentUserId) {
+          var receiverToken = member['fcmToken'];
+
+          // Notification title: Sender name + إلى + Group name
+          var notificationTitle = "$senderName إلى ${widget.groupName}";
+
+          await NotificationService.instance.sendNotificationToSpecific(
+            receiverToken,
+            notificationTitle, // عنوان الإشعار
+            content, // محتوى الرسالة
+          );
+        }
+      }
+    } catch (error) {
+      print('Error sending notifications: $error');
+    }
   }
 
   @override

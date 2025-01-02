@@ -1,8 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:login_page/screens/config.dart';
 import 'package:http/http.dart' as http;
 import 'package:login_page/screens/workerProfile.dart';
+import 'package:login_page/services/notification_service.dart';
 import 'dart:convert'; // To handle JSON decoding
 import 'config.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
@@ -10,7 +12,8 @@ import 'package:jwt_decoder/jwt_decoder.dart';
 class OwnerWorkingPage extends StatefulWidget {
   final String token;
   final String userId;
-  const OwnerWorkingPage({required this.token, Key? key, required this.userId}) : super(key: key);
+  const OwnerWorkingPage({required this.token, Key? key, required this.userId})
+      : super(key: key);
 
   @override
   _OwnerWorkingPageState createState() => _OwnerWorkingPageState();
@@ -20,6 +23,11 @@ class _OwnerWorkingPageState extends State<OwnerWorkingPage> {
   int quantity = 1; // الكمية الحالية
   List<dynamic> requests = [];
   late String username;
+  late String userfirstName = "";
+  late String userlastName = "";
+  late String userFcmToken = "";
+  late String workerId = "";
+  late String useremail = "";
   @override
   void initState() {
     super.initState();
@@ -30,8 +38,70 @@ class _OwnerWorkingPageState extends State<OwnerWorkingPage> {
     fetchRequests(); // Call the fetch function when the page is loaded
   }
 
-  void requestDecision(String requestId, String status, String landId) async {
+//////TO GET THE WORKER
+  void fetchUser(String workerUsername) async {
     try {
+      final response = await http.get(
+        Uri.parse('$getUser/${workerUsername}'),
+        headers: {'Content-Type': 'application/json'},
+      );
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        if (data['status'] == true) {
+          final userInfo = data['data'];
+          setState(() {
+            userfirstName = userInfo['firstName'] ?? "";
+            userlastName = userInfo['lastName'] ?? "";
+            useremail = userInfo['email'] ?? "";
+          });
+
+          // Fetch owner FCM token after updating owneremail
+          fetchWorkerFcmToken();
+        } else {
+          print("Error fetching user: ${data['message']}");
+        }
+      } else {
+        print("Failed to load user: ${response.statusCode}");
+      }
+    } catch (e) {
+      print("An error occurred: $e");
+    }
+  }
+
+  void initializeNotificationService() async {
+    await NotificationService.instance.initialize();
+  }
+
+  Future<void> fetchWorkerFcmToken() async {
+    try {
+      print("on fetch");
+      // Query Firestore for a user with the same email as the owner
+      final querySnapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .where('email', isEqualTo: useremail)
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        final userDoc = querySnapshot.docs.first;
+        setState(() {
+          userFcmToken = userDoc['fcmToken'] ?? "";
+          workerId = userDoc.id; // Get the FCM token
+        });
+        print("Owner's FCM token: $userFcmToken");
+        print("Owner's document ID: $workerId");
+      } else {
+        print("No user found with the email: $useremail");
+      }
+    } catch (e) {
+      print("Error fetching FCM token: $e");
+    }
+  }
+
+  void requestDecision(String requestId, String status, String landId,
+      String workerUsername, String landName) async {
+    try {
+      fetchUser(workerUsername);
       print('Request ID: $requestId, Status: $status');
       // Convert image to base64 if an image is selected
       //String? base64Image = _image != null ? base64Encode(_image!) : null;
@@ -64,6 +134,30 @@ class _OwnerWorkingPageState extends State<OwnerWorkingPage> {
         );
         if (status == "accepted") {
           updateWorkersNum(landId);
+          await NotificationService.instance.sendNotificationToSpecific(
+            userFcmToken,
+            'قبول طلب العمل في أرض ',
+            '. تم قبول طلب عملك في $landName',
+          );
+          await NotificationService.instance.saveNotificationToFirebase(
+              userFcmToken,
+              'قبول طلب العمل في أرض ',
+              'لقد وافق مالك أرض  "$landName "على طلبك للعمل فيها. اضغط لرؤية التفاصيل ',
+              workerId,
+              'workDecision');
+        } else if (status == "rejected") {
+          // updateWorkersNum(landId);
+          await NotificationService.instance.sendNotificationToSpecific(
+            userFcmToken,
+            'رفض طلب العمل في أرض ',
+            '. تم رفض طلب عملك في $landName',
+          );
+          await NotificationService.instance.saveNotificationToFirebase(
+              userFcmToken,
+              'رفض طلب العمل في أرض ',
+              'لقد رفض مالك أرض  "$landName " طلبك للعمل فيها. اضغط لرؤية التفاصيل ',
+              workerId,
+              'workDecision');
         }
       } else {
         // Server error - handle accordingly
@@ -100,7 +194,8 @@ class _OwnerWorkingPageState extends State<OwnerWorkingPage> {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => OwnerWorkingPage(token: widget.token, userId: widget.userId),
+            builder: (context) =>
+                OwnerWorkingPage(token: widget.token, userId: widget.userId),
           ),
         );
       } else {
@@ -221,10 +316,11 @@ class _OwnerWorkingPageState extends State<OwnerWorkingPage> {
                                         context,
                                         MaterialPageRoute(
                                           builder: (context) => Workerprofile(
-                                            username: request[
-                                                'workerUsername'],
-                                                userId: widget.userId // Pass the worker's username
-                                          ),
+                                              username:
+                                                  request['workerUsername'],
+                                              userId: widget
+                                                  .userId // Pass the worker's username
+                                              ),
                                         ),
                                       );
                                     },
@@ -437,8 +533,13 @@ class _OwnerWorkingPageState extends State<OwnerWorkingPage> {
                               Expanded(
                                 child: ElevatedButton(
                                   onPressed: () {
-                                    requestDecision(request['_id'], "accepted",
-                                        request['landId']);
+                                    //fetchUser(request['workerUsername']);
+                                    requestDecision(
+                                        request['_id'],
+                                        "accepted",
+                                        request['landId'],
+                                        request['workerUsername'],
+                                        request['landName']);
                                   },
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: Colors.white,
@@ -466,8 +567,12 @@ class _OwnerWorkingPageState extends State<OwnerWorkingPage> {
                               Expanded(
                                 child: ElevatedButton(
                                   onPressed: () {
-                                    requestDecision(request['_id'], "rejected",
-                                        request['landId']);
+                                    requestDecision(
+                                        request['_id'],
+                                        "rejected",
+                                        request['landId'],
+                                        request['workerUsername'],
+                                        request['landName']);
                                   },
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: Colors.white,
