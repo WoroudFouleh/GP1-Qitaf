@@ -3,6 +3,7 @@ const db = require('../config/db');
 const orderSchema = new mongoose.Schema({
   username: { type: String, required: true }, // Username as a string
   phoneNumber: { type: String, required: true },
+  recepientCity:{ type: String, required: true },
   location: { type: String, required: true },
   coordinates: {
     type: {

@@ -5,4 +5,5 @@ router.get('/getUserOrders/:username', orderController.getUserOrders);
 router.post('/getDeliveryGroups', orderController.groupItems);
 
 router.post('/getFastDeliveries', orderController.getAllOrdersWithPaths);
+router.post('/getNormalDeliveries', orderController.getNormalDeliveryGroups);
 module.exports = router;

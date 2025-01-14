@@ -43,7 +43,7 @@ app.use('/api/deliveryMens', deliveryManRoute);
 app.use('/uploads/', express.static(path.join(__dirname, 'uploads')));
 
 const port = 3000;
-const host = '192.168.88.10';  // Your machine's IP address
+const host = '192.168.88.4';  // Your machine's IP address
 
 const server = app.listen(port, host, () => {
     console.log(`App listening at http://${host}:${port}/`);

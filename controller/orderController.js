@@ -3,7 +3,7 @@ const haversine = require('haversine-distance');
 exports.registerOrder = async (req, res) => {
   try {
     // Extract data from the request body
-    const { username, phoneNumber, location,coordinates, totalPrice, items, deliveryType } = req.body;
+    const { username, phoneNumber,recepientCity, location,coordinates, totalPrice, items, deliveryType } = req.body;
 
     // Validation: Check if all required fields are provided
     if (!username || !phoneNumber || !location || !totalPrice || !items || items.length === 0) {
@@ -17,6 +17,7 @@ exports.registerOrder = async (req, res) => {
     const order = new Order({
       username,
       phoneNumber,
+      recepientCity,
       location,
       coordinates,
       totalPrice,
@@ -112,6 +113,7 @@ exports.getUserOrders = async (req, res) => {
       res.status(500).json({ success: false, message: "Server error" });
     }
   };
+  ////////////fast delivery
   const calculateDistance = (coord1, coord2) => {
     const toRadians = (degrees) => (degrees * Math.PI) / 180;
     const R = 6371; // Radius of Earth in kilometers
@@ -144,28 +146,36 @@ exports.getUserOrders = async (req, res) => {
   };
   
   const tspBruteForce = (locations) => {
-    const permutations = permute([...Array(locations.length).keys()]);
+    const permutations = permute([...Array(locations.length - 1).keys()].map(i => i + 1)); // Exclude the first location (fixed start)
     let shortestDistance = Infinity;
     let bestRoute = null;
   
     for (const path of permutations) {
+      const fullPath = [0, ...path]; // Add the starting location at the beginning
       let distance = 0;
   
-      for (let i = 0; i < path.length - 1; i++) {
+      for (let i = 0; i < fullPath.length - 1; i++) {
         distance += calculateDistance(
-          locations[path[i]].location,
-          locations[path[i + 1]].location
+          locations[fullPath[i]].location,
+          locations[fullPath[i + 1]].location
         );
       }
   
+      // Add the return trip to the starting location (optional for a round trip)
+      distance += calculateDistance(
+        locations[fullPath[fullPath.length - 1]].location,
+        locations[0].location
+      );
+  
       if (distance < shortestDistance) {
         shortestDistance = distance;
-        bestRoute = path;
+        bestRoute = fullPath;
       }
     }
   
     return bestRoute;
   };
+  
   
   exports.getAllOrdersWithPaths = async (req, res) => {
     try {
@@ -188,19 +198,19 @@ exports.getUserOrders = async (req, res) => {
   
         // Prepare locations for TSP calculation
         const locations = [
-          { location: deliveryManLocation, name: 'Start: Delivery Man Location' },
+          { location: deliveryManLocation, name: 'الانطلاق: مكانك الحالي' },
         ];
   
         order.items.forEach((item) => {
           locations.push({
             location: item.productCoordinates,
-            name: `Pick: ${item.productName}`,
+            name: `أحضر: ${item.productName}`,
           });
         });
   
         locations.push({
           location: order.coordinates,
-          name: 'Destination: User Location',
+          name: 'نقطة الاستلام للزبون',
         });
   
         // Solve TSP
@@ -211,15 +221,19 @@ exports.getUserOrders = async (req, res) => {
           name: locations[index].name,
           coordinates: locations[index].location,
         }));
- // console.log(route);
+  console.log(order);
         // Add the order with its calculated route
         ordersWithPaths.push({
           orderId: order._id,
-          orderDetails: order,
-          deliveryRoute: route,
+          orderDetails: order.toObject(),
+          deliveryRoute: route.map(routeItem => ({
+            name: routeItem.name,
+            coordinates: routeItem.coordinates
+        }))
         });
       }
-      console.log(ordersWithPaths);
+      //console.log(ordersWithPaths);
+      //console.log(JSON.stringify(ordersWithPaths, null, 2));
       // Return all orders with their respective paths
       return res.status(200).json({ status: true, orders: ordersWithPaths });
     } catch (err) {
@@ -227,6 +241,84 @@ exports.getUserOrders = async (req, res) => {
     }
   };
   
-  
-  
+  ////////////////Normal delivery
+// Import necessary modules and models
+
+
+exports.getNormalDeliveryGroups = async (req, res) => {
+  try {
+    console.log("here del");
+    const { deliveryManCity } = req.body;
+
+    if (!deliveryManCity) {
+      console.log("here del2");
+      return res.status(400).json({ status: false, error: 'Missing delivery man city' });
+    }
+
+    // Fetch all undelivered items in normal delivery orders
+    const normalOrders = await Order.find({
+      'deliveryType': 'slow',
+      'items.itemStatus': 'undelivered', // Assuming items have an isDelivered field
+    });
+
+    if (!normalOrders.length) {
+      console.log("here del3");
+      return res.status(404).json({ status: false, error: 'No undelivered items found for normal delivery' });
+    }
+
+    // Filter items where the owner’s city matches the delivery man’s city
+    const itemsInDeliveryManCity = [];
+
+    normalOrders.forEach((order) => {
+      order.items.forEach((item) => {
+        if (item.itemStatus == 'undelivered' && item.productCity === deliveryManCity) {
+          itemsInDeliveryManCity.push({
+            orderId: order._id,
+            itemId: item._id,
+            productName: item.productName,
+            sourceCity: deliveryManCity,
+            destinationCity: order.recepientCity, // Assuming coordinates have a city field
+            productCoordinates: item.productCoordinates,
+          });
+        }
+      });
+    });
+
+    if (!itemsInDeliveryManCity.length) {
+      console.log("here del4");
+      return res.status(404).json({
+        status: false,
+        error: 'No items found for delivery in the delivery man’s city',
+      });
+    }
+
+    // Group items by their destination city
+    const groupedItems = {};
+
+    itemsInDeliveryManCity.forEach((item) => {
+      const destinationCity = item.destinationCity;
+      if (!groupedItems[destinationCity]) {
+        groupedItems[destinationCity] = [];
+      }
+      groupedItems[destinationCity].push(item);
+    });
+
+    // Convert grouped items into an array of groups for easier handling
+    const groupedItemsArray = Object.entries(groupedItems).map(([city, items]) => ({
+      destinationCity: city,
+      items,
+    }));
+
+    // Return the grouped items to the frontend
+    console.log(groupedItemsArray);
+    return res.status(200).json({
+      status: true,
+      groups: groupedItemsArray,
+    });
+  } catch (err) {
+    return res.status(500).json({ status: false, error: err.message });
+  }
+};
+
+
   

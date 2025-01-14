@@ -121,7 +121,8 @@ exports.login = async (req, res, next) => {
                 userType: 'delivery',
                 firstName: deliveryMan.firstName,
                 lastName: deliveryMan.lastName,
-                phoneNumber: deliveryMan.phoneNumber
+                phoneNumber: deliveryMan.phoneNumber,
+                city:deliveryMan.location
             };
             const deliveryToken = await UserServices.generateToken(deliveryTokenData, "secretKey", '1h');
 
