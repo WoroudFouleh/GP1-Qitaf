@@ -105,19 +105,6 @@ class _SigninScreenState extends State<SigninScreen> {
           return;
         }
 
-        // Check for hardcoded delivery credentials
-        if (_usernameController.text == "delivery" &&
-            _passController.text == "delivery") {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) =>
-                  DeliveryOrdersPage(), // Replace with your DeliveryPage
-            ),
-          );
-          return;
-        }
-
         try {
           // Firebase login
           UserCredential firebaseUser = await FirebaseAuth.instance
@@ -309,7 +296,7 @@ class _SigninScreenState extends State<SigninScreen> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => DeliveryOrdersPage(),
+          builder: (context) => DeliveryOrdersPage(token: myToken),
         ),
       );
     }

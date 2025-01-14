@@ -30,7 +30,26 @@ class _OrderWidgetState extends State<OrderWidget> {
   final TextEditingController addressController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
   late String username;
+  String? selectedCity;
   LatLng? locationCoordinates;
+  final List<String> cities = [
+    'القدس',
+    'بيت لحم',
+    'طوباس',
+    'رام الله',
+    'نابلس',
+    'الخليل',
+    'جنين',
+    'طولكرم',
+    'قلقيلية',
+    'سلفيت',
+    'أريحا',
+    'غزة',
+    'دير البلح',
+    'خان يونس',
+    'رفح',
+    'الداخل الفلسطيني'
+  ];
   @override
   void initState() {
     super.initState();
@@ -51,6 +70,7 @@ class _OrderWidgetState extends State<OrderWidget> {
       // Prepare the order details
       final orderDetails = {
         'username': username,
+        'recepientCity': selectedCity,
         'location': addressController.text,
         'phoneNumber': phoneController.text,
         'totalPrice': widget.totalPrice,
@@ -197,6 +217,46 @@ class _OrderWidgetState extends State<OrderWidget> {
               fontSize: 22,
               color: Color(0xFF355E3B),
               fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+        Container(
+          margin: const EdgeInsets.only(left: 15, top: 20),
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(10),
+          ),
+          width: 370,
+          child: DropdownButtonFormField<String>(
+            value: selectedCity,
+            hint: const Text(
+              'اختر مدينة الاستلام',
+              textAlign: TextAlign.right,
+            ),
+            items: cities.map((city) {
+              return DropdownMenuItem<String>(
+                value: city,
+                child: Text(city, textAlign: TextAlign.right),
+              );
+            }).toList(),
+            onChanged: (value) {
+              setState(() {
+                selectedCity = value;
+              });
+            },
+            validator: (value) {
+              if (value == null) {
+                return 'يرجى اختيار اسم مدينتك';
+              }
+              return null;
+            },
+            decoration: InputDecoration(
+              contentPadding:
+                  const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+              // border: OutlineInputBorder(
+              //   borderRadius: BorderRadius.circular(10),
+              // ),
             ),
           ),
         ),

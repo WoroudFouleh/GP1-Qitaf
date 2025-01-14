@@ -5,6 +5,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:login_page/Delivery/AcceptedPage.dart';
 import 'package:login_page/Delivery/DeliveryMap.dart';
 import 'package:login_page/Delivery/DileveryProfile.dart';
+import 'package:login_page/screens/map2.dart';
 import 'package:login_page/screens/map_screen.dart';
 import 'package:login_page/screens/config.dart';
 
@@ -12,6 +13,9 @@ import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:http/http.dart' as http;
 
 class DeliveryOrdersPage extends StatefulWidget {
+  final String token;
+
+  const DeliveryOrdersPage({super.key, required this.token});
   @override
   _DeliveryOrdersPageState createState() => _DeliveryOrdersPageState();
 }
@@ -20,14 +24,26 @@ class _DeliveryOrdersPageState extends State<DeliveryOrdersPage> {
   String _status = 'متاح'; // الحالة الافتراضية
   int _currentIndex = 0;
   LatLng? locationCoordinates;
-  List<dynamic> _orders = [];
+  final List<dynamic> _orders = [];
+  late String deliveryCity;
+  bool isFast = true;
+  @override
+  void initState() {
+    super.initState();
+
+    Map<String, dynamic> jwtDecoderToken = JwtDecoder.decode(widget.token);
+    print(jwtDecoderToken);
+    deliveryCity = jwtDecoderToken['city'] ?? 'No username';
+  }
+
   void _updateStatus(String newStatus) {
     setState(() {
       _status = newStatus;
     });
   }
 
-  Future<void> _fetchOrders() async {
+  Future<void> _fetchFastOrders() async {
+    isFast = true;
     final response = await http.post(
       Uri.parse(getFastDeliveryOrders), // Replace with your backend URL
       headers: {'Content-Type': 'application/json'},
@@ -43,16 +59,64 @@ class _DeliveryOrdersPageState extends State<DeliveryOrdersPage> {
       final data = jsonDecode(response.body);
       if (data['status'] == true) {
         setState(() {
-          _orders = data['orders']; // Store the orders with paths
+          _orders.clear();
+          _orders.addAll(data['orders']);
         });
-        print('Response: ${_orders.toString()}');
-
-        //print(_orders);
       } else {
         print('Error fetching orders: ${data['error']}');
       }
     } else {
       print('Failed to load orders');
+    }
+  }
+
+  Future<void> _fetchNormalOrders() async {
+    isFast = false;
+    final response = await http.post(
+      Uri.parse(getNormalDeliveryOrders), // Replace with your backend URL
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        'deliveryManCity':
+            deliveryCity // Example location, can be dynamically set
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      print(data); // Log the API response
+      if (data['status'] == true) {
+        setState(() {
+          _orders.clear();
+          _orders.addAll(data['groups']); // Assuming orders are inside "groups"
+        });
+      } else {
+        print('Error fetching orders: ${data['error']}');
+      }
+    } else {
+      print('Failed to load orders');
+    }
+  }
+
+  void _showCoordinatesOnMap(
+      Map<String, double> coordinates, String locationName) {
+    try {
+      final latitude = coordinates['lat']!;
+      final longitude = coordinates['lng']!;
+
+      final location = LatLng(latitude, longitude);
+
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => MapScreen2(
+            initialLocation: location,
+            name: locationName,
+          ),
+        ),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('حدث خطأ أثناء عرض الموقع')),
+      );
     }
   }
 
@@ -76,6 +140,61 @@ class _DeliveryOrdersPageState extends State<DeliveryOrdersPage> {
       // Optionally save the result to the database
       //_saveLocationToDatabase(result['name'], result['position']);
     }
+  }
+
+  void _showOrderTypeDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text(
+          'اختر نوع الطلبات',
+          textAlign: TextAlign.center,
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+                _fetchFastOrders(); // Call fetch orders for fast delivery
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.green[800],
+                padding:
+                    const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+              ),
+              child: const Text(
+                'الطلبات السريعة',
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+            const SizedBox(height: 10),
+            ElevatedButton(
+              onPressed: () {
+                print("normal");
+                Navigator.of(context).pop(); // Close the dialog
+                _fetchNormalOrders(); // Call fetch orders for normal delivery
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.blue,
+                padding:
+                    const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+              ),
+              child: const Text(
+                'الطلبات العادية',
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   // صفحة رئيسية مع الحالة
@@ -135,7 +254,8 @@ class _DeliveryOrdersPageState extends State<DeliveryOrdersPage> {
               ),
               const SizedBox(width: 10),
               ElevatedButton.icon(
-                onPressed: locationCoordinates == null ? null : _fetchOrders,
+                onPressed:
+                    locationCoordinates == null ? null : _showOrderTypeDialog,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: locationCoordinates == null
                       ? Colors.grey
@@ -163,8 +283,13 @@ class _DeliveryOrdersPageState extends State<DeliveryOrdersPage> {
               ? ListView.builder(
                   itemCount: _orders.length, // Dynamically set to order count
                   itemBuilder: (context, index) {
-                    return _buildOrderCard(
-                        _orders[index]); // Pass the order data
+                    if (isFast) {
+                      return _buildOrderCard(
+                          _orders[index]); // Pass the order data
+                    } else {
+                      return _buildNormalOrderCard(
+                          _orders[index]); // Pass the order data
+                    }
                   },
                 )
               : Center(
@@ -180,8 +305,169 @@ class _DeliveryOrdersPageState extends State<DeliveryOrdersPage> {
     );
   }
 
+  Widget _buildNormalOrderCard(Map order) {
+    // Extract the grouped items
+    final itemsGroup = order['items'];
+    final destinationCity =
+        order['destinationCity']; // Destination city for the group
+
+    return Card(
+      margin: const EdgeInsets.all(16.0),
+      elevation: 4.0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15.0),
+      ),
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(15.0),
+          color: Colors.white, // Plain color for the card background
+        ),
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Header with source and destination cities
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'من: ${itemsGroup.isNotEmpty ? itemsGroup[0]['sourceCity'] : 'غير محدد'}',
+                  style: TextStyle(
+                    fontSize: 16.0,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.blue,
+                  ),
+                ),
+                Text(
+                  'إلى: $destinationCity',
+                  style: TextStyle(
+                    fontSize: 16.0,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.red,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 10),
+            const Divider(),
+            const SizedBox(height: 10),
+
+            // List of items in this group
+            ListView.builder(
+              shrinkWrap: true,
+              physics:
+                  NeverScrollableScrollPhysics(), // Disable scrolling for nested list
+              itemCount: itemsGroup.length,
+              itemBuilder: (context, index) {
+                final item = itemsGroup[index];
+                return Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'اسم المنتج: ${item['productName']}',
+                        style: TextStyle(fontSize: 14.0, color: Colors.black),
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Text(
+                            'من: ${item['productCity']}',
+                            style:
+                                TextStyle(fontSize: 12.0, color: Colors.grey),
+                          ),
+                          Text(
+                            'إلى: ${item['destinationCity']}',
+                            style:
+                                TextStyle(fontSize: 12.0, color: Colors.grey),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+            const SizedBox(height: 10),
+
+            // Action buttons
+            Row(
+              children: [
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      // Handle acceptance logic here
+                      _updateStatus('مشغول');
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('تم قبول الطلب!'),
+                          backgroundColor: Colors.green,
+                        ),
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.all(12),
+                      backgroundColor: Colors.green[50],
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                        side: BorderSide(
+                            color: Colors.green.shade800, width: 1.5),
+                      ),
+                    ),
+                    child: const Text(
+                      'قبول',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.green,
+                        fontSize: 16.0,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('تم رفض الطلب.'),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.all(12),
+                      backgroundColor: Colors.red[50],
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                        side:
+                            BorderSide(color: Colors.red.shade800, width: 1.5),
+                      ),
+                    ),
+                    child: const Text(
+                      'رفض',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.red,
+                        fontSize: 16.0,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _buildOrderCard(Map order) {
+    print("hereeeeee");
     final route = order['deliveryRoute'];
+    final orderDetails = order['orderDetails'];
+    print(order['deliveryRoute']);
     return Card(
       margin: const EdgeInsets.all(16.0),
       elevation: 4.0,
@@ -207,7 +493,7 @@ class _DeliveryOrdersPageState extends State<DeliveryOrdersPage> {
               children: [
                 Icon(Icons.confirmation_number, color: Colors.blue),
                 Text(
-                  'رقم الطلب: ${order['_id']}',
+                  'رقم الطلب: ${orderDetails['phoneNumber']}',
                   style: TextStyle(fontSize: 16.0, color: Colors.black),
                   textAlign: TextAlign.right,
                 ),
@@ -228,16 +514,16 @@ class _DeliveryOrdersPageState extends State<DeliveryOrdersPage> {
               ),
             ),
 
-            _buildOrderDetailWithIcon(
-                Icons.person, 'الزبون', order['username'], Colors.purple),
-            _buildOrderDetailWithIcon(
-                Icons.phone, 'رقم الزبون', order['phoneNumber'], Colors.orange),
+            _buildOrderDetailWithIcon(Icons.person, 'الزبون',
+                orderDetails['username'], Colors.purple),
+            _buildOrderDetailWithIcon(Icons.phone, 'رقم الزبون',
+                orderDetails['phoneNumber'], Colors.orange),
             _buildOrderDetailWithIcon(Icons.location_on, 'عنوان التوصيل',
-                order['location'], Colors.red),
+                orderDetails['location'], Colors.red),
             _buildOrderDetailWithIcon(
                 Icons.monetization_on, 'الدفع', "عند الاستلام", Colors.teal),
             _buildOrderDetailWithIcon(Icons.attach_money, 'السعر الكلي',
-                order['totalPrice'], Colors.blue),
+                '${orderDetails['totalPrice'].toString()}', Colors.blue),
             const SizedBox(height: 8.0),
             _buildPathSection(route), // New section for showing the path
             const SizedBox(height: 8.0),
@@ -316,22 +602,79 @@ class _DeliveryOrdersPageState extends State<DeliveryOrdersPage> {
       return const Text(
         'لا يوجد مسار متاح',
         style: TextStyle(fontSize: 16, fontStyle: FontStyle.italic),
+        textDirection: TextDirection.rtl, // Align to Arabic layout
       );
     }
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          'مسار التوصيل:',
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-        ),
-        for (var step in path)
-          Text(
-            '${step['name'] ?? 'غير متوفر'}: (${step['coordinates']?['lat'] ?? 'غير متوفر'}, ${step['coordinates']?['lng'] ?? 'غير متوفر'})',
-            style: const TextStyle(fontSize: 14),
+    return Directionality(
+      textDirection: TextDirection.rtl, // Ensure Arabic alignment
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'مسار التوصيل:',
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
-      ],
+          const SizedBox(height: 8.0),
+          ...path.asMap().entries.map((entry) {
+            int index = entry.key + 1;
+            var step = entry.value;
+            String nodeName = step['name'] ?? 'غير متوفر';
+            double? lat = step['coordinates']?['lat'];
+            double? lng = step['coordinates']?['lng'];
+
+            return GestureDetector(
+              onTap: () {
+                if (lat != null && lng != null) {
+                  _showCoordinatesOnMap({
+                    'lat': lat,
+                    'lng': lng,
+                  }, step['name'] ?? 'غير متوفر');
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('لا تتوفر إحداثيات لهذه النقطة'),
+                    ),
+                  );
+                }
+              },
+              child: Container(
+                margin: const EdgeInsets.symmetric(vertical: 6.0),
+                padding: const EdgeInsets.all(12.0),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10.0),
+                  color: Colors.green[50],
+                  border: Border.all(color: Colors.green, width: 1.0),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      '$index  ', // Node number
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.green,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    Expanded(
+                      child: Text(
+                        nodeName,
+                        style: const TextStyle(
+                          fontSize: 14,
+                          color: Colors.black,
+                        ),
+                        textAlign: TextAlign.right,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          }).toList(),
+        ],
+      ),
     );
   }
 
