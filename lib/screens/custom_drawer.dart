@@ -14,7 +14,8 @@ import 'package:login_page/screens/previousOrders.dart';
 class CustomDrawer extends StatefulWidget {
   final token;
   final userId;
-  const CustomDrawer({required this.token, Key? key, this.userId}) : super(key: key);
+  const CustomDrawer({required this.token, Key? key, this.userId})
+      : super(key: key);
 
   @override
   _CustomDrawerState createState() => _CustomDrawerState();
@@ -87,9 +88,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                 context,
                 MaterialPageRoute(
                     builder: (context) => ProfilePage(
-                          token: widget.token,
-                          userId: widget.userId
-                        )),
+                        token: widget.token, userId: widget.userId)),
               );
             },
           ),
@@ -103,10 +102,8 @@ class _CustomDrawerState extends State<CustomDrawer> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => MyBookingPage(
-                    token: widget.token,
-                    userId: widget.userId
-                  ),
+                  builder: (context) =>
+                      MyBookingPage(token: widget.token, userId: widget.userId),
                 ),
               );
             },
@@ -121,8 +118,8 @@ class _CustomDrawerState extends State<CustomDrawer> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => CustomerWorkPage(token: widget.token,
-                  userId: widget.userId),
+                  builder: (context) => CustomerWorkPage(
+                      token: widget.token, userId: widget.userId),
                 ),
               );
             },
@@ -167,8 +164,8 @@ class _CustomDrawerState extends State<CustomDrawer> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => OwnerWorkingPage(token: widget.token,
-                    userId: widget.userId),
+                    builder: (context) => OwnerWorkingPage(
+                        token: widget.token, userId: widget.userId),
                   ),
                 );
               }),
@@ -182,7 +179,8 @@ class _CustomDrawerState extends State<CustomDrawer> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => CustomersBuying(),
+                    builder: (context) => CustomersBuying(
+                        token: widget.token, userId: widget.userId),
                   ),
                 );
               }),
@@ -197,9 +195,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                 context,
                 MaterialPageRoute(
                   builder: (context) => OwnerBookingPage(
-                    token: widget.token,
-                    userId: widget.userId
-                  ),
+                      token: widget.token, userId: widget.userId),
                 ),
               );
             },

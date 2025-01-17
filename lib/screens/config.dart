@@ -1,4 +1,4 @@
-const url = 'http://192.168.88.4:3000/';
+const url = 'http://192.168.88.10:3000/';
 final registration = "${url}api/users/register";
 final login = "${url}api/users/login";
 final forgotPass = "${url}api/users/forgotPass";
@@ -98,3 +98,5 @@ final deleteDeliveryMan = "${url}api/deliveryMens/deleteDeliveryMan";
 //////////////////delivery paths
 final getFastDeliveryOrders = "${url}api/orders/getFastDeliveries";
 final getNormalDeliveryOrders = "${url}api/orders/getNormalDeliveries";
+final getOwnerOrders = "${url}api/orders/getOwnerOrders";
+final updatePreparationStatus = "${url}api/orders/updateItemPreparation";

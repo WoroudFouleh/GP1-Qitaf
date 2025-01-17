@@ -306,21 +306,31 @@ class _DeliveryOrdersPageState extends State<DeliveryOrdersPage> {
   }
 
   Widget _buildNormalOrderCard(Map order) {
-    // Extract the grouped items
     final itemsGroup = order['items'];
-    final destinationCity =
-        order['destinationCity']; // Destination city for the group
+    final destinationCity = order['destinationCity'];
 
     return Card(
-      margin: const EdgeInsets.all(16.0),
-      elevation: 4.0,
+      margin: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 12.0),
+      elevation: 6.0,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15.0),
+        borderRadius: BorderRadius.circular(20.0),
       ),
       child: Container(
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(15.0),
-          color: Colors.white, // Plain color for the card background
+          borderRadius: BorderRadius.circular(20.0),
+          gradient: LinearGradient(
+            colors: [Colors.white, Colors.grey.shade100],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.3),
+              spreadRadius: 2,
+              blurRadius: 8,
+              offset: const Offset(0, 4), // Shadow position
+            ),
+          ],
         ),
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -328,59 +338,145 @@ class _DeliveryOrdersPageState extends State<DeliveryOrdersPage> {
           children: [
             // Header with source and destination cities
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                Text(
-                  'من: ${itemsGroup.isNotEmpty ? itemsGroup[0]['sourceCity'] : 'غير محدد'}',
-                  style: TextStyle(
-                    fontSize: 16.0,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.blue,
-                  ),
+                Row(
+                  children: [
+                    Icon(Icons.location_on, color: Colors.blue, size: 20),
+                    const SizedBox(width: 5),
+                    Text(
+                      'من: ${itemsGroup.isNotEmpty ? itemsGroup[0]['sourceCity'] : 'غير محدد'}',
+                      style: const TextStyle(
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.blue,
+                      ),
+                    ),
+                  ],
                 ),
-                Text(
-                  'إلى: $destinationCity',
-                  style: TextStyle(
-                    fontSize: 16.0,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.red,
-                  ),
+                Row(
+                  children: [
+                    Icon(Icons.location_on, color: Colors.red, size: 20),
+                    const SizedBox(width: 5),
+                    Text(
+                      'إلى: $destinationCity',
+                      style: const TextStyle(
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.red,
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
-            const SizedBox(height: 10),
-            const Divider(),
+            const SizedBox(height: 12),
+            const Divider(thickness: 1.5),
             const SizedBox(height: 10),
 
             // List of items in this group
             ListView.builder(
               shrinkWrap: true,
-              physics:
-                  NeverScrollableScrollPhysics(), // Disable scrolling for nested list
+              physics: const NeverScrollableScrollPhysics(),
               itemCount: itemsGroup.length,
               itemBuilder: (context, index) {
                 final item = itemsGroup[index];
+
                 return Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  padding: const EdgeInsets.symmetric(vertical: 12.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        'اسم المنتج: ${item['productName']}',
-                        style: TextStyle(fontSize: 14.0, color: Colors.black),
+                      Row(
+                        children: [
+                          const SizedBox(width: 10),
+                          if (item['productImage'] != null)
+                            Container(
+                              width: 55,
+                              height: 55,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                  color: const Color.fromARGB(255, 38, 95, 10),
+                                  width: 2,
+                                ),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey.withOpacity(0.4),
+                                    blurRadius: 6,
+                                    offset: const Offset(0, 3),
+                                  ),
+                                ],
+                                image: DecorationImage(
+                                  image: MemoryImage(
+                                    base64Decode(item['productImage']),
+                                  ),
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
+                          const SizedBox(width: 12),
+                          Text(
+                            item['productName'],
+                            style: const TextStyle(
+                              fontSize: 16.0,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ],
                       ),
                       Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            'من: ${item['productCity']}',
-                            style:
-                                TextStyle(fontSize: 12.0, color: Colors.grey),
+                          GestureDetector(
+                            onTap: () {
+                              if (item['recepientCoordinates'] != null) {
+                                final coordinates = {
+                                  'lat': (item['recepientCoordinates']['lat']
+                                          as num)
+                                      .toDouble(),
+                                  'lng': (item['recepientCoordinates']['lng']
+                                          as num)
+                                      .toDouble(),
+                                };
+                                _showCoordinatesOnMap(
+                                    coordinates, 'موقع الاستلام من المالك');
+                              }
+                            },
+                            child: Text(
+                              'موقع الاستلام من المالك: ${item['sourceCity']}',
+                              style: TextStyle(
+                                fontSize: 14.0,
+                                color: const Color.fromARGB(255, 0, 0, 0),
+                                decoration: TextDecoration.underline,
+                              ),
+                            ),
                           ),
-                          Text(
-                            'إلى: ${item['destinationCity']}',
-                            style:
-                                TextStyle(fontSize: 12.0, color: Colors.grey),
+                          SizedBox(height: 10),
+                          GestureDetector(
+                            onTap: () {
+                              if (item['productCoordinates'] != null) {
+                                final coordinates = {
+                                  'lat':
+                                      (item['productCoordinates']['lat'] as num)
+                                          .toDouble(),
+                                  'lng':
+                                      (item['productCoordinates']['lng'] as num)
+                                          .toDouble(),
+                                };
+                                _showCoordinatesOnMap(
+                                    coordinates, 'موقع التسليم إلى الزبون');
+                              }
+                            },
+                            child: Text(
+                              'موقع التسليم إلى الزبون: ${item['destinationCity']}',
+                              style: TextStyle(
+                                fontSize: 14.0,
+                                color: const Color.fromARGB(255, 0, 0, 0),
+                                decoration: TextDecoration.underline,
+                              ),
+                            ),
                           ),
                         ],
                       ),
@@ -389,15 +485,14 @@ class _DeliveryOrdersPageState extends State<DeliveryOrdersPage> {
                 );
               },
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 12),
 
             // Action buttons
             Row(
               children: [
                 Expanded(
-                  child: ElevatedButton(
+                  child: ElevatedButton.icon(
                     onPressed: () {
-                      // Handle acceptance logic here
                       _updateStatus('مشغول');
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
@@ -406,6 +501,7 @@ class _DeliveryOrdersPageState extends State<DeliveryOrdersPage> {
                         ),
                       );
                     },
+                    icon: const Icon(Icons.check, color: Colors.green),
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.all(12),
                       backgroundColor: Colors.green[50],
@@ -415,7 +511,7 @@ class _DeliveryOrdersPageState extends State<DeliveryOrdersPage> {
                             color: Colors.green.shade800, width: 1.5),
                       ),
                     ),
-                    child: const Text(
+                    label: const Text(
                       'قبول',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
@@ -427,7 +523,7 @@ class _DeliveryOrdersPageState extends State<DeliveryOrdersPage> {
                 ),
                 const SizedBox(width: 10),
                 Expanded(
-                  child: ElevatedButton(
+                  child: ElevatedButton.icon(
                     onPressed: () {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
@@ -436,6 +532,7 @@ class _DeliveryOrdersPageState extends State<DeliveryOrdersPage> {
                         ),
                       );
                     },
+                    icon: const Icon(Icons.close, color: Colors.red),
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.all(12),
                       backgroundColor: Colors.red[50],
@@ -445,7 +542,7 @@ class _DeliveryOrdersPageState extends State<DeliveryOrdersPage> {
                             BorderSide(color: Colors.red.shade800, width: 1.5),
                       ),
                     ),
-                    child: const Text(
+                    label: const Text(
                       'رفض',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
