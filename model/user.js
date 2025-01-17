@@ -54,6 +54,15 @@ const userSchema = new mongoose.Schema({
         min: 0, // Ensures the rate cannot go below 0
         max: 5 // Optional: Add if you want to restrict ratings to a 0-5 scale
     },
+    points: {
+        type: Number,
+        default: 0, // Initial value
+    },
+    reports: {
+        type: Number,
+        default: 0, // Initial value
+    },
+
 }, {
     timestamps: true // Automatically adds createdAt and updatedAt fields
 });

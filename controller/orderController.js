@@ -145,15 +145,22 @@ exports.getUserOrders = async (req, res) => {
     return permutations;
   };
   
-  const tspBruteForce = (locations) => {
-    const permutations = permute([...Array(locations.length - 1).keys()].map(i => i + 1)); // Exclude the first location (fixed start)
+  const tspWithConstraints = (locations) => {
+    // Separate the delivery point (last location) from the pickup points
+    const pickupPoints = locations.slice(1, -1); // Exclude the first (current location) and last (delivery point)
+    const deliveryPoint = locations[locations.length - 1]; // Final delivery point
+  
+    // Generate permutations for pickup points only
+    const pickupPermutations = permute([...Array(pickupPoints.length).keys()].map(i => i + 1));
+  
     let shortestDistance = Infinity;
     let bestRoute = null;
   
-    for (const path of permutations) {
+    for (const path of pickupPermutations) {
       const fullPath = [0, ...path]; // Add the starting location at the beginning
       let distance = 0;
   
+      // Calculate the distance for the pickup points
       for (let i = 0; i < fullPath.length - 1; i++) {
         distance += calculateDistance(
           locations[fullPath[i]].location,
@@ -161,26 +168,25 @@ exports.getUserOrders = async (req, res) => {
         );
       }
   
-      // Add the return trip to the starting location (optional for a round trip)
+      // Add the distance from the last pickup point to the delivery point
       distance += calculateDistance(
         locations[fullPath[fullPath.length - 1]].location,
-        locations[0].location
+        deliveryPoint.location
       );
   
       if (distance < shortestDistance) {
         shortestDistance = distance;
-        bestRoute = fullPath;
+        bestRoute = [...fullPath, locations.length - 1]; // Append the delivery point
       }
     }
   
     return bestRoute;
   };
   
-  
   exports.getAllOrdersWithPaths = async (req, res) => {
     try {
       // Fetch all orders (you can filter orders by delivery type if needed)
-      const orders = await Order.find({ 'deliveryType': 'fast' });
+      const orders = await Order.find({ deliveryType: 'fast' });
   
       if (!orders.length) {
         return res.status(404).json({ status: false, error: 'No fast delivery orders found' });
@@ -190,6 +196,15 @@ exports.getUserOrders = async (req, res) => {
       const ordersWithPaths = [];
   
       for (const order of orders) {
+
+        const allItemsReady = order.items.every((item) => item.itemPreparation === 'ready');
+
+      if (!allItemsReady) {
+        return res.status(400).json({
+          status: false,
+          error: `Not all items in order ${order._id} are ready for delivery.`,
+        });
+      }
         const { deliveryManLocation } = req.body; // Assuming deliveryManLocation is sent in the request body
   
         if (!deliveryManLocation) {
@@ -213,15 +228,15 @@ exports.getUserOrders = async (req, res) => {
           name: 'نقطة الاستلام للزبون',
         });
   
-        // Solve TSP
-        const pathIndices = tspBruteForce(locations);
+        // Solve TSP with constraints
+        const pathIndices = tspWithConstraints(locations);
   
         // Map the path indices back to the original locations with names
         const route = pathIndices.map((index) => ({
           name: locations[index].name,
           coordinates: locations[index].location,
         }));
-  console.log(order);
+  
         // Add the order with its calculated route
         ordersWithPaths.push({
           orderId: order._id,
@@ -229,11 +244,10 @@ exports.getUserOrders = async (req, res) => {
           deliveryRoute: route.map(routeItem => ({
             name: routeItem.name,
             coordinates: routeItem.coordinates
-        }))
+          }))
         });
       }
-      //console.log(ordersWithPaths);
-      //console.log(JSON.stringify(ordersWithPaths, null, 2));
+  
       // Return all orders with their respective paths
       return res.status(200).json({ status: true, orders: ordersWithPaths });
     } catch (err) {
@@ -271,7 +285,7 @@ exports.getNormalDeliveryGroups = async (req, res) => {
 
     normalOrders.forEach((order) => {
       order.items.forEach((item) => {
-        if (item.itemStatus == 'undelivered' && item.productCity === deliveryManCity) {
+        if (item.itemStatus == 'undelivered' && item.itemPreparation == 'ready' && item.productCity === deliveryManCity) {
           itemsInDeliveryManCity.push({
             orderId: order._id,
             itemId: item._id,
@@ -279,6 +293,8 @@ exports.getNormalDeliveryGroups = async (req, res) => {
             sourceCity: deliveryManCity,
             destinationCity: order.recepientCity, // Assuming coordinates have a city field
             productCoordinates: item.productCoordinates,
+          recepientCoordinates: order.coordinates,
+          productImage: item.image
           });
         }
       });
@@ -320,5 +336,78 @@ exports.getNormalDeliveryGroups = async (req, res) => {
   }
 };
 
+//////////////
 
-  
+exports.getItemsByOwnerAndPreparation = async (req, res) => {
+  try {
+    const { ownerusername } = req.params; // Extract ownerusername from the request parameters
+console.log(ownerusername);
+    if (!ownerusername) {
+      console.log("no user");
+      return res.status(400).json({ message: 'Owner username is required.' });
+    }
+
+    // Query the database for matching items
+    const orders = await Order.find({
+      'items.ownerusername': ownerusername,
+      //'items.itemPreparation': 'notReady',
+    }, {
+      'items.$': 1 // Project only matching items
+    });
+
+    // Extract and consolidate items from all matching orders
+    const items = orders.flatMap(order => order.items);
+
+    if (items.length === 0) {
+      console.log("no items");
+      return res.status(404).json({status: false, message: 'No matching items found.' });
+    }
+
+    return res.status(200).json({status: true, items });
+  } catch (error) {
+    console.error('Error fetching items:', error);
+    return res.status(500).json({ message: 'Internal server error.', error });
+  }
+};
+
+// Update item preparation status in an order
+exports.updateItemPreparation = async (req, res) => {
+  try {
+    console.log("here");
+    const { itemId } = req.params;
+    const { preparationStatus } = req.body;
+
+    // Find the order and update the item in a single operation using $set
+    const order = await Order.findOneAndUpdate(
+      { 'items._id': itemId }, // Find the order containing the item
+      { $set: { 'items.$.itemPreparation': 'ready' } }, // Update the item's preparation status
+      { new: true } // Return the updated order
+    );
+
+    if (!order) {
+      return res.status(404).json({ message: 'Item not found in any order' });
+    }
+
+    // Find the updated item after the update
+    const updatedItem = order.items.id(itemId);
+    
+    if (!updatedItem) {
+      return res.status(404).json({ message: 'Item not found' });
+    }
+
+    console.log("Updated Order:", order); // Check the saved order
+    console.log("donee");
+
+    res.status(200).json({
+      message: 'Item preparation status updated successfully',
+      updatedItem: updatedItem,
+    });
+  } catch (error) {
+    console.error('Error updating item preparation status:', error);
+    res.status(500).json({ message: 'Internal server error', error });
+  }
+};
+
+
+
+

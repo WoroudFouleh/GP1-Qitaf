@@ -67,6 +67,16 @@ type: String, enum: ['fast', 'slow'], default: 'slow'
             type: String,
             default: "undelivered"
           },
+          itemPreparation:{
+            type: String,
+            //required: true,
+            default: "notReady"
+          },
+          deliveryUsername:{
+            type: String,
+            required: false
+            
+          },
           addedAt: {
             type: Date,
             default: Date.now,
