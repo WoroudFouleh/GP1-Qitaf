@@ -18,6 +18,14 @@ const orderSchema = new mongoose.Schema({
  deliveryType:{
 type: String, enum: ['fast', 'slow'], default: 'slow'
  },
+ fastDeliveryUsername:{
+  type: String,
+  required: false
+ },
+ isTakenToDeliver:{
+type: Boolean,
+default: false
+ },
   items: [
     {
       ownerusername: {
@@ -71,6 +79,11 @@ type: String, enum: ['fast', 'slow'], default: 'slow'
             type: String,
             //required: true,
             default: "notReady"
+          },
+          itemTaken:{
+            type: String,
+            //required: true,
+            default: "notTaken"
           },
           deliveryUsername:{
             type: String,

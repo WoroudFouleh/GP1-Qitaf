@@ -7,4 +7,7 @@ router.post('/getFastDeliveries', orderController.getAllOrdersWithPaths);
 router.post('/getNormalDeliveries', orderController.getNormalDeliveryGroups);
 router.get('/getOwnerOrders/:ownerusername', orderController.getItemsByOwnerAndPreparation);
 router.put('/updateItemPreparation/:itemId', orderController.updateItemPreparation);
+router.post('/updateNormalOrderStatus', orderController.updateItemStatus);
+router.post('/updateFastOrderStatus', orderController.updateFastStatus);
+router.get('/getAcceptedOrders/:deliveryUsername', orderController.getAcceptedOrders);
 module.exports = router;

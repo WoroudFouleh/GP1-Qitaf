@@ -515,5 +515,45 @@ exports.getUserStatistics = async (req, res) => {
       res.status(500).json({ message: "Server error", error });
     }
   };
+  async function getUserPoints(username) {
+    // Replace with your actual database query
+    const user = await User.findOne({ username: username });
+    if (user) {
+      return user.points;
+    } else {
+      throw new Error('User not found');
+    }
+  }
   
+  // Discount calculation function based on points
+  function calculateDiscount(points) {
+    if (points >= 100) {
+      return 30;  // 30% discount for 100 points or more
+    } else if (points >= 50) {
+      return 20;  // 20% discount for 50 points or more
+    } else if (points >= 20) {
+      return 10;  // 10% discount for 20 points or more
+    } else if (points >= 10) {
+      return 5;   // 5% discount for 10 points or more
+    } else {
+      return 0;   // No discount for less than 10 points
+    }
+  }
+  
+  exports.calculateDiscount = async (req, res) => {
+    const { username } = req.body; // Get username from the request body
+
+  try {
+    // Get user points from the database
+    const points = await getUserPoints(username);
+
+    // Calculate the discount based on points
+    const discountPercentage = calculateDiscount(points);
+
+    // Send back the discount percentage
+    res.json({ discountPercentage });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to calculate discount', message: error.message });
+  }
+  };
   

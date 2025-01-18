@@ -186,7 +186,7 @@ exports.getUserOrders = async (req, res) => {
   exports.getAllOrdersWithPaths = async (req, res) => {
     try {
       // Fetch all orders (you can filter orders by delivery type if needed)
-      const orders = await Order.find({ deliveryType: 'fast' });
+      const orders = await Order.find({ deliveryType: 'fast', isTakenToDeliver: false });
   
       if (!orders.length) {
         return res.status(404).json({ status: false, error: 'No fast delivery orders found' });
@@ -197,14 +197,15 @@ exports.getUserOrders = async (req, res) => {
   
       for (const order of orders) {
 
-        const allItemsReady = order.items.every((item) => item.itemPreparation === 'ready');
+      //   const allItemsReady = order.items.every((item) => item.itemPreparation === 'ready');
 
-      if (!allItemsReady) {
-        return res.status(400).json({
-          status: false,
-          error: `Not all items in order ${order._id} are ready for delivery.`,
-        });
-      }
+      // if (!allItemsReady) {
+      //   console.log("not all ready");
+      //   return res.status(400).json({
+      //     status: false,
+      //     error: `Not all items in order ${order._id} are ready for delivery.`,
+      //   });
+      // }
         const { deliveryManLocation } = req.body; // Assuming deliveryManLocation is sent in the request body
   
         if (!deliveryManLocation) {
@@ -285,7 +286,7 @@ exports.getNormalDeliveryGroups = async (req, res) => {
 
     normalOrders.forEach((order) => {
       order.items.forEach((item) => {
-        if (item.itemStatus == 'undelivered' && item.itemPreparation == 'ready' && item.productCity === deliveryManCity) {
+        if (item.itemStatus == 'undelivered' && item.itemPreparation == 'ready' && item.itemTaken != 'taken' && item.productCity === deliveryManCity) {
           itemsInDeliveryManCity.push({
             orderId: order._id,
             itemId: item._id,
@@ -407,7 +408,120 @@ exports.updateItemPreparation = async (req, res) => {
     res.status(500).json({ message: 'Internal server error', error });
   }
 };
+////////////
+exports.updateItemStatus = async (req, res) => {
+  try {
+    const { itemIds, deliverymanUsername } = req.body;
+console.log(deliverymanUsername);
+console.log(itemIds);
+    // Validate input
+    if (!itemIds || !Array.isArray(itemIds) || itemIds.length === 0) {
+      return res.status(400).json({ message: 'Item IDs are required and should be an array.' });
+    }
+    if (!deliverymanUsername) {
+      return res.status(400).json({ message: 'Deliveryman username is required.' });
+    }
 
+    // Find and update items in "slow" orders
+    const result = await Order.updateMany(
+      { 
+        deliveryType: 'slow',
+        'items._id': { $in: itemIds } // Match any items in the list
+      },
+      { 
+        $set: { 
+          'items.$[elem].itemTaken': 'taken', 
+          'items.$[elem].deliveryUsername': deliverymanUsername 
+        } 
+      },
+      {
+        arrayFilters: [{ 'elem._id': { $in: itemIds } }],
+        multi: true // Ensure multiple items in the array are updated
+      }
+    );
 
+    if (result.modifiedCount === 0) {
+      return res.status(404).json({ message: 'No matching items found to update.' });
+    }
+
+    res.status(200).json({ 
+      message: 'Item status updated successfully.', 
+      modifiedCount: result.modifiedCount 
+    });
+  } catch (error) {
+    console.error('Error updating item status:', error);
+    res.status(500).json({ message: 'Internal server error.', error });
+  }
+};
+
+exports.updateFastStatus = async (req, res) => {
+  try {
+    const { orderId, deliveryUsername } = req.body;
+    
+    // Find the order by orderId
+    const order = await Order.findById(orderId);
+    
+    if (!order) {
+      return res.status(404).json({ message: 'Order not found' });
+    }
+    console.log(deliveryUsername);
+    // Update the order details
+    order.fastDeliveryUsername = deliveryUsername;
+    order.isTakenToDeliver = true;
+
+    // Save the updated order
+    await order.save();
+console.log(order.fastDeliveryUsername);
+    // Respond with success
+    res.status(200).json({ message: 'Order updated successfully' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Server error' });
+  }
+
+};
+exports.getAcceptedOrders = async (req, res) => {
+  try {
+    const { deliveryUsername } = req.params;
+
+    // Fetch fast orders
+    const fastOrders = await Order.find({
+      deliveryType: 'fast',
+      isTakenToDeliver: true,
+      fastDeliveryUsername: deliveryUsername,
+      status: 'غير مستلم',
+    });
+
+    // Fetch slow orders (based on individual items)
+    const slowOrders = await Order.find({
+      deliveryType: 'slow',
+      'items.itemTaken': 'taken',
+      'items.deliveryUsername': deliveryUsername,
+      'items.itemStatus': 'undelivered',
+    }).select('items');
+
+    // Extract relevant slow items
+    const slowItems = [];
+    for (const order of slowOrders) {
+      const filteredItems = order.items.filter(
+        (item) =>
+          item.itemTaken === 'taken' &&
+          item.deliveryUsername === deliveryUsername &&
+          item.itemStatus === 'undelivered'
+      );
+      slowItems.push(...filteredItems);
+    }
+console.log(fastOrders);
+console.log(slowItems);
+    // Respond with the combined data
+    res.status(200).json({
+      fastOrders,
+      slowItems,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
 
 
