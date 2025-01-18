@@ -1,15 +1,18 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:login_page/screens/changepass.dart';
 
 // استدعاء الـ Drawer المخصص
 
 class DeliveryProfile extends StatefulWidget {
-  const DeliveryProfile({super.key});
+  final String token;
+  const DeliveryProfile({super.key, required this.token});
 
   @override
   State<DeliveryProfile> createState() => _DeliveryProfileState();
@@ -22,10 +25,11 @@ class _DeliveryProfileState extends State<DeliveryProfile> {
   final TextEditingController _emailController = TextEditingController();
 
   // قيم افتراضية للحقول
-  String name = 'ورود فوله';
-  String phone = '+97256706470';
-  String address = 'نابلس، شارع 24';
-  String email = 'woroudfouleh@gmail.com';
+  late String name;
+  late String phone;
+  late String address;
+  late String email;
+
   Uint8List? _image;
   File? selectedImage;
   bool agreePersonalData = true;
@@ -33,11 +37,19 @@ class _DeliveryProfileState extends State<DeliveryProfile> {
   @override
   void initState() {
     super.initState();
-    // تعيين القيم الافتراضية في الـ TextEditingController
+
+    Map<String, dynamic> jwtDecoderToken = JwtDecoder.decode(widget.token);
+    print(jwtDecoderToken);
+    address = jwtDecoderToken['city'] ?? 'No username';
+    email = jwtDecoderToken['email'] ?? 'No username';
+    phone = jwtDecoderToken['phoneNumber'] ?? 'No username';
+    name =
+        '${jwtDecoderToken['firstName'] ?? 'No username'} ${jwtDecoderToken['lastName'] ?? 'No username'}';
     _nameController.text = name;
     _phoneController.text = phone;
     _addressController.text = address;
     _emailController.text = email;
+    //_image=base64Decode(jwtDecoderToken['profileImage'])
   }
 
   @override

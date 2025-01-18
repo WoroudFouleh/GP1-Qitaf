@@ -100,3 +100,6 @@ final getFastDeliveryOrders = "${url}api/orders/getFastDeliveries";
 final getNormalDeliveryOrders = "${url}api/orders/getNormalDeliveries";
 final getOwnerOrders = "${url}api/orders/getOwnerOrders";
 final updatePreparationStatus = "${url}api/orders/updateItemPreparation";
+final updateNormalItemsStatus = "${url}api/orders/updateNormalOrderStatus";
+final updateFastStatus = "${url}api/orders/updateFastOrderStatus";
+final getAcceptedOrders = "${url}api/orders/getAcceptedOrders";

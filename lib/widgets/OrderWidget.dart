@@ -32,6 +32,7 @@ class _OrderWidgetState extends State<OrderWidget> {
   late String username;
   String? selectedCity;
   LatLng? locationCoordinates;
+  double deliveryPrice = 0;
   final List<String> cities = [
     'القدس',
     'بيت لحم',
@@ -203,141 +204,220 @@ class _OrderWidgetState extends State<OrderWidget> {
     }
   }
 
+  double calculateDeliveryPrice(String? destinationCity, bool isFastDelivery) {
+    // Define the groups
+    print(isFastDelivery);
+    const westBankCities = [
+      'بيت لحم',
+      'طوباس',
+      'رام الله',
+      'نابلس',
+      'الخليل',
+      'جنين',
+      'طولكرم',
+      'قلقيلية',
+      'سلفيت',
+      'أريحا',
+    ]; // Example cities
+    const gazaCities = [
+      'غزة',
+      'دير البلح',
+      'خان يونس',
+      'رفح',
+    ]; // Example cities
+    const occupiedCities = ['الداخل الفلسطيني', 'القدس']; // Example cities
+
+    // Helper function to identify city group
+    String getCityGroup(String? city) {
+      if (westBankCities.contains(city)) {
+        return 'westbank';
+      } else if (gazaCities.contains(city)) {
+        return 'gaza';
+      } else if (occupiedCities.contains(city)) {
+        return 'occupied';
+      } else {
+        return 'unknown';
+      }
+    }
+
+    // Get the city group for the destination city only
+    String destinationGroup = getCityGroup(destinationCity);
+
+    // Determine the delivery price based on the destination city
+    double deliveryPrice = 0;
+
+    if (destinationGroup == 'westbank' || destinationGroup == 'gaza') {
+      deliveryPrice = 20; // Westbank or Gaza destination
+    } else if (destinationGroup == 'occupied') {
+      deliveryPrice = 40; // Occupied destination
+    } else {
+      deliveryPrice =
+          40; // Default price for unknown destination (could be adjusted)
+    }
+
+    // If fast delivery is chosen, increase the price
+    if (isFastDelivery) {
+      deliveryPrice *= 1.5; // Increase by 50% for fast delivery
+    }
+
+    return deliveryPrice;
+  }
+
+  double calculateTotalPrice(double itemPrice, double deliveryPrice) {
+    return itemPrice + deliveryPrice;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Container(
-          margin: const EdgeInsets.only(right: 15, top: 20),
-          alignment: Alignment.centerRight,
-          child: const Text(
-            "قم بتعبئة تفاصيل الطلب",
-            style: TextStyle(
-              fontSize: 22,
-              color: Color(0xFF355E3B),
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
-        Container(
-          margin: const EdgeInsets.only(left: 15, top: 20),
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(10),
-          ),
-          width: 370,
-          child: DropdownButtonFormField<String>(
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Divider(),
+          _buildSectionHeader("قم بتعبئة تفاصيل الطلب"),
+          _buildDropdown(
+            context,
+            label: "اختر مدينة الاستلام",
             value: selectedCity,
-            hint: const Text(
-              'اختر مدينة الاستلام',
-              textAlign: TextAlign.right,
-            ),
-            items: cities.map((city) {
-              return DropdownMenuItem<String>(
-                value: city,
-                child: Text(city, textAlign: TextAlign.right),
-              );
-            }).toList(),
+            items: cities,
             onChanged: (value) {
               setState(() {
                 selectedCity = value;
+                // Calculate the delivery price when the city changes
+                deliveryPrice = calculateDeliveryPrice(
+                    selectedCity, selectedDeliveryMethod == 'fast');
               });
             },
-            validator: (value) {
-              if (value == null) {
-                return 'يرجى اختيار اسم مدينتك';
-              }
-              return null;
-            },
-            decoration: InputDecoration(
-              contentPadding:
-                  const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-              // border: OutlineInputBorder(
-              //   borderRadius: BorderRadius.circular(10),
-              // ),
-            ),
           ),
-        ),
-        Row(
-          children: [
-            IconButton(
-              icon: const Icon(
-                Icons.add_location_alt, // أيقونة لإضافة الموقع
-                color: Color.fromARGB(255, 11, 108, 45),
-                size: 40,
-              ),
-              onPressed: () {
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(
-                //     builder: (context) =>
-                //         MapScreen(), // استدعاء صفحة الخريطة
-                //   ),
-                // );
-                _navigateToMap();
-              },
-            ),
-            const SizedBox(width: 10.0),
-            Container(
-              margin: const EdgeInsets.only(top: 20),
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              width: 320,
-              child: TextFormField(
-                controller: addressController,
-                textAlign: TextAlign.right,
-                decoration: const InputDecoration(
-                  border: InputBorder.none,
-                  hintText: " عنوان الاستلام",
-                  hintStyle: TextStyle(
-                    fontSize: 20,
-                    color: Color(0xFF355E3B),
-                  ),
-                ),
-              ),
-            ),
-            // مسافة بين القائمة والزر
-          ],
-        ),
-        Container(
-          margin: const EdgeInsets.only(left: 15, top: 20),
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(10),
+          const SizedBox(height: 15),
+          _buildTextInput(
+            label: "عنوان الاستلام",
+            controller: addressController,
+            icon: Icons.location_on,
+            onIconPressed: _navigateToMap,
           ),
-          width: 370,
-          child: TextFormField(
+          const SizedBox(height: 15),
+          _buildTextInput(
+            label: "رقم الهاتف",
             controller: phoneController,
-            textAlign: TextAlign.right,
-            decoration: const InputDecoration(
-              border: InputBorder.none,
-              hintText: "رقم الهاتف",
-              hintStyle: TextStyle(
-                fontSize: 20,
-                color: Color(0xFF355E3B),
+            icon: Icons.phone,
+          ),
+          _buildSectionHeader("طريقة التوصيل"),
+          _buildDeliveryOptions(),
+          _buildSectionHeader("طريقة الدفع"),
+          _buildPaymentOptions(),
+          const SizedBox(height: 20),
+          _buildOrderSummary(),
+          const SizedBox(height: 20),
+          _buildSubmitButton(),
+          const SizedBox(height: 50),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSectionHeader(String title) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      child: Text(
+        title,
+        style: const TextStyle(
+          fontSize: 22,
+          fontWeight: FontWeight.bold,
+          color: Color(0xFF355E3B),
+        ),
+        textAlign: TextAlign.right, // Align text to the right for Arabic
+        textDirection:
+            TextDirection.rtl, // Ensure text is properly aligned for RTL
+      ),
+    );
+  }
+
+  Widget _buildDropdown(
+    BuildContext context, {
+    required String label,
+    required String? value,
+    required List<String> items,
+    required ValueChanged<String?> onChanged,
+  }) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 20),
+      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.shade200,
+            spreadRadius: 3,
+            blurRadius: 6,
+          ),
+        ],
+      ),
+      child: DropdownButtonFormField<String>(
+        value: value,
+        decoration: InputDecoration(
+          labelText: label,
+          labelStyle: const TextStyle(color: Colors.black54),
+          border: InputBorder.none,
+        ),
+        items: items.map((city) {
+          return DropdownMenuItem<String>(
+            value: city,
+            child: Text(city, textAlign: TextAlign.right),
+          );
+        }).toList(),
+        onChanged: onChanged,
+      ),
+    );
+  }
+
+  Widget _buildTextInput({
+    required String label,
+    required TextEditingController controller,
+    IconData? icon,
+    VoidCallback? onIconPressed,
+  }) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 20),
+      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.shade200,
+            spreadRadius: 3,
+            blurRadius: 6,
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: TextField(
+              controller: controller,
+              textAlign: TextAlign.right,
+              decoration: InputDecoration(
+                hintText: label,
+                border: InputBorder.none,
+                hintStyle: const TextStyle(color: Colors.black54, fontSize: 18),
               ),
             ),
           ),
-        ),
-        const SizedBox(height: 20),
-        Container(
-          margin: const EdgeInsets.only(right: 15, bottom: 10),
-          alignment: Alignment.centerRight,
-          child: const Text(
-            "طريقة التوصيل",
-            style: TextStyle(
-              fontSize: 22,
-              color: Color(0xFF355E3B),
-              fontWeight: FontWeight.bold,
+          if (icon != null)
+            IconButton(
+              icon: Icon(icon, color: Colors.green),
+              onPressed: onIconPressed,
             ),
-          ),
-        ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDeliveryOptions() {
+    return Column(
+      children: [
         DeliveryOptionContainer(
           context,
           icon: Icons.fast_forward,
@@ -350,61 +430,138 @@ class _OrderWidgetState extends State<OrderWidget> {
           title: "توصيل عادي - قطع منفردة",
           value: 'slow',
         ),
-        const SizedBox(height: 20),
-        Container(
-          margin: const EdgeInsets.only(right: 15, bottom: 10),
-          alignment: Alignment.centerRight,
-          child: const Text(
-            "طريقة الدفع",
-            style: TextStyle(
-              fontSize: 22,
-              color: Color(0xFF355E3B),
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
-        paymentOptionContainer(
-          context,
-          icon: Icons.attach_money,
-          title: "الدفع عند الاستلام",
-          value: 'cash',
-        ),
-        paymentOptionContainer(
-          context,
-          imagePath: 'assets/images/visa.png',
-          title: "فيزا ** ** ** 2187",
-          value: 'visa',
-        ),
-        const SizedBox(height: 50),
-        InkWell(
-          onTap: () {
-            if (selectedPaymentMethod == 'visa') {
-              _showCardDetailsBottomSheet(context);
-            } else {
-              makeOrder();
-              // تنفيذ عملية الطلب بالدفع عند الاستلام
-            }
-          },
-          child: Container(
-            alignment: Alignment.center,
-            padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-            margin: const EdgeInsets.symmetric(horizontal: 20),
-            decoration: BoxDecoration(
-              color: Color.fromARGB(255, 11, 108, 45),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: const Text(
-              "اطلب الآن",
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-        ),
-        const SizedBox(height: 50),
       ],
+    );
+  }
+
+  Widget _buildPaymentOptions() {
+    // Check if the selected delivery method is 'fast'
+    bool isFastDelivery = selectedDeliveryMethod == 'fast';
+
+    return Column(
+      children: [
+        // Show both payment options if delivery is fast
+        if (isFastDelivery)
+          paymentOptionContainer(
+            context,
+            icon: Icons.attach_money,
+            title: "الدفع عند الاستلام",
+            value: 'cash',
+          ),
+        if (isFastDelivery)
+          paymentOptionContainer(
+            context,
+            imagePath: 'assets/images/visa.png',
+            title: "فيزا ** ** ** 2187",
+            value: 'visa',
+          ),
+        // Show only visa if delivery is slow
+        if (!isFastDelivery)
+          paymentOptionContainer(
+            context,
+            imagePath: 'assets/images/visa.png',
+            title: "فيزا ** ** ** 2187",
+            value: 'visa',
+          ),
+      ],
+    );
+  }
+
+  Widget _buildOrderSummary() {
+    double totalPrice =
+        calculateTotalPrice(widget.totalPrice.toDouble(), deliveryPrice);
+
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 20),
+      padding: const EdgeInsets.all(15),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(10),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.shade300,
+            spreadRadius: 1,
+            blurRadius: 5,
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildSummaryRow(
+              label: ":الإجمالي الفرعي", value: widget.totalPrice.toString()),
+          const Divider(),
+          _buildSummaryRow(
+              label: ":تكلفة التوصيل", value: deliveryPrice.toString()),
+          const Divider(),
+          // _buildSummaryRow(label: ":خصم", value: "-10"), // Example discount
+          // const Divider(),
+          _buildSummaryRow(
+              label: ":الإجمالي",
+              value: totalPrice
+                  .toStringAsFixed(2), // Total price with two decimals
+              isTotal: true),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSummaryRow({
+    required String label,
+    required String value,
+    bool isTotal = false,
+  }) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          value,
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: isTotal ? Colors.redAccent : Colors.black54,
+          ),
+        ),
+        Text(
+          label,
+          style: const TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: Colors.black87,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSubmitButton() {
+    return InkWell(
+      onTap: () {
+        if (selectedPaymentMethod == 'visa') {
+          _showCardDetailsBottomSheet(context);
+        } else {
+          makeOrder();
+        }
+      },
+      child: Container(
+        alignment: Alignment.center,
+        padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+        margin: const EdgeInsets.symmetric(horizontal: 20),
+        decoration: BoxDecoration(
+          gradient: const LinearGradient(
+            colors: [Colors.green, Colors.teal],
+          ),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: const Text(
+          "اطلب الآن",
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
     );
   }
 
@@ -492,6 +649,8 @@ class _OrderWidgetState extends State<OrderWidget> {
           onChanged: (value) {
             setState(() {
               selectedDeliveryMethod = value!;
+              deliveryPrice = calculateDeliveryPrice(
+                  selectedCity, selectedDeliveryMethod == 'fast');
             });
           },
           activeColor: const Color(0xFF355E3B),

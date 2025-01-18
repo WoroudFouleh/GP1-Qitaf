@@ -5,6 +5,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:login_page/Delivery/AcceptedPage.dart';
 import 'package:login_page/Delivery/DeliveryMap.dart';
 import 'package:login_page/Delivery/DileveryProfile.dart';
+import 'package:login_page/screens/allInbox.dart';
 import 'package:login_page/screens/map2.dart';
 import 'package:login_page/screens/map_screen.dart';
 import 'package:login_page/screens/config.dart';
@@ -14,8 +15,9 @@ import 'package:http/http.dart' as http;
 
 class DeliveryOrdersPage extends StatefulWidget {
   final String token;
-
-  const DeliveryOrdersPage({super.key, required this.token});
+  final String token2;
+  const DeliveryOrdersPage(
+      {super.key, required this.token, required this.token2});
   @override
   _DeliveryOrdersPageState createState() => _DeliveryOrdersPageState();
 }
@@ -27,13 +29,17 @@ class _DeliveryOrdersPageState extends State<DeliveryOrdersPage> {
   final List<dynamic> _orders = [];
   late String deliveryCity;
   bool isFast = true;
+  late String deliveryusername;
+  late String uid;
   @override
   void initState() {
     super.initState();
-
+    uid = JwtDecoder.decode(widget.token2)['user_id'];
+    print(uid);
     Map<String, dynamic> jwtDecoderToken = JwtDecoder.decode(widget.token);
     print(jwtDecoderToken);
     deliveryCity = jwtDecoderToken['city'] ?? 'No username';
+    deliveryusername = jwtDecoderToken['email'] ?? 'No username';
   }
 
   void _updateStatus(String newStatus) {
@@ -195,6 +201,60 @@ class _DeliveryOrdersPageState extends State<DeliveryOrdersPage> {
         ),
       ),
     );
+  }
+
+  void updateItemsStatus(
+    List<String> itemIds,
+  ) async {
+    // Replace with your backend URL
+
+    try {
+      final response = await http.post(
+        Uri.parse(updateNormalItemsStatus),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'itemIds': itemIds,
+          'deliverymanUsername': deliveryusername,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        // Successful request
+        print('Order status updated successfully!');
+      } else {
+        // Handle errors
+        print('Failed to update order status: ${response.body}');
+      }
+    } catch (e) {
+      print('Error updating order status: $e');
+    }
+  }
+
+  void updateFastOrderStatus(
+    String orderId,
+  ) async {
+    // Replace with your backend URL
+
+    try {
+      final response = await http.post(
+        Uri.parse(updateFastStatus),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'orderId': orderId,
+          'deliveryUsername': deliveryusername,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        // Successful request
+        print('Order status updated successfully!');
+      } else {
+        // Handle errors
+        print('Failed to update order status: ${response.body}');
+      }
+    } catch (e) {
+      print('Error updating order status: $e');
+    }
   }
 
   // صفحة رئيسية مع الحالة
@@ -493,7 +553,26 @@ class _DeliveryOrdersPageState extends State<DeliveryOrdersPage> {
                 Expanded(
                   child: ElevatedButton.icon(
                     onPressed: () {
+                      print(itemsGroup);
+                      final List<String> itemIds = itemsGroup
+                          .where((item) =>
+                              item['itemId'] !=
+                              null) // Filter out items with null itemId
+                          .map<String>((item) => item['itemId']
+                              .toString()) // Convert itemId to string
+                          .toList();
+
+                      print('itemIds: $itemIds');
+
+                      if (itemIds.isEmpty) {
+                        print('No valid item IDs found');
+                        return;
+                      }
+
+                      print('items: $itemIds');
+
                       _updateStatus('مشغول');
+                      updateItemsStatus(itemIds);
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
                           content: Text('تم قبول الطلب!'),
@@ -501,57 +580,30 @@ class _DeliveryOrdersPageState extends State<DeliveryOrdersPage> {
                         ),
                       );
                     },
-                    icon: const Icon(Icons.check, color: Colors.green),
+                    //icon: const Icon(Icons.check, color: Colors.green),
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.all(12),
-                      backgroundColor: Colors.green[50],
+                      backgroundColor:
+                          Colors.green, // Change background to solid green
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8.0),
-                        side: BorderSide(
-                            color: Colors.green.shade800, width: 1.5),
                       ),
+                    ),
+                    icon: const Icon(
+                      Icons.check,
+                      color: Colors.white, // Set the icon color to white
                     ),
                     label: const Text(
                       'قبول',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        color: Colors.green,
+                        color: Colors.white, // Change the text color to white
                         fontSize: 16.0,
                       ),
                     ),
                   ),
                 ),
                 const SizedBox(width: 10),
-                Expanded(
-                  child: ElevatedButton.icon(
-                    onPressed: () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('تم رفض الطلب.'),
-                          backgroundColor: Colors.red,
-                        ),
-                      );
-                    },
-                    icon: const Icon(Icons.close, color: Colors.red),
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.all(12),
-                      backgroundColor: Colors.red[50],
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8.0),
-                        side:
-                            BorderSide(color: Colors.red.shade800, width: 1.5),
-                      ),
-                    ),
-                    label: const Text(
-                      'رفض',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.red,
-                        fontSize: 16.0,
-                      ),
-                    ),
-                  ),
-                ),
               ],
             ),
           ],
@@ -627,8 +679,10 @@ class _DeliveryOrdersPageState extends State<DeliveryOrdersPage> {
             Row(
               children: [
                 Expanded(
-                  child: ElevatedButton(
+                  child: ElevatedButton.icon(
                     onPressed: () {
+                      String orderId = order['orderId'];
+                      updateFastOrderStatus(orderId);
                       _updateStatus('مشغول');
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
@@ -639,53 +693,27 @@ class _DeliveryOrdersPageState extends State<DeliveryOrdersPage> {
                     },
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.all(12),
-                      backgroundColor: Colors.green[50],
+                      backgroundColor:
+                          Colors.green, // Change background to solid green
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8.0),
-                        side: BorderSide(
-                            color: Colors.green.shade800, width: 1.5),
                       ),
                     ),
-                    child: const Text(
+                    icon: const Icon(
+                      Icons.check,
+                      color: Colors.white, // Set the icon color to white
+                    ),
+                    label: const Text(
                       'قبول',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        color: Colors.green,
+                        color: Colors.white, // Change the text color to white
                         fontSize: 16.0,
                       ),
                     ),
                   ),
                 ),
                 const SizedBox(width: 10),
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('تم رفض الطلب.'),
-                          backgroundColor: Colors.red,
-                        ),
-                      );
-                    },
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.all(12),
-                      backgroundColor: Colors.red[50],
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8.0),
-                        side:
-                            BorderSide(color: Colors.red.shade800, width: 1.5),
-                      ),
-                    ),
-                    child: const Text(
-                      'رفض',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.red,
-                        fontSize: 16.0,
-                      ),
-                    ),
-                  ),
-                ),
               ],
             ),
           ],
@@ -829,7 +857,9 @@ class _DeliveryOrdersPageState extends State<DeliveryOrdersPage> {
                           ? 'الطلبات المقبولة'
                           : _currentIndex == 2
                               ? 'الخريطة'
-                              : 'الملف الشخصي',
+                              : _currentIndex == 3
+                                  ? 'المحادثة'
+                                  : 'الملف الشخصي',
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
@@ -856,10 +886,14 @@ class _DeliveryOrdersPageState extends State<DeliveryOrdersPage> {
         body: _currentIndex == 0
             ? _buildHomePage()
             : _currentIndex == 1
-                ? AcceptedOrdersPage()
+                ? AcceptedOrdersPage(token: widget.token)
                 : _currentIndex == 2
                     ? Deliverymap()
-                    : DeliveryProfile(),
+                    : _currentIndex == 3
+                        ? TabbedInboxScreen(userId: uid)
+                        : DeliveryProfile(
+                            token: widget.token,
+                          ),
         bottomNavigationBar: BottomNavigationBar(
           currentIndex: _currentIndex,
           onTap: (index) {
@@ -879,6 +913,10 @@ class _DeliveryOrdersPageState extends State<DeliveryOrdersPage> {
             BottomNavigationBarItem(
               icon: Icon(Icons.location_on),
               label: 'الخريطة',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.chat),
+              label: 'الدردشة',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.person),

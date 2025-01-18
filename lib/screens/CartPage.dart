@@ -71,9 +71,9 @@ class _CartPageState extends State<CartPage> {
     return total;
   }
 
-  int calculateGrandTotal() {
-    return calculateTotalPrice() + deliveryFee - discount;
-  }
+  // int calculateGrandTotal() {
+  //   return calculateTotalPrice() + deliveryFee - discount;
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -138,181 +138,10 @@ class _CartPageState extends State<CartPage> {
                           );
                         },
                       ),
-                Container(
-                  margin:
-                      const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-                  padding: const EdgeInsets.all(15),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10),
-                    boxShadow: [
-                      BoxShadow(
-                        color: const Color(0xFF475269).withOpacity(0.3),
-                        spreadRadius: 1,
-                        blurRadius: 5,
-                      ),
-                    ],
-                  ),
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            children: [
-                              Text(
-                                calculateTotalPrice().toString(),
-                                style: const TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xFF475269),
-                                ),
-                              ),
-                              const SizedBox(width: 5),
-                              const Text(
-                                "₪",
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xFF475269),
-                                ),
-                              ),
-                            ],
-                          ),
-                          const Text(
-                            ":الإجمالي الفرعي",
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Color(0xFF475269),
-                            ),
-                          ),
-                        ],
-                      ),
-                      const Divider(
-                        height: 20,
-                        thickness: 0.5,
-                        color: Color(0xFF475269),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            children: [
-                              Text(
-                                deliveryFee.toString(),
-                                style: const TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xFF475269),
-                                ),
-                              ),
-                              const SizedBox(width: 5),
-                              const Text(
-                                "₪",
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xFF475269),
-                                ),
-                              ),
-                            ],
-                          ),
-                          const Text(
-                            ":تكلفة التوصيل ",
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Color(0xFF475269),
-                            ),
-                          ),
-                        ],
-                      ),
-                      const Divider(
-                        height: 20,
-                        thickness: 0.5,
-                        color: Color(0xFF475269),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            children: [
-                              Text(
-                                "-$discount",
-                                style: const TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xFF475269),
-                                ),
-                              ),
-                              const SizedBox(width: 5),
-                              const Text(
-                                "₪",
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xFF475269),
-                                ),
-                              ),
-                            ],
-                          ),
-                          const Text(
-                            ":خصم",
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Color(0xFF475269),
-                            ),
-                          ),
-                        ],
-                      ),
-                      const Divider(
-                        height: 20,
-                        thickness: 0.5,
-                        color: Color(0xFF475269),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            children: [
-                              Text(
-                                calculateGrandTotal().toString(),
-                                style: const TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.redAccent,
-                                ),
-                              ),
-                              const SizedBox(width: 5),
-                              const Text(
-                                "₪",
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.redAccent,
-                                ),
-                              ),
-                            ],
-                          ),
-                          const Text(
-                            ":الإجمالي",
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Color(0xFF475269),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
                 OrderWidget(
                   items: items, // Pass the list of items
                   token: widget.token, // Pass the token
-                  totalPrice: calculateGrandTotal(),
+                  totalPrice: calculateTotalPrice(),
                 ),
               ],
             ),
