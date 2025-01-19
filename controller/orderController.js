@@ -1,9 +1,10 @@
 const Order = require('../model/order'); // Adjust the path as necessary
+const User = require('../model/user'); // Adjust the path as necessary
 const haversine = require('haversine-distance');
 exports.registerOrder = async (req, res) => {
   try {
     // Extract data from the request body
-    const { username, phoneNumber,recepientCity, location,coordinates, totalPrice, items, deliveryType } = req.body;
+    const { username, phoneNumber, recepientCity, location, coordinates, totalPrice, items, deliveryType } = req.body;
 
     // Validation: Check if all required fields are provided
     if (!username || !phoneNumber || !location || !totalPrice || !items || items.length === 0) {
@@ -12,6 +13,15 @@ exports.registerOrder = async (req, res) => {
         message: 'All fields are required, including items',
       });
     }
+
+    // Define the points system
+    const calculatePoints = (price) => {
+      // Example: 1 point for every 20 units of price
+      return Math.floor(price / 20);
+    };
+
+    // Calculate points for the order
+    const points = calculatePoints(totalPrice);
 
     // Create a new order
     const order = new Order({
@@ -23,17 +33,40 @@ exports.registerOrder = async (req, res) => {
       totalPrice,
       items,
       orderDate: new Date(), // Add the current date
-      status: 'غير مستلم', 
-      deliveryType// Default status
+      status: 'غير مستلم', // Default status
+      deliveryType,
     });
 
     // Save the order to the database
     await order.save();
 
+    // Update the user's points
+    const user = await User.findOne({ username }); // Assuming a User model exists
+    if (user) {
+      user.points = (user.points || 0) + points; // Add points to the existing balance
+      await user.save();
+    } else {
+      console.warn(`User with username ${username} not found. Points not awarded.`);
+    }
+
+    // Fetch emails of item owners
+    const ownerEmails = await Promise.all(
+      items.map(async (item) => {
+        const ownerUser = await User.findOne({ username: item.ownerusername });
+        return ownerUser ? ownerUser.email : null; // Return the email if user exists
+      })
+    );
+
+    // Filter out null emails in case some owners were not found
+    const filteredEmails = ownerEmails.filter((email) => email !== null);
+
+    // Respond with success
     res.status(201).json({
       success: true,
-      message: 'Order registered successfully',
+      message: 'Order registered successfully and points awarded',
       order, // Returning the saved order for confirmation
+      pointsAwarded: points, // Inform the user of points awarded
+      ownerEmails: filteredEmails, // List of item owner emails
     });
   } catch (error) {
     console.error('Error registering order:', error);
@@ -43,6 +76,7 @@ exports.registerOrder = async (req, res) => {
     });
   }
 };
+
 exports.getUserOrders = async (req, res) => {
     const { username } = req.params; // Extract username from request parameters
   
@@ -342,34 +376,34 @@ exports.getNormalDeliveryGroups = async (req, res) => {
 exports.getItemsByOwnerAndPreparation = async (req, res) => {
   try {
     const { ownerusername } = req.params; // Extract ownerusername from the request parameters
-console.log(ownerusername);
+    console.log(ownerusername);
+
     if (!ownerusername) {
       console.log("no user");
       return res.status(400).json({ message: 'Owner username is required.' });
     }
 
-    // Query the database for matching items
-    const orders = await Order.find({
-      'items.ownerusername': ownerusername,
-      //'items.itemPreparation': 'notReady',
-    }, {
-      'items.$': 1 // Project only matching items
-    });
+    // Query the database for matching items, sorted by orderDate (newest first)
+    const orders = await Order.find(
+      { 'items.ownerusername': ownerusername }, // Filter orders by ownerusername
+      { 'items.$': 1, orderDate: 1 } // Project only matching items and orderDate
+    ).sort({ orderDate: -1 }); // Sort orders by orderDate in descending order
 
     // Extract and consolidate items from all matching orders
     const items = orders.flatMap(order => order.items);
 
     if (items.length === 0) {
       console.log("no items");
-      return res.status(404).json({status: false, message: 'No matching items found.' });
+      return res.status(404).json({ status: false, message: 'No matching items found.' });
     }
 
-    return res.status(200).json({status: true, items });
+    return res.status(200).json({ status: true, items });
   } catch (error) {
     console.error('Error fetching items:', error);
     return res.status(500).json({ message: 'Internal server error.', error });
   }
 };
+
 
 // Update item preparation status in an order
 exports.updateItemPreparation = async (req, res) => {

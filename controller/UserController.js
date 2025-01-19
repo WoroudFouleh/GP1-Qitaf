@@ -561,5 +561,35 @@ exports.getUserStatistics = async (req, res) => {
       res.status(500).json({ error: 'Failed to calculate discount', message: error.message });
     }
   };
+  // Increment reports for a user
+exports.incrementUserReports = async (req, res) => {
+    try {
+      const { username } = req.body; // Extract the username from the request body
+  
+      if (!username) {
+        return res.status(400).json({ message: 'Username is required.' });
+      }
+  
+      // Find the user by username and increment the reports field
+      const user = await User.findOneAndUpdate(
+        { username },
+        { $inc: { reports: 1 } }, // Increment reports by 1
+        { new: true } // Return the updated user document
+      );
+  
+      if (!user) {
+        return res.status(404).json({ message: 'User not found.' });
+      }
+  
+      res.status(200).json({
+        success: true,
+        message: 'User reports incremented successfully.',
+        updatedReports: user.reports,
+      });
+    } catch (error) {
+      console.error('Error incrementing user reports:', error);
+      res.status(500).json({ message: 'Internal server error.', error });
+    }
+  };
   
   

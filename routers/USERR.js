@@ -12,5 +12,6 @@ router.post('/updatePostsCount/:username', UserController.updateUserPosts);
 router.post('/rateWorker', UserController.rateWorker);
 router.get('/getUserStatistics', UserController.getUserStatistics);
 router.post('/getDiscountPercentage', UserController.calculateDiscount);
+router.post('/reportCustomer', UserController.incrementUserReports);
 module.exports = router;
 
