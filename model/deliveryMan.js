@@ -57,6 +57,13 @@ const deliveryManSchema = new mongoose.Schema({
     min: 0, // Ensures the rate cannot go below 0
     max: 5 // Optional: Add if you want to restrict ratings to a 0-5 scale
 },
+coordinates: {
+  type: {
+    lat: { type: Number, required: true }, // Latitude
+    lng: { type: Number, required: true }  // Longitude
+  },
+  required: false // Optional, make required if all products must have coordinates
+},
   createdAt: {
     type: Date,
     default: Date.now,

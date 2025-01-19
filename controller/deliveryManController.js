@@ -123,3 +123,84 @@ exports.getDeliveryMen = async (req, res) => {
       res.status(500).json({ message: 'Internal Server Error' });
     }
   };
+exports.updateDeliveryManStatus = async (req, res) => {
+    try {
+      const { email, status } = req.body;
+  
+      // Validate input
+      if (!email || !status) {
+        return res.status(400).json({ message: 'Email and status are required.' });
+      }
+  
+      // Check if status is valid
+      const validStatuses = ['Busy', 'Available', 'OutOfService'];
+      if (!validStatuses.includes(status)) {
+        return res.status(400).json({ message: 'Invalid status value.' });
+      }
+  
+      // Find and update the delivery man by email
+      const updatedDeliveryMan = await DeliveryMan.findOneAndUpdate(
+        { email },
+        { status },
+        { new: true } // Return the updated document
+      );
+  
+      // Check if delivery man exists
+      if (!updatedDeliveryMan) {
+        return res.status(404).json({ message: 'Delivery man not found.' });
+      }
+  
+      // Return success response
+      res.status(200).json({
+        message: 'Status updated successfully.',
+        deliveryMan: updatedDeliveryMan,
+      });
+    } catch (error) {
+      console.error('Error updating status:', error);
+      res.status(500).json({ message: 'An error occurred while updating status.' });
+    }
+  };
+  exports.updateDeliveryManCoordinates = async (req, res) => {
+    try {
+      const { email, coordinates } = req.body;
+  
+      // Validate input
+      if (!email || !coordinates || !coordinates.lat || !coordinates.lng) {
+        return res.status(400).json({ 
+          status: false, 
+          error: 'Missing required email or coordinates (lat and lng)' 
+        });
+      }
+  
+      // Find the delivery man by email
+      const deliveryMan = await DeliveryMan.findOne({ email });
+  
+      if (!deliveryMan) {
+        return res.status(404).json({ 
+          status: false, 
+          error: 'Delivery man not found' 
+        });
+      }
+  
+      // Update coordinates
+      deliveryMan.coordinates = coordinates;
+  
+      // Save the updated delivery man
+      await deliveryMan.save();
+  
+      return res.status(200).json({
+        status: true,
+        message: 'Coordinates updated successfully',
+        deliveryMan: {
+          username: deliveryMan.username,
+          email: deliveryMan.email,
+          coordinates: deliveryMan.coordinates,
+        },
+      });
+    } catch (error) {
+      return res.status(500).json({ 
+        status: false, 
+        error: error.message 
+      });
+    }
+  };

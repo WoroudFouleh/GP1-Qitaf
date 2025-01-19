@@ -122,7 +122,9 @@ exports.login = async (req, res, next) => {
                 firstName: deliveryMan.firstName,
                 lastName: deliveryMan.lastName,
                 phoneNumber: deliveryMan.phoneNumber,
-                city:deliveryMan.location
+                city:deliveryMan.location,
+                status:deliveryMan.status,
+                coordinates: deliveryMan.coordinates
             };
             const deliveryToken = await UserServices.generateToken(deliveryTokenData, "secretKey", '1h');
 
@@ -542,18 +544,22 @@ exports.getUserStatistics = async (req, res) => {
   
   exports.calculateDiscount = async (req, res) => {
     const { username } = req.body; // Get username from the request body
-
-  try {
-    // Get user points from the database
-    const points = await getUserPoints(username);
-
-    // Calculate the discount based on points
-    const discountPercentage = calculateDiscount(points);
-
-    // Send back the discount percentage
-    res.json({ discountPercentage });
-  } catch (error) {
-    res.status(500).json({ error: 'Failed to calculate discount', message: error.message });
-  }
+  
+    try {
+      // Get user points from the database
+      const points = await getUserPoints(username);
+  
+      // Calculate the discount based on points
+      const discountPercentage = calculateDiscount(points);
+  
+      // Reset the user's points to 0
+      await User.updateOne({ username: username }, { $set: { points: 0 } });
+  console.log("in discount");
+      // Send back the discount percentage
+      res.json({ status: true, discountPercentage });
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to calculate discount', message: error.message });
+    }
   };
+  
   

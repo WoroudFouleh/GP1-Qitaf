@@ -16,5 +16,6 @@ router.put('/editDeliveryMan/:id', deliveryManController.updateDeliveryMan);
 
 // Delete a delivery man
 router.delete('/deleteDeliveryMan/:id', deliveryManController.deleteDeliveryMan);
-
+router.post('/updateManStatus', deliveryManController.updateDeliveryManStatus);
+router.post('/updateManCoordinates', deliveryManController.updateDeliveryManCoordinates);
 module.exports = router;

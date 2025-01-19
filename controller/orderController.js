@@ -523,5 +523,248 @@ console.log(slowItems);
     res.status(500).json({ message: 'Server error' });
   }
 };
+/////////////////
+exports.getAllOrdersWithPathsForDeliveryMan = async (req, res) => {
+  try {
+    console.log("in fast");
+    const { deliveryManLocation, deliveryUsername } = req.body;
 
+    if (!deliveryManLocation || !deliveryUsername) {
+      console.log("in fast2");
+      return res.status(400).json({ status: false, error: 'Missing delivery man location or username' });
+    }
 
+    // Fetch orders related to the delivery man
+    const orders = await Order.find({
+      deliveryType: 'fast',
+      isTakenToDeliver: true,
+      fastDeliveryUsername: deliveryUsername,
+      status: 'غير مستلم'
+    });
+
+    if (!orders.length) {
+      console.log("no fast");
+      return res.status(404).json({ status: false, error: 'No fast delivery orders found for the specified delivery man' });
+    }
+
+    const ordersWithPaths = [];
+
+    for (const order of orders) {
+      const locations = [
+        { location: deliveryManLocation, name: 'الانطلاق: مكانك الحالي' },
+      ];
+
+      order.items.forEach((item) => {
+        locations.push({
+          location: item.productCoordinates,
+          name: `أحضر: ${item.productName}`,
+        });
+      });
+
+      locations.push({
+        location: order.coordinates,
+        name: 'نقطة الاستلام للزبون',
+      });
+
+      const pathIndices = tspWithConstraints(locations);
+
+      const route = pathIndices.map((index) => ({
+        name: locations[index].name,
+        coordinates: locations[index].location,
+      }));
+
+      ordersWithPaths.push({
+        orderId: order._id,
+        orderDetails: order.toObject(),
+        deliveryRoute: route.map(routeItem => ({
+          name: routeItem.name,
+          coordinates: routeItem.coordinates,
+        })),
+      });
+    }
+//console.log(ordersWithPaths);
+    return res.status(200).json({ status: true, orders: ordersWithPaths });
+  } catch (err) {
+    return res.status(500).json({ status: false, error: err.message });
+  }
+};
+exports.getNormalDeliveryGroupsForDeliveryMan = async (req, res) => {
+  try {
+    console.log("in slow ");
+    const { deliveryManCity, deliveryUsername } = req.body;
+
+    if (!deliveryManCity || !deliveryUsername) {
+      console.log("in slow 1");
+      return res.status(400).json({ status: false, error: 'Missing delivery man city or username' });
+    }
+
+    // Fetch orders related to the delivery man
+    const normalOrders = await Order.find({
+      deliveryType: 'slow',
+      'items.itemStatus': 'undelivered',
+      'items.itemTaken': 'taken',
+      'items.deliveryUsername': deliveryUsername, // Filter by username at the item level
+    });
+
+    if (!normalOrders.length) {
+      console.log("in slow 2");
+      return res.status(404).json({ status: false, error: 'No undelivered items found for normal delivery' });
+    }
+
+    const itemsInDeliveryManCity = [];
+
+    normalOrders.forEach((order) => {
+      order.items.forEach((item) => {
+        if (
+          item.itemStatus === 'undelivered' &&
+          item.itemPreparation === 'ready' &&
+          item.itemTaken === 'taken' &&
+          item.deliveryUsername === deliveryUsername &&
+          item.productCity === deliveryManCity
+        ) {
+          itemsInDeliveryManCity.push({
+            orderId: order._id,
+            itemId: item._id,
+            productName: item.productName,
+            sourceCity: deliveryManCity,
+            destinationCity: order.recepientCity,
+            productCoordinates: item.productCoordinates,
+            recepientCoordinates: order.coordinates,
+            productImage: item.image,
+            customerusername: item.username,
+            
+          });
+        }
+      });
+    });
+
+    if (!itemsInDeliveryManCity.length) {
+      return res.status(404).json({
+        status: false,
+        error: 'No items found for delivery in the delivery man’s city',
+      });
+    }
+
+    const groupedItems = {};
+
+    itemsInDeliveryManCity.forEach((item) => {
+      const destinationCity = item.destinationCity;
+      if (!groupedItems[destinationCity]) {
+        groupedItems[destinationCity] = [];
+      }
+      groupedItems[destinationCity].push(item);
+    });
+
+    const groupedItemsArray = Object.entries(groupedItems).map(([city, items]) => ({
+      destinationCity: city,
+      items,
+    }));
+console.log(groupedItemsArray);
+    return res.status(200).json({
+      status: true,
+      groups: groupedItemsArray,
+    });
+  } catch (err) {
+    return res.status(500).json({ status: false, error: err.message });
+  }
+};
+
+exports.updateFastRecievedStatus = async (req, res) => {
+  try {
+    console.log(" in fast recieved");
+    const { orderId, status } = req.body;
+
+    // Find the order by orderId
+    const order = await Order.findById(orderId);
+
+    if (!order) {
+      return res.status(404).json({ message: 'Order not found' });
+    }
+
+    // Update order status to the passed status
+    order.status = status;
+
+    // Update itemStatus for each item based on the passed status
+    order.items.forEach((item) => {
+      if (status === 'مستلم') {
+        item.itemStatus = 'delivered';
+      } else if (status === 'غير مستلم') {
+        item.itemStatus = 'undelivered';
+      }
+    });
+
+    // Save the updated order
+    await order.save();
+
+    // Respond with success
+    res.status(200).json({ message: 'Order updated successfully', order });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+exports.updateItemRecievedStatus = async (req, res) => {
+  try {
+    const { itemIds, status } = req.body;
+
+    // Validate input
+    if (!itemIds || !Array.isArray(itemIds) || itemIds.length === 0) {
+      return res.status(400).json({ message: 'Item IDs are required and should be an array.' });
+    }
+
+    if (!status) {
+      return res.status(400).json({ message: 'Status is required.' });
+    }
+
+    let result; // Declare the variable outside the conditional blocks
+
+    if (status === 'مستلم') {
+      result = await Order.updateMany(
+        { 
+          deliveryType: 'slow',
+          'items._id': { $in: itemIds } // Match any items in the list
+        },
+        { 
+          $set: { 
+            'items.$[elem].itemStatus': 'delivered'
+          } 
+        },
+        {
+          arrayFilters: [{ 'elem._id': { $in: itemIds } }],
+          multi: true // Ensure multiple items in the array are updated
+        }
+      );
+    } else if (status === 'غير مستلم') {
+      result = await Order.updateMany(
+        { 
+          deliveryType: 'slow',
+          'items._id': { $in: itemIds } // Match any items in the list
+        },
+        { 
+          $set: { 
+            'items.$[elem].itemStatus': 'undelivered'
+          } 
+        },
+        {
+          arrayFilters: [{ 'elem._id': { $in: itemIds } }],
+          multi: true // Ensure multiple items in the array are updated
+        }
+      );
+    } else {
+      return res.status(400).json({ message: 'Invalid status provided.' });
+    }
+
+    // Check if any items were modified
+    if (result.modifiedCount === 0) {
+      return res.status(404).json({ message: 'No matching items found to update.' });
+    }
+
+    res.status(200).json({ 
+      message: 'Item status updated successfully.', 
+      modifiedCount: result.modifiedCount 
+    });
+  } catch (error) {
+    console.error('Error updating item status:', error);
+    res.status(500).json({ message: 'Internal server error.', error });
+  }
+};
