@@ -10,8 +10,6 @@ import 'package:login_page/screens/animition_notification_bar.dart';
 import 'package:login_page/screens/first_screen.dart';
 import 'package:login_page/screens/forget_password_screen.dart';
 
-//import 'package:login_page/screens/forget_password_screen.dart';
-//import 'package:login_page/screens/opcode.dart';
 import 'package:login_page/screens/signup_screen.dart';
 import 'package:login_page/services/notification_service.dart';
 

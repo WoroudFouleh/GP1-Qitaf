@@ -31,6 +31,7 @@ class _DeliveryOrdersPageState extends State<DeliveryOrdersPage> {
   bool isFast = true;
   late String deliveryusername;
   late String uid;
+  late String deliveryManStatus;
   @override
   void initState() {
     super.initState();
@@ -40,6 +41,45 @@ class _DeliveryOrdersPageState extends State<DeliveryOrdersPage> {
     print(jwtDecoderToken);
     deliveryCity = jwtDecoderToken['city'] ?? 'No username';
     deliveryusername = jwtDecoderToken['email'] ?? 'No username';
+    deliveryManStatus = jwtDecoderToken['status'] ?? 'No username';
+    if (deliveryManStatus == 'Available') {
+      _status = 'متاح';
+    } else if (deliveryManStatus == 'Busy') {
+      _status = 'مشغول';
+    } else {
+      _status = 'خارج عن الخدمة';
+    }
+  }
+
+  Future<void> _updateDeliveryManStatus(String newStatus) async {
+    try {
+      final response = await http.post(
+        Uri.parse(updateDeliveryManStatus),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
+          'email': deliveryusername, // Replace with the actual email
+          'status': newStatus,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        setState(() {
+          _status = newStatus; // Update the UI with the new status
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('تم تحديث الحالة بنجاح!'),
+            backgroundColor: Colors.green,
+          ),
+        );
+      } else {
+        print('Failed to update status: ${response.body}');
+      }
+    } catch (e) {
+      print('Error updating delivery man status: $e');
+    }
   }
 
   void _updateStatus(String newStatus) {
@@ -142,9 +182,45 @@ class _DeliveryOrdersPageState extends State<DeliveryOrdersPage> {
         locationCoordinates = result['position'];
         print("Name: ${result['name']}, Coordinates: ${result['position']}");
       });
-
+      await _updateCoordinates(
+        // Replace with the actual email
+        coordinates: result['position'],
+      );
       // Optionally save the result to the database
       //_saveLocationToDatabase(result['name'], result['position']);
+    }
+  }
+
+  Future<void> _updateCoordinates({
+    required dynamic coordinates,
+  }) async {
+    try {
+      final response = await http.post(
+        Uri.parse(updateDeliveryManCoordinates),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: json.encode({
+          'email': deliveryusername,
+          'coordinates': {
+            'lat': coordinates.latitude,
+            'lng': coordinates.longitude,
+          },
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        if (data['status']) {
+          print('Coordinates updated successfully');
+        } else {
+          print('Error: ${data['error']}');
+        }
+      } else {
+        print('Failed to update coordinates: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error updating coordinates: $e');
     }
   }
 
@@ -573,6 +649,7 @@ class _DeliveryOrdersPageState extends State<DeliveryOrdersPage> {
 
                       _updateStatus('مشغول');
                       updateItemsStatus(itemIds);
+                      _updateDeliveryManStatus('Busy');
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
                           content: Text('تم قبول الطلب!'),
@@ -684,6 +761,7 @@ class _DeliveryOrdersPageState extends State<DeliveryOrdersPage> {
                       String orderId = order['orderId'];
                       updateFastOrderStatus(orderId);
                       _updateStatus('مشغول');
+                      _updateDeliveryManStatus('Busy');
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
                           content: Text('تم قبول الطلب!'),
@@ -886,7 +964,10 @@ class _DeliveryOrdersPageState extends State<DeliveryOrdersPage> {
         body: _currentIndex == 0
             ? _buildHomePage()
             : _currentIndex == 1
-                ? AcceptedOrdersPage(token: widget.token)
+                ? AcceptedOrdersPage(
+                    token: widget.token,
+                    token2: widget.token2,
+                  )
                 : _currentIndex == 2
                     ? Deliverymap()
                     : _currentIndex == 3

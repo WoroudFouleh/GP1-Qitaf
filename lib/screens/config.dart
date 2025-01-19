@@ -1,4 +1,4 @@
-const url = 'http://192.168.88.10:3000/';
+const url = 'http://192.168.88.5:3000/';
 final registration = "${url}api/users/register";
 final login = "${url}api/users/login";
 final forgotPass = "${url}api/users/forgotPass";
@@ -95,6 +95,10 @@ final getAllDeliveryMens = "${url}api/deliveryMens/getAllDekiveryMens";
 final getDeliveryById = "${url}api/deliveryMens/getDeliveryById";
 final editDeliveryMan = "${url}api/deliveryMens/editDeliveryMan";
 final deleteDeliveryMan = "${url}api/deliveryMens/deleteDeliveryMan";
+final updateDeliveryManStatus = "${url}api/deliveryMens/updateManStatus";
+final updateDeliveryManCoordinates =
+    "${url}api/deliveryMens/updateManCoordinates";
+
 //////////////////delivery paths
 final getFastDeliveryOrders = "${url}api/orders/getFastDeliveries";
 final getNormalDeliveryOrders = "${url}api/orders/getNormalDeliveries";
@@ -103,3 +107,8 @@ final updatePreparationStatus = "${url}api/orders/updateItemPreparation";
 final updateNormalItemsStatus = "${url}api/orders/updateNormalOrderStatus";
 final updateFastStatus = "${url}api/orders/updateFastOrderStatus";
 final getAcceptedOrders = "${url}api/orders/getAcceptedOrders";
+final getFastAcceptedOrders = "${url}api/orders/getAcceptedFastDeliveries";
+final getNormalAcceptedOrders = "${url}api/orders/getAcceptedNormalDeliveries";
+final updateItemsRecievedStatus = "${url}api/orders/updateNormalRecievedStatus";
+final updateFastRecievedStatus = "${url}api/orders/updateFastRecievedStatus";
+final getDiscount = "${url}api/users/getDiscountPercentage";

@@ -9,8 +9,9 @@ import 'config.dart';
 
 class Customerprofile extends StatefulWidget {
   final String username;
-final userId;
-  const Customerprofile({required this.username, Key? key, this.userId}) : super(key: key);
+  final userId;
+  const Customerprofile({required this.username, Key? key, this.userId})
+      : super(key: key);
 
   @override
   _customerprofileState createState() => _customerprofileState();
@@ -207,7 +208,7 @@ class _customerprofileState extends State<Customerprofile> {
                                               child: Column(
                                                 children: [
                                                   Text(
-                                                    'دردشة مع العامل',
+                                                    'دردشة مع الزبون',
                                                     style: TextStyle(
                                                       color: Colors.grey[700],
                                                       fontSize: 20,

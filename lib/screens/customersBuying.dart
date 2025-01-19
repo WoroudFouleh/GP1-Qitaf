@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:http/http.dart' as http;
+import 'package:login_page/Customers/customerProfile.dart';
+import 'package:login_page/screens/customerProfile.dart';
 
 import 'config.dart';
 
@@ -428,12 +430,26 @@ class _CustomersBuyingState extends State<CustomersBuying> {
                                         size: 20,
                                       ),
                                       SizedBox(width: 5),
-                                      Text(
-                                        "${item['username']} ",
-                                        style: TextStyle(
-                                          fontSize: 18,
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.bold,
+                                      GestureDetector(
+                                        onTap: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  Customerprofile(
+                                                username: item['username'],
+                                                userId: widget.userId,
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                        child: Text(
+                                          "${item['username']} ",
+                                          style: const TextStyle(
+                                            fontSize: 18,
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.bold,
+                                          ),
                                         ),
                                       ),
                                     ],

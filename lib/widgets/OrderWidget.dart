@@ -33,6 +33,7 @@ class _OrderWidgetState extends State<OrderWidget> {
   String? selectedCity;
   LatLng? locationCoordinates;
   double deliveryPrice = 0;
+  late int finalPrice;
   final List<String> cities = [
     'القدس',
     'بيت لحم',
@@ -57,58 +58,6 @@ class _OrderWidgetState extends State<OrderWidget> {
     Map<String, dynamic> jwtDecoderToken = JwtDecoder.decode(widget.token);
 
     username = jwtDecoderToken['username'] ?? 'No First Name';
-  }
-
-  void makeOrder() async {
-    if (addressController.text.isEmpty || phoneController.text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("يرجى تعبئة جميع الحقول المطلوبة")),
-      );
-      return;
-    }
-
-    try {
-      // Prepare the order details
-      final orderDetails = {
-        'username': username,
-        'recepientCity': selectedCity,
-        'location': addressController.text,
-        'phoneNumber': phoneController.text,
-        'totalPrice': widget.totalPrice,
-        'items': widget.items, // The list of items
-        "coordinates": {
-          "lat": locationCoordinates!.latitude,
-          "lng": locationCoordinates!.longitude,
-        },
-        "deliveryType": selectedDeliveryMethod
-      };
-
-      // Send the request to your backend API
-      final response = await http.post(
-        Uri.parse(registerOrder), // Replace with your API URL
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: json.encode(orderDetails),
-      );
-      print("Response status: ${response.statusCode}");
-      print("Response body: ${response.body}");
-
-      if (response.statusCode == 201) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("تم تسجيل الطلب بنجاح")),
-        );
-        updateQuantity();
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("حدث خطأ أثناء تسجيل الطلب")),
-        );
-      }
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("فشل الاتصال بالخادم")),
-      );
-    }
   }
 
   void updateQuantity() async {
@@ -265,6 +214,81 @@ class _OrderWidgetState extends State<OrderWidget> {
 
   double calculateTotalPrice(double itemPrice, double deliveryPrice) {
     return itemPrice + deliveryPrice;
+  }
+
+  void makeOrder() async {
+    if (addressController.text.isEmpty || phoneController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("يرجى تعبئة جميع الحقول المطلوبة")),
+      );
+      return;
+    }
+
+    try {
+      // Prepare the order details
+      final orderDetails = {
+        'username': username,
+        'recepientCity': selectedCity,
+        'location': addressController.text,
+        'phoneNumber': phoneController.text,
+        'totalPrice': finalPrice,
+        'items': widget.items, // The list of items
+        "coordinates": {
+          "lat": locationCoordinates!.latitude,
+          "lng": locationCoordinates!.longitude,
+        },
+        "deliveryType": selectedDeliveryMethod
+      };
+
+      // Send the request to your backend API
+      final response = await http.post(
+        Uri.parse(registerOrder), // Replace with your API URL
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: json.encode(orderDetails),
+      );
+      print("Response status: ${response.statusCode}");
+      print("Response body: ${response.body}");
+
+      if (response.statusCode == 201) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("تم تسجيل الطلب بنجاح")),
+        );
+        updateQuantity();
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("حدث خطأ أثناء تسجيل الطلب")),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("فشل الاتصال بالخادم")),
+      );
+    }
+  }
+
+  Future<double> getDiscountPercentage() async {
+    try {
+      print("in discount");
+      // Make a POST request to the backend
+      final response = await http.post(
+        Uri.parse(getDiscount),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode({'username': username}),
+      );
+
+      if (response.statusCode == 200) {
+        // Parse the response to get the discount percentage
+        final data = json.decode(response.body);
+        return data['discountPercentage'].toDouble();
+      } else {
+        throw Exception('Failed to load discount percentage');
+      }
+    } catch (e) {
+      print('Error: $e');
+      throw Exception('Error fetching discount');
+    }
   }
 
   @override
@@ -468,8 +492,9 @@ class _OrderWidgetState extends State<OrderWidget> {
   }
 
   Widget _buildOrderSummary() {
-    double totalPrice =
-        calculateTotalPrice(widget.totalPrice.toDouble(), deliveryPrice);
+    finalPrice =
+        (calculateTotalPrice(widget.totalPrice.toDouble(), deliveryPrice))
+            .toInt();
 
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20),
@@ -498,7 +523,7 @@ class _OrderWidgetState extends State<OrderWidget> {
           // const Divider(),
           _buildSummaryRow(
               label: ":الإجمالي",
-              value: totalPrice
+              value: finalPrice
                   .toStringAsFixed(2), // Total price with two decimals
               isTotal: true),
         ],
@@ -536,12 +561,20 @@ class _OrderWidgetState extends State<OrderWidget> {
 
   Widget _buildSubmitButton() {
     return InkWell(
-      onTap: () {
-        if (selectedPaymentMethod == 'visa') {
-          _showCardDetailsBottomSheet(context);
+      onTap: () async {
+        double discountPercentage = await getDiscountPercentage();
+        if (discountPercentage > 0) {
+          // If a discount is available, show a dialog
+          _showDiscountDialog(context, discountPercentage);
         } else {
           makeOrder();
         }
+
+        // if (selectedPaymentMethod == 'visa') {
+        //   _showCardDetailsBottomSheet(context);
+        // } else {
+        //   makeOrder();
+        // }
       },
       child: Container(
         alignment: Alignment.center,
@@ -563,6 +596,98 @@ class _OrderWidgetState extends State<OrderWidget> {
         ),
       ),
     );
+  }
+
+  void _showDiscountDialog(BuildContext context, double discountPercentage) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15),
+          ),
+          contentPadding: const EdgeInsets.all(20),
+          title: Column(
+            children: [
+              Icon(
+                Icons.celebration,
+                color: Colors.green,
+                size: 50,
+              ),
+              const SizedBox(height: 10),
+              Text(
+                "مبروك!",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Colors.green,
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                "لديك خصم بنسبة ${discountPercentage.toStringAsFixed(0)}% على هذا الطلب. هل تريد تطبيقه الآن؟",
+                textAlign: TextAlign.right,
+                textDirection: TextDirection.rtl,
+                style: const TextStyle(
+                  fontSize: 18,
+                  color: Colors.black87,
+                ),
+              ),
+              const SizedBox(height: 20),
+              // Image.asset(
+              //   'assets/images/congrats.png', // Add your celebration image here
+              //   height: 100,
+              //   width: 100,
+              // ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+                makeOrder(); // Proceed without applying the discount
+              },
+              child: const Text(
+                "لاحقاً",
+                style: TextStyle(color: Colors.grey, fontSize: 16),
+              ),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pop(context);
+                applyDiscountAndOrder(discountPercentage); // Apply the discount
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.green,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
+              ),
+              child: const Text(
+                "تطبيق الآن",
+                style: TextStyle(color: Colors.white, fontSize: 16),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void applyDiscountAndOrder(double discountPercentage) {
+    setState(() {
+      int discountAmount =
+          (widget.totalPrice * (discountPercentage / 100)).toInt();
+      finalPrice = widget.totalPrice - discountAmount;
+    });
+    makeOrder(); // Proceed with the order after applying the discount
   }
 
   Widget paymentOptionContainer(BuildContext context,
@@ -603,6 +728,9 @@ class _OrderWidgetState extends State<OrderWidget> {
           onChanged: (value) {
             setState(() {
               selectedPaymentMethod = value!;
+              if (selectedPaymentMethod == 'visa') {
+                _showCardDetailsBottomSheet(context);
+              }
             });
           },
           activeColor: const Color(0xFF355E3B),

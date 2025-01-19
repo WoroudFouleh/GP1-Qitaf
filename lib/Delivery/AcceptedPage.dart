@@ -1,16 +1,17 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:login_page/Delivery/DileveryHome.dart';
 import 'package:login_page/screens/config.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:http/http.dart' as http;
+import 'package:login_page/screens/customerProfile.dart';
 import 'package:login_page/screens/map2.dart';
-import 'package:login_page/screens/map_screen.dart';
 
 class AcceptedOrdersPage extends StatefulWidget {
   final String token;
-
-  AcceptedOrdersPage({required this.token});
+  final String token2;
+  AcceptedOrdersPage({required this.token, required this.token2});
 
   @override
   _AcceptedOrdersPageState createState() => _AcceptedOrdersPageState();
@@ -18,9 +19,10 @@ class AcceptedOrdersPage extends StatefulWidget {
 
 class _AcceptedOrdersPageState extends State<AcceptedOrdersPage> {
   late String deliveryEmail;
+  late String deliveryCity;
   List<dynamic> slowOrders = [];
   List<dynamic> fastOrders = [];
-
+  LatLng? locationCoordinates;
   @override
   void initState() {
     super.initState();
@@ -28,21 +30,88 @@ class _AcceptedOrdersPageState extends State<AcceptedOrdersPage> {
     // Decode the token to get the email
     Map<String, dynamic> jwtDecoderToken = JwtDecoder.decode(widget.token);
     deliveryEmail = jwtDecoderToken['email'] ?? 'No username';
-    fetchAcceptedOrders(deliveryEmail);
+    deliveryCity = jwtDecoderToken['city'] ?? 'No username';
+    //fetchAcceptedOrders(deliveryEmail);
+    // Assuming coordinates is a map with lat and lng
+    var coordinates = jwtDecoderToken['coordinates'];
+    if (coordinates != null) {
+      locationCoordinates = LatLng(coordinates['lat'], coordinates['lng']);
+    } else {
+      locationCoordinates = null; // or set to a default LatLng
+    }
+    _fetchFastOrders();
+    _fetchNormalOrders();
   }
 
-  void fetchAcceptedOrders(String deliveryUsername) async {
-    final response =
-        await http.get(Uri.parse('$getAcceptedOrders/$deliveryEmail'));
+  // void fetchAcceptedOrders(String deliveryUsername) async {
+  //   final response =
+  //       await http.get(Uri.parse('$getAcceptedOrders/$deliveryEmail'));
+
+  //   if (response.statusCode == 200) {
+  //     final data = json.decode(response.body);
+  //     setState(() {
+  //       fastOrders = data['fastOrders'];
+  //       slowOrders = data['slowItems'];
+  //     });
+  //   } else {
+  //     throw Exception('Failed to load orders');
+  //   }
+  // }
+  Future<void> _fetchFastOrders() async {
+    //isFast = true;
+    final response = await http.post(
+      Uri.parse(getFastAcceptedOrders), // Replace with your backend URL
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        'deliveryManLocation': {
+          "lat": locationCoordinates!.latitude,
+          "lng": locationCoordinates!.longitude
+        }, // Example location, can be dynamically set
+        'deliveryUsername': deliveryEmail
+      }),
+    );
 
     if (response.statusCode == 200) {
-      final data = json.decode(response.body);
-      setState(() {
-        fastOrders = data['fastOrders'];
-        slowOrders = data['slowItems'];
-      });
+      final data = jsonDecode(response.body);
+      if (data['status'] == true) {
+        setState(() {
+          fastOrders.clear();
+          fastOrders.addAll(data['orders']);
+        });
+        print(fastOrders);
+      } else {
+        print('Error fetching orders: ${data['error']}');
+      }
     } else {
-      throw Exception('Failed to load orders');
+      print('Failed to load orders');
+    }
+  }
+
+  Future<void> _fetchNormalOrders() async {
+    final response = await http.post(
+      Uri.parse(getNormalAcceptedOrders), // Replace with your backend URL
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        'deliveryManCity':
+            deliveryCity, // Example location, can be dynamically set
+        'deliveryUsername': deliveryEmail
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      print(data); // Log the API response
+      if (data['status'] == true) {
+        setState(() {
+          slowOrders.clear();
+          slowOrders
+              .addAll(data['groups']); // Assuming orders are inside "groups"
+        });
+      } else {
+        print('Error fetching orders: ${data['error']}');
+      }
+    } else {
+      print('Failed to load orders');
     }
   }
 
@@ -69,20 +138,111 @@ class _AcceptedOrdersPageState extends State<AcceptedOrdersPage> {
     }
   }
 
+  Future<void> _updateManStatus() async {
+    try {
+      final response = await http.post(
+        Uri.parse(updateDeliveryManStatus),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
+          'email': deliveryEmail, // Replace with the actual email
+          'status': 'Available',
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('تم تحديث الحالة بنجاح!'),
+            backgroundColor: Colors.green,
+          ),
+        );
+      } else {
+        print('Failed to update status: ${response.body}');
+      }
+    } catch (e) {
+      print('Error updating delivery man status: $e');
+    }
+  }
+
+  void updateItemsStatus(List<String> itemIds, String status) async {
+    // Replace with your backend URL
+
+    try {
+      final response = await http.post(
+        Uri.parse(updateItemsRecievedStatus),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({'itemIds': itemIds, 'status': status}),
+      );
+
+      if (response.statusCode == 200) {
+        // Successful request
+        print('Order status updated successfully!');
+        // Navigator.push(
+        //   context,
+        //   MaterialPageRoute(
+        //       builder: (context) => AcceptedOrdersPage(token: widget.token)),
+        // );
+        await _updateManStatus();
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => DeliveryOrdersPage(
+                  token: widget.token, token2: widget.token2)),
+        );
+      } else {
+        // Handle errors
+        print('Failed to update order status: ${response.body}');
+      }
+    } catch (e) {
+      print('Error updating order status: $e');
+    }
+  }
+
+  void updateFastOrderStatus(String orderId, String status) async {
+    // Replace with your backend URL
+
+    try {
+      final response = await http.post(
+        Uri.parse(updateFastRecievedStatus),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({'orderId': orderId, 'status': status}),
+      );
+
+      if (response.statusCode == 200) {
+        // Successful request
+        print('Order status updated successfully!');
+        await _updateManStatus();
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => DeliveryOrdersPage(
+                  token: widget.token, token2: widget.token2)),
+        );
+      } else {
+        // Handle errors
+        print('Failed to update order status: ${response.body}');
+      }
+    } catch (e) {
+      print('Error updating order status: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('الطلبات المقبولة'),
-      ),
+      // appBar: AppBar(
+      //   //title: const Text('الطلبات المقبولة'),
+      // ),
       body: ListView(
         padding: const EdgeInsets.all(16.0),
         children: [
           if (slowOrders.isNotEmpty) ...[
             const Text(
-              'الطلبات العادية:',
-              style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
-              textAlign: TextAlign.right,
+              'الطلبات العادية',
+              style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
+              textAlign: TextAlign.center,
             ),
             const SizedBox(height: 10),
             ...slowOrders.map((order) => _buildNormalOrderCard(order)),
@@ -90,9 +250,9 @@ class _AcceptedOrdersPageState extends State<AcceptedOrdersPage> {
           if (fastOrders.isNotEmpty) ...[
             const SizedBox(height: 20),
             const Text(
-              'الطلبات السريعة:',
-              style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
-              textAlign: TextAlign.right,
+              'الطلبات السريعة',
+              style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
+              textAlign: TextAlign.center,
             ),
             const SizedBox(height: 10),
             ...fastOrders.map((order) => _buildOrderCard(order)),
@@ -106,116 +266,6 @@ class _AcceptedOrdersPageState extends State<AcceptedOrdersPage> {
               ),
             ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildOrderCard(Map order) {
-    print("hereeeeee");
-    final route = order['deliveryRoute'];
-    final orderDetails = order['orderDetails'];
-    print(order['deliveryRoute']);
-    return Card(
-      margin: const EdgeInsets.all(16.0),
-      elevation: 4.0,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15.0),
-      ),
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(15.0),
-          gradient: const LinearGradient(
-            colors: [
-              Color(0xFFEFFAF1),
-              Color(0xFFDFF2E0),
-            ],
-          ),
-        ),
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Icon(Icons.confirmation_number, color: Colors.blue),
-                Text(
-                  'رقم الطلب: ${orderDetails['phoneNumber']}',
-                  style: TextStyle(fontSize: 16.0, color: Colors.black),
-                  textAlign: TextAlign.right,
-                ),
-              ],
-            ),
-            const Divider(thickness: 1.5),
-            Container(
-              margin: const EdgeInsets.symmetric(vertical: 10),
-              alignment: Alignment.center,
-              child: CircleAvatar(
-                radius: 35,
-                backgroundColor: Colors.green[100],
-                child: const Icon(
-                  Icons.person,
-                  size: 40,
-                  color: Colors.green,
-                ),
-              ),
-            ),
-
-            _buildOrderDetailWithIcon(Icons.person, 'الزبون',
-                orderDetails['username'], Colors.purple),
-            _buildOrderDetailWithIcon(Icons.phone, 'رقم الزبون',
-                orderDetails['phoneNumber'], Colors.orange),
-            _buildOrderDetailWithIcon(Icons.location_on, 'عنوان التوصيل',
-                orderDetails['location'], Colors.red),
-            _buildOrderDetailWithIcon(
-                Icons.monetization_on, 'الدفع', "عند الاستلام", Colors.teal),
-            _buildOrderDetailWithIcon(Icons.attach_money, 'السعر الكلي',
-                '${orderDetails['totalPrice'].toString()}', Colors.blue),
-            const SizedBox(height: 8.0),
-            _buildPathSection(route), // New section for showing the path
-            const SizedBox(height: 8.0),
-            Row(
-              children: [
-                Expanded(
-                  child: ElevatedButton.icon(
-                    onPressed: () {
-                      String orderId = order['orderId'];
-                      // updateFastOrderStatus(orderId);
-                      // _updateStatus('مشغول');
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('تم قبول الطلب!'),
-                          backgroundColor: Colors.green,
-                        ),
-                      );
-                    },
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.all(12),
-                      backgroundColor:
-                          Colors.green, // Change background to solid green
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                    ),
-                    icon: const Icon(
-                      Icons.check,
-                      color: Colors.white, // Set the icon color to white
-                    ),
-                    label: const Text(
-                      'قبول',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white, // Change the text color to white
-                        fontSize: 16.0,
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 10),
-              ],
-            ),
-          ],
-        ),
       ),
     );
   }
@@ -408,7 +458,7 @@ class _AcceptedOrdersPageState extends State<AcceptedOrdersPage> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Row(
+                      Column(
                         children: [
                           const SizedBox(width: 10),
                           if (item['productImage'] != null)
@@ -436,7 +486,7 @@ class _AcceptedOrdersPageState extends State<AcceptedOrdersPage> {
                                 ),
                               ),
                             ),
-                          const SizedBox(width: 12),
+                          const SizedBox(height: 12),
                           Text(
                             item['productName'],
                             style: const TextStyle(
@@ -499,6 +549,89 @@ class _AcceptedOrdersPageState extends State<AcceptedOrdersPage> {
                               ),
                             ),
                           ),
+                          const SizedBox(height: 10),
+                          GestureDetector(
+                            onTap: () {
+                              // Navigate to the customer profile page
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => Customerprofile(
+                                          username: item['customerusername'],
+                                        )),
+                              );
+                            },
+                            child: Text(
+                              'الملف الشخصي للزبون',
+                              style: TextStyle(
+                                fontSize: 14.0,
+                                color: const Color.fromARGB(255, 26, 105, 1),
+                                decoration: TextDecoration.underline,
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 10),
+
+                          // Add buttons for 'تم الاستلام' and 'تم التوصيل'
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              OutlinedButton(
+                                onPressed: () {
+                                  // Add functionality for 'تم الاستلام' here
+                                  final List<String> itemIds = itemsGroup
+                                      .where((item) =>
+                                          item['itemId'] !=
+                                          null) // Filter out items with null itemId
+                                      .map<String>((item) => item['itemId']
+                                          .toString()) // Convert itemId to string
+                                      .toList();
+                                  updateItemsStatus(itemIds, 'مستلم');
+                                  print(
+                                      'تم الاستلام for item ${item['productName']}');
+                                },
+                                child: Text('تم الاستلام'),
+                                style: OutlinedButton.styleFrom(
+                                  foregroundColor: Colors.green,
+                                  side: BorderSide(
+                                      color: Colors.green,
+                                      width: 2), // Border color and width
+                                  padding: EdgeInsets.symmetric(
+                                      vertical: 8.0,
+                                      horizontal:
+                                          16.0), // Adjust padding to make it smaller
+                                  minimumSize: Size(100,
+                                      36), // Set a specific minimum size (width, height)
+                                ),
+                              ),
+                              const SizedBox(width: 5),
+                              OutlinedButton(
+                                onPressed: () {
+                                  final List<String> itemIds = itemsGroup
+                                      .where((item) =>
+                                          item['itemId'] !=
+                                          null) // Filter out items with null itemId
+                                      .map<String>((item) => item['itemId']
+                                          .toString()) // Convert itemId to string
+                                      .toList();
+                                  updateItemsStatus(itemIds, 'غير مستلم');
+                                },
+                                child: Text('لم يتم الاستلام '),
+                                style: OutlinedButton.styleFrom(
+                                  foregroundColor: Colors.red,
+                                  side: BorderSide(
+                                      color: Colors.red,
+                                      width: 2), // Border color and width
+                                  padding: EdgeInsets.symmetric(
+                                      vertical: 8.0,
+                                      horizontal:
+                                          16.0), // Adjust padding to make it smaller
+                                  minimumSize: Size(100,
+                                      36), // Set a specific minimum size (width, height)
+                                ),
+                              ),
+                            ],
+                          ),
                         ],
                       ),
                     ],
@@ -506,164 +639,151 @@ class _AcceptedOrdersPageState extends State<AcceptedOrdersPage> {
                 );
               },
             ),
-            const SizedBox(height: 12),
-
-            // Action buttons
-            Row(
-              children: [
-                Expanded(
-                  child: ElevatedButton.icon(
-                    onPressed: () {
-                      print(itemsGroup);
-                      final List<String> itemIds = itemsGroup
-                          .where((item) =>
-                              item['itemId'] !=
-                              null) // Filter out items with null itemId
-                          .map<String>((item) => item['itemId']
-                              .toString()) // Convert itemId to string
-                          .toList();
-
-                      print('itemIds: $itemIds');
-
-                      if (itemIds.isEmpty) {
-                        print('No valid item IDs found');
-                        return;
-                      }
-
-                      print('items: $itemIds');
-
-                      // _updateStatus('مشغول');
-                      // updateItemsStatus(itemIds);
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('تم قبول الطلب!'),
-                          backgroundColor: Colors.green,
-                        ),
-                      );
-                    },
-                    //icon: const Icon(Icons.check, color: Colors.green),
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.all(12),
-                      backgroundColor:
-                          Colors.green, // Change background to solid green
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                    ),
-                    icon: const Icon(
-                      Icons.check,
-                      color: Colors.white, // Set the icon color to white
-                    ),
-                    label: const Text(
-                      'قبول',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white, // Change the text color to white
-                        fontSize: 16.0,
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 10),
-              ],
-            ),
+            const SizedBox(height: 5),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildFastOrders() {
+  Widget _buildOrderCard(Map order) {
+    print("hereeeeee");
+    print(order);
+    final route = order['deliveryRoute'];
+    final orderDetails = order['orderDetails'];
+    print(order['deliveryRoute']);
     return Card(
       margin: const EdgeInsets.all(16.0),
-      elevation: 4.0,
+      elevation: 7.0,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15.0),
       ),
       child: Container(
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(15.0),
-          gradient: const LinearGradient(
-            colors: [
-              Color(0xFFEFFAF1),
-              Color(0xFFDFF2E0),
-            ],
+          borderRadius: BorderRadius.circular(20.0),
+          gradient: LinearGradient(
+            colors: [Colors.white, Colors.grey.shade100],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
           ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.3),
+              spreadRadius: 2,
+              blurRadius: 8,
+              offset: const Offset(0, 4), // Shadow position
+            ),
+          ],
         ),
         padding: const EdgeInsets.all(16.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: fastOrders.map((order) {
-            return _buildOrderDetail(order);
-          }).toList(),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildSlowOrders() {
-    return Column(
-      children: slowOrders.map((order) {
-        return Card(
-          margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-          elevation: 4.0,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(15.0),
-          ),
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(15.0),
-              gradient: const LinearGradient(
-                colors: [
-                  Color(0xFFEFFAF1),
-                  Color(0xFFDFF2E0),
-                ],
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Icon(Icons.confirmation_number, color: Colors.blue),
+                const SizedBox(
+                  width: 10,
+                ),
+                Text(
+                  'رقم الطلب: ${orderDetails['_id'].toString().substring(0, 3)}',
+                  style: TextStyle(fontSize: 16.0, color: Colors.black),
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
+            const Divider(thickness: 1.5),
+            Container(
+              margin: const EdgeInsets.symmetric(vertical: 10),
+              alignment: Alignment.center,
+              child: CircleAvatar(
+                radius: 35,
+                backgroundColor: Colors.green[100],
+                child: const Icon(
+                  Icons.person,
+                  size: 40,
+                  color: Colors.green,
+                ),
               ),
             ),
-            padding: const EdgeInsets.all(16.0),
-            child: _buildOrderDetail(order),
-          ),
-        );
-      }).toList(),
-    );
-  }
 
-  Widget _buildOrderDetail(Map<String, dynamic> order) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _buildOrderDetailWithIcon(
-          Icons.confirmation_number,
-          'رقم الطلب',
-          order['_id'] ?? 'غير متوفر',
-          Colors.blue,
+            GestureDetector(
+              onTap: () {
+                // Navigate to the customer profile page
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => Customerprofile(
+                            username: orderDetails['username'],
+                          )),
+                );
+              },
+              child: _buildOrderDetailWithIcon(
+                  Icons.person,
+                  'الملف الشخصي للزبون ',
+                  orderDetails['username'],
+                  const Color.fromARGB(255, 70, 10, 72)),
+            ),
+            _buildOrderDetailWithIcon(Icons.phone, 'رقم الزبون',
+                orderDetails['phoneNumber'], Colors.orange),
+            _buildOrderDetailWithIcon(Icons.location_on, 'عنوان التوصيل',
+                orderDetails['location'], Colors.red),
+            _buildOrderDetailWithIcon(
+                Icons.monetization_on, 'الدفع', "عند الاستلام", Colors.teal),
+            _buildOrderDetailWithIcon(Icons.attach_money, 'السعر الكلي',
+                '${orderDetails['totalPrice'].toString()}', Colors.blue),
+            const SizedBox(height: 8.0),
+            _buildPathSection(route), // New section for showing the path
+            const SizedBox(height: 8.0),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                OutlinedButton(
+                  onPressed: () {
+                    String orderId = order['orderId'];
+                    updateFastOrderStatus(orderId, 'مستلم');
+                    // Add functionality for 'تم التوصيل' here
+                    print('تم التوصيل for item ${orderDetails['productName']}');
+                  },
+                  child: Text('تم الاستلام'),
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: Colors.green,
+                    side: BorderSide(
+                        color: Colors.green,
+                        width: 2), // Border color and width
+                    padding: EdgeInsets.symmetric(
+                        vertical: 8.0,
+                        horizontal: 16.0), // Adjust padding to make it smaller
+                    minimumSize: Size(
+                        150, 50), // Set a specific minimum size (width, height)
+                  ),
+                ),
+                const SizedBox(width: 5),
+                OutlinedButton(
+                  onPressed: () {
+                    String orderId = order['orderId'];
+                    updateFastOrderStatus(orderId, 'غير مستلم');
+                    // Add functionality for 'تم التوصيل' here
+                    print('تم التوصيل for item ${orderDetails['productName']}');
+                  },
+                  child: Text('لم يتم الاستلام '),
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: Colors.red,
+                    side: BorderSide(
+                        color: Colors.red, width: 2), // Border color and width
+                    padding: EdgeInsets.symmetric(
+                        vertical: 8.0,
+                        horizontal: 16.0), // Adjust padding to make it smaller
+                    minimumSize: Size(
+                        150, 50), // Set a specific minimum size (width, height)
+                  ),
+                ),
+              ],
+            ),
+          ],
         ),
-        _buildOrderDetailWithIcon(
-          Icons.person,
-          'الزبون',
-          order['username'] ?? 'غير متوفر',
-          Colors.purple,
-        ),
-        _buildOrderDetailWithIcon(
-          Icons.phone,
-          'رقم الزبون',
-          order['customerPhone'] ?? 'غير متوفر',
-          Colors.orange,
-        ),
-        _buildOrderDetailWithIcon(
-          Icons.location_on,
-          'عنوان التوصيل',
-          order['deliveryAddress'] ?? 'غير متوفر',
-          Colors.red,
-        ),
-        _buildOrderDetailWithIcon(
-          Icons.attach_money,
-          'السعر الكلي',
-          '${order['totalPrice']}₪' ?? 'غير متوفر',
-          Colors.green,
-        ),
-        const Divider(thickness: 1.5),
-      ],
+      ),
     );
   }
 }
