@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
+
 import 'package:login_page/screens/CustomerWork.dart';
 import 'package:login_page/screens/OwnerWorking.dart';
-import 'package:login_page/screens/allInbox.dart'; // Required for formatting relative time.
+import 'package:login_page/screens/allInbox.dart';
+import 'package:login_page/screens/customersBuying.dart'; // Required for formatting relative time.
 
 class NotificationsPage extends StatefulWidget {
   final String currentUserId;
@@ -85,6 +87,15 @@ class _NotificationsPageState extends State<NotificationsPage> {
                   userId: widget.currentUserId,
                 )),
       );
+    } else if (page == 'orderNotification') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => CustomersBuying(
+                  token: widget.token,
+                  userId: widget.currentUserId,
+                )),
+      );
     } else {
       print("Unknown page: $page");
     }
@@ -98,6 +109,13 @@ class _NotificationsPageState extends State<NotificationsPage> {
         return Icon(Icons.work, color: Colors.green, size: 24);
       case 'workDecision':
         return Icon(Icons.assignment_turned_in, color: Colors.orange, size: 24);
+      case 'orderNotification':
+        return Icon(Icons.note,
+            color: const Color.fromARGB(255, 53, 6, 86), size: 24);
+      case 'report':
+        return Icon(Icons.warning,
+            color: const Color.fromARGB(255, 171, 8, 8), size: 24);
+
       default:
         return Icon(Icons.notifications, color: Colors.grey, size: 24);
     }
@@ -113,6 +131,9 @@ class _NotificationsPageState extends State<NotificationsPage> {
             const Text(
               "الإشعارات",
               style: TextStyle(color: Colors.white, fontSize: 20),
+            ),
+            const SizedBox(
+              width: 10,
             ),
             const Icon(Icons.notifications, color: Colors.white),
           ],

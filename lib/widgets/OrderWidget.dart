@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
@@ -6,6 +7,7 @@ import 'package:jwt_decoder/jwt_decoder.dart';
 import 'dart:convert'; // To handle JSON decoding
 import 'package:login_page/screens/CartPage.dart';
 import 'package:login_page/screens/map_screen.dart';
+import 'package:login_page/services/notification_service.dart';
 
 class OrderWidget extends StatefulWidget {
   final List<dynamic> items;
@@ -55,6 +57,7 @@ class _OrderWidgetState extends State<OrderWidget> {
   @override
   void initState() {
     super.initState();
+    initializeNotificationService();
     Map<String, dynamic> jwtDecoderToken = JwtDecoder.decode(widget.token);
 
     username = jwtDecoderToken['username'] ?? 'No First Name';
@@ -79,9 +82,9 @@ class _OrderWidgetState extends State<OrderWidget> {
       print("Response body: ${response.body}");
 
       if (response.statusCode == 200) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("تم تعديل الكميات بنجاح")),
-        );
+        // ScaffoldMessenger.of(context).showSnackBar(
+        //   const SnackBar(content: Text("تم تعديل الكميات بنجاح")),
+        // );
         clearUserCart();
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -110,9 +113,9 @@ class _OrderWidgetState extends State<OrderWidget> {
       print("Response body: ${response.body}");
 
       if (response.statusCode == 200) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("تم حذف السلة بنجاح")),
-        );
+        // ScaffoldMessenger.of(context).showSnackBar(
+        //   const SnackBar(content: Text("تم حذف السلة بنجاح")),
+        // );
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
@@ -218,8 +221,14 @@ class _OrderWidgetState extends State<OrderWidget> {
 
   void makeOrder() async {
     if (addressController.text.isEmpty || phoneController.text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("يرجى تعبئة جميع الحقول المطلوبة")),
+      //
+      showCustomDialog(
+        context: context,
+        icon: Icons.warning,
+        iconColor: Colors.red,
+        title: "انتبه ",
+        message: "الرجاء تعبئة جميع الحقول",
+        buttonText: "حسناً",
       );
       return;
     }
@@ -252,10 +261,24 @@ class _OrderWidgetState extends State<OrderWidget> {
       print("Response body: ${response.body}");
 
       if (response.statusCode == 201) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("تم تسجيل الطلب بنجاح")),
+        // ScaffoldMessenger.of(context).showSnackBar(
+        //   const SnackBar(content: Text("تم تسجيل الطلب بنجاح")),
+        // );
+        showCustomDialog(
+          context: context,
+          icon: Icons.check,
+          iconColor: Colors.green,
+          title: "تمّ بنجاح",
+          message: "!تمّ  تسجيل طلبك بنجاح",
+          buttonText: "حسناً",
         );
         updateQuantity();
+        final data = json.decode(response.body);
+        print(data['ownerEmails']);
+        final List<dynamic> ownerEmails = data['ownerEmails'] ?? [];
+        for (String ownerEmail in ownerEmails) {
+          await handleOwnerNotification(ownerEmail);
+        }
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text("حدث خطأ أثناء تسجيل الطلب")),
@@ -265,6 +288,52 @@ class _OrderWidgetState extends State<OrderWidget> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("فشل الاتصال بالخادم")),
       );
+    }
+  }
+
+  void initializeNotificationService() async {
+    await NotificationService.instance.initialize();
+  }
+
+  Future<void> handleOwnerNotification(String ownerEmail) async {
+    try {
+      // Fetch FCM token and owner ID
+      final querySnapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .where('email', isEqualTo: ownerEmail)
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        final userDoc = querySnapshot.docs.first;
+        final ownerFcmToken = userDoc['fcmToken'] ?? "";
+        final ownerId = userDoc.id;
+
+        if (ownerFcmToken.isNotEmpty) {
+          // Send the notification
+          await NotificationService.instance.sendNotificationToSpecific(
+            ownerFcmToken,
+            'طلب شراء جديد',
+            'تم تسجيل طلبية شراء لأحد منتجاتك',
+          );
+
+          // Save the notification
+          await NotificationService.instance.saveNotificationToFirebase(
+            ownerFcmToken,
+            'طلب شراء جديد',
+            '،اضغط لرؤية التفاصيل وتحضير الطلب. تم تسجيل طلبية شراء لأحد منتجاتك',
+            ownerId,
+            'orderNotification',
+          );
+
+          print("Notification sent and saved for owner: $ownerEmail");
+        } else {
+          print("FCM token not found for owner: $ownerEmail");
+        }
+      } else {
+        print("No user found with email: $ownerEmail");
+      }
+    } catch (e) {
+      print("Error handling notification for $ownerEmail: $e");
     }
   }
 
@@ -862,6 +931,82 @@ class _OrderWidgetState extends State<OrderWidget> {
           borderSide: BorderSide.none,
         ),
       ),
+    );
+  }
+
+  void showCustomDialog({
+    required BuildContext context,
+    required IconData icon,
+    required Color iconColor,
+    required String title,
+    required String message,
+    required String buttonText,
+  }) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16.0),
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  color: iconColor,
+                  shape: BoxShape.circle,
+                ),
+                padding: const EdgeInsets.all(16.0),
+                child: Icon(
+                  icon,
+                  color: Colors.white,
+                  size: 48.0,
+                ),
+              ),
+              const SizedBox(height: 16.0),
+              Text(
+                title,
+                style: const TextStyle(
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 8.0),
+              Text(
+                message,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 16.0,
+                  color: Colors.grey[700],
+                ),
+              ),
+              const SizedBox(height: 16.0),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).pop(); // Close the dialog
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: iconColor,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 32.0, vertical: 12.0),
+                ),
+                child: Text(
+                  buttonText,
+                  style: const TextStyle(
+                    fontSize: 16.0,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }

@@ -1,10 +1,12 @@
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:http/http.dart' as http;
 import 'package:login_page/Customers/customerProfile.dart';
 import 'package:login_page/screens/customerProfile.dart';
+import 'package:login_page/services/notification_service.dart';
 
 import 'config.dart';
 
@@ -21,7 +23,11 @@ class _CustomersBuyingState extends State<CustomersBuying> {
   int quantity = 1; // الكمية الحالية
   late String username;
   List<dynamic> items = [];
-
+  late String customerFirstname;
+  late String customerLasttname;
+  late String customerEmail;
+  late String customerFCM;
+  late String customerID;
   @override
   void initState() {
     super.initState();
@@ -55,6 +61,76 @@ class _CustomersBuyingState extends State<CustomersBuying> {
     }
   }
 
+  void fetchUser(String customerusername) async {
+    try {
+      final response = await http.get(
+        Uri.parse('$getUser/${customerusername}'),
+        headers: {'Content-Type': 'application/json'},
+      );
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        if (data['status'] == true) {
+          final userInfo = data['data'];
+          setState(() {
+            customerFirstname = userInfo['firstName'] ?? "";
+            customerLasttname = userInfo['lastName'] ?? "";
+            customerEmail = userInfo['email'] ?? "";
+          });
+
+          // Fetch owner FCM token after updating owneremail
+          fetchCustomerFcmToken(customerEmail);
+        } else {
+          print("Error fetching user: ${data['message']}");
+        }
+      } else {
+        print("Failed to load user: ${response.statusCode}");
+      }
+    } catch (e) {
+      print("An error occurred: $e");
+    }
+  }
+
+  Future<void> fetchCustomerFcmToken(String customerEmail) async {
+    try {
+      print("on fetch");
+      // Query Firestore for a user with the same email as the owner
+      final querySnapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .where('email', isEqualTo: customerEmail)
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        final userDoc = querySnapshot.docs.first;
+        setState(() {
+          customerFCM = userDoc['fcmToken'] ?? "";
+          customerID = userDoc.id; // Get the FCM token
+        });
+        print("Customer's FCM token: $customerFCM");
+        print("Customer's document ID: $customerID");
+        // Send the notification
+        await NotificationService.instance.sendNotificationToSpecific(
+          customerFCM,
+          'تنبيه للحساب!  ',
+          'لقد تلقى حسابك تنبيها جديدا من أحد المالكين',
+        );
+
+        // Save the notification
+        await NotificationService.instance.saveNotificationToFirebase(
+          customerFCM,
+          '  تنبيه جديد',
+          'لقد تلقيت تنبيها لحسابك نتيجة لعدم استلامك إحدى الطلبيات، يرجى العلم بأنه سيتم تقييد الحساب عند تجاوز ثلاثة تنبيهات',
+          customerID,
+          'report',
+        );
+      } else {
+        print("No user found with the email: $customerEmail");
+      }
+    } catch (e) {
+      print("Error fetching FCM token: $e");
+    }
+  }
+
   Future<void> updateItemPreparation(String itemId, String status) async {
     final response = await http.put(
       Uri.parse('$updatePreparationStatus/$itemId'),
@@ -68,6 +144,35 @@ class _CustomersBuyingState extends State<CustomersBuying> {
       print("Item preparation status updated successfully");
     } else {
       print("Failed to update item preparation status: ${response.body}");
+    }
+  }
+
+  Future<void> reportCustomer(String customerUsername) async {
+    try {
+      final response = await http.post(
+        Uri.parse(reportUser), // Replace with your API URL
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode({'username': customerUsername}),
+      );
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        print("Report incremented: ${data['updatedReports']}");
+        // ScaffoldMessenger.of(context).showSnackBar(
+        //   SnackBar(content: Text('تم إرسال التنبيه بنجاح.')),
+        // );
+        fetchUser(customerUsername);
+      } else {
+        print("Error incrementing reports: ${response.body}");
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('حدث خطأ أثناء إرسال التنبيه.')),
+        );
+      }
+    } catch (e) {
+      print("Error: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('فشل الاتصال بالخادم.')),
+      );
     }
   }
 
@@ -158,7 +263,8 @@ class _CustomersBuyingState extends State<CustomersBuying> {
     );
   }
 
-  void handleCancelledItem(BuildContext context, String productName) {
+  void handleCancelledItem(
+      BuildContext context, String productName, String customerusername) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -217,6 +323,7 @@ class _CustomersBuyingState extends State<CustomersBuying> {
             ),
             TextButton(
               onPressed: () {
+                reportCustomer(customerusername);
                 Navigator.of(context).pop();
                 print("Report submitted for $productName");
               },
@@ -259,9 +366,8 @@ class _CustomersBuyingState extends State<CustomersBuying> {
         case 'delivered':
           return Colors.green;
         case 'undelivered':
-          return Colors.amber;
-        case 'cancelled':
           return Colors.red;
+
         default:
           return Colors.grey;
       }
@@ -276,9 +382,8 @@ class _CustomersBuyingState extends State<CustomersBuying> {
       switch (item['itemStatus']) {
         case 'delivered':
           return "تم الاستلام";
+
         case 'undelivered':
-          return "لم يتم التسليم بعد";
-        case 'cancelled':
           return "الزبون لم يستلم الطلب!";
         default:
           return "حالة الاستلام غير متوفرة";
@@ -562,9 +667,11 @@ class _CustomersBuyingState extends State<CustomersBuying> {
                                                 'notReady' ||
                                             item['itemStatus'] == 'delivered')
                                         ? null
-                                        : item['itemStatus'] == 'cancelled'
+                                        : item['itemStatus'] == 'undelivered'
                                             ? () => handleCancelledItem(
-                                                context, item['productName'])
+                                                context,
+                                                item['productName'],
+                                                item['username'])
                                             : () {
                                                 print(
                                                     "${item['productName']} button pressed");

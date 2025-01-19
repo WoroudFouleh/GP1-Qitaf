@@ -112,3 +112,5 @@ final getNormalAcceptedOrders = "${url}api/orders/getAcceptedNormalDeliveries";
 final updateItemsRecievedStatus = "${url}api/orders/updateNormalRecievedStatus";
 final updateFastRecievedStatus = "${url}api/orders/updateFastRecievedStatus";
 final getDiscount = "${url}api/users/getDiscountPercentage";
+//////////////reports
+final reportUser = "${url}api/users/reportCustomer";
