@@ -180,8 +180,8 @@ class _EditProductionLineState extends State<EditProductionLine> {
     _priceController.text = widget.price.toString();
     _unitController.text = widget.quantityUnit;
     _workDaysController.text = widget.days.toString();
-    _startTimesController.text = widget.startTime.toString().substring(10, 15);
-    _endTimeController.text = widget.endTime.toString().substring(10, 15);
+    _startTimesController.text = widget.startTime.toString();
+    _endTimeController.text = widget.endTime.toString();
     _preparationUniy.text = widget.preparationUnit;
     _phoneNumCont.text = widget.phoneNum;
     if (widget.image != null) {

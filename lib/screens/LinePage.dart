@@ -450,7 +450,7 @@ class _LinePageState extends State<LinePage> {
                           MainAxisAlignment.end, // محاذاة العناصر إلى اليمين
                       children: [
                         Text(
-                          "وقت الدوام: ${widget.startTime.toString().substring(10, 15)} - ${widget.endTime.toString().substring(10, 15)} ", // وقت الدوام
+                          "وقت الدوام: ${widget.startTime.toString()} - ${widget.endTime.toString()} ", // وقت الدوام
                           style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,

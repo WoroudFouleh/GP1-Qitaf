@@ -82,6 +82,80 @@ class _SigninScreenState extends State<SigninScreen> {
     });
   }
 
+// Example Function to Show the Suspension Dialog
+  void showSuspensionDialog(BuildContext context, int remainingTime) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15.0), // Rounded corners
+          ),
+          title: Column(
+            children: [
+              Row(
+                mainAxisAlignment:
+                    MainAxisAlignment.center, // Center align title
+                children: [
+                  // Icon(Icons.warning_amber_rounded,
+                  //     color: Colors.red, size: 30),
+                  // SizedBox(width: 10),
+                  Text(
+                    'الحساب معلق',
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                    textAlign: TextAlign.center, // Center align title text
+                  ),
+                ],
+              ),
+            ],
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                Icons.lock_outline,
+                color: Colors.red,
+                size: 60,
+              ),
+              SizedBox(height: 10),
+              Text(
+                'تم تعليق حسابك بسبب حصولك على ثلاثة تنبيهات',
+                style: TextStyle(fontSize: 18),
+                textAlign: TextAlign.center,
+              ),
+              SizedBox(height: 10),
+              Text(
+                'يرجى المحاولة مرة أخرى بعد $remainingTime ساعة',
+                style: TextStyle(fontSize: 16, color: Colors.black54),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+          actionsAlignment: MainAxisAlignment.center,
+          actions: [
+            ElevatedButton.icon(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.red, // Red background
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+              },
+              icon: Icon(Icons.close,
+                  size: 18, color: Colors.white), // White icon color
+              label: Text(
+                'موافق',
+                style: TextStyle(color: Colors.white), // White text color
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   void loginUser() async {
     try {
       var myToken2;
@@ -102,7 +176,36 @@ class _SigninScreenState extends State<SigninScreen> {
           );
           return;
         }
+//Check for user suspension
+        var suspensionCheckResponse = await http.post(
+          Uri.parse(
+              checkUserSuspension), // Replace with your suspension check endpoint
+          headers: {"Content-Type": "application/json"},
+          body: jsonEncode({"email": _usernameController.text}),
+        );
+        print("heree");
+        print(suspensionCheckResponse);
+        if (suspensionCheckResponse.statusCode == 200) {
+          print("in suss");
+          var suspensionCheckResult = jsonDecode(suspensionCheckResponse.body);
 
+          if (suspensionCheckResult['suspended'] == true) {
+            int remainingTime =
+                (suspensionCheckResult['remainingTime'] / (60 * 60 * 1000))
+                    .ceil();
+            String message =
+                'تم تعليق حسابك. يرجى المحاولة مرة أخرى بعد $remainingTime ساعة.';
+
+            showSuspensionDialog(context, remainingTime);
+            return; // Stop further execution
+          }
+        } else {
+          showNotification(
+            'Error checking account suspension: ${suspensionCheckResponse.body}',
+            backgroundColor: Colors.red,
+          );
+          return; // Stop further execution
+        }
         try {
           // Firebase login
           UserCredential firebaseUser = await FirebaseAuth.instance
@@ -128,17 +231,7 @@ class _SigninScreenState extends State<SigninScreen> {
                 'fcmToken': fcmToken,
               });
             }
-            // await NotificationService.instance.sendNotificationToSpecific(
-            //   await FirebaseMessaging.instance.getToken(),
-            //   'Login Successful',
-            //   'Welcome back to the app!',
-            // );
-            // await NotificationService.instance.saveNotificationToFirebase(
-            //     await FirebaseMessaging.instance.getToken(),
-            //     'تم تسجيل الدخول',
-            //     'أهلا بك في قطاف!',
-            //     userId,
-            //     'chat');
+
             showNotification('تم تسجيل الدخول عبر Firebase بنجاح');
             firebaseLoginSuccess = true;
           }
@@ -300,68 +393,12 @@ class _SigninScreenState extends State<SigninScreen> {
       );
     }
   }
-  // void forgetPass() async {
-  //   try {
-  //     if (_usernameController.text.isNotEmpty) {
-  //       var reqBody = {
-  //         "username": _usernameController.text,
-  //       };
-
-  //       try {
-  //         var response = await http.post(
-  //           Uri.parse(forgotPass), // Point to the forgot password endpoint
-  //           headers: {"Content-Type": "application/json"},
-  //           body: jsonEncode(reqBody),
-  //         );
-
-  //         if (response.statusCode == 200) {
-  //           var jsonResponse = jsonDecode(response.body);
-  //           if (jsonResponse['status']) {
-  //             showNotification('تم إرسال رمز التحقق إلى البريد الإلكتروني');
-
-  //             // Navigate to the code input screen
-  //             Navigator.of(context).push(
-  //               MaterialPageRoute(
-  //                 builder: (context) =>
-  //                     OpcodeScreen(email: _usernameController.text),
-  //               ),
-  //             );
-  //           } else {
-  //             showNotification('البريد الإلكتروني غير مسجل',
-  //                 backgroundColor: Colors.red);
-  //           }
-  //         } else {
-  //           showNotification('حدث خطأ: ${response.statusCode}',
-  //               backgroundColor: Colors.red);
-  //         }
-  //       } catch (e) {
-  //         showNotification('حدث خطأ: $e', backgroundColor: Colors.red);
-  //       }
-  //     } else {
-  //       showNotification('يرجى إدخال البريد الإلكتروني',
-  //           backgroundColor: Colors.red);
-  //     }
-  //   } catch (e) {
-  //     // Handle exceptions (like network issues)
-  //     showNotification('حدث خطأ: $e', backgroundColor: Colors.red);
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {
     return CustomScaffold(
       child: Stack(
         children: [
-          // Container(
-          //   decoration: BoxDecoration(
-          //     image: DecorationImage(
-          //       image:
-          //           AssetImage("assets/images/cover.jpg"), // Path to your image
-          //       fit: BoxFit.cover, // Cover the whole screen
-          //     ),
-          //   ),
-          // ),
-
           Column(
             children: [
               const Expanded(child: SizedBox(height: 10)),

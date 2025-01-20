@@ -114,3 +114,4 @@ final updateFastRecievedStatus = "${url}api/orders/updateFastRecievedStatus";
 final getDiscount = "${url}api/users/getDiscountPercentage";
 //////////////reports
 final reportUser = "${url}api/users/reportCustomer";
+final checkUserSuspension = "${url}api/users/isSuspended";

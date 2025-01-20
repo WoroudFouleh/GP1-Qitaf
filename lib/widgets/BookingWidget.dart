@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
@@ -5,6 +6,7 @@ import 'dart:convert'; // To handle JSON decoding
 
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:login_page/screens/config.dart';
+import 'package:login_page/services/notification_service.dart';
 
 class BookingWidget extends StatefulWidget {
   final int price;
@@ -72,11 +74,15 @@ class _BookingWidgetState extends State<BookingWidget> {
   late String customerImage;
   late String customerFirstName;
   late String customerLastName;
-
+  late String ownerEmail;
+  late String ownerFCM;
+  late String ownerID;
 // Function to calculate total price and revenue
   @override
   void initState() {
     super.initState();
+    fetchUser();
+    initializeNotificationService();
     quantityController.text = "0";
     Map<String, dynamic> jwtDecoderToken = JwtDecoder.decode(widget.token);
     print(jwtDecoderToken);
@@ -86,21 +92,96 @@ class _BookingWidgetState extends State<BookingWidget> {
     customerLastName = jwtDecoderToken['lastName'] ?? 'No username';
   }
 
-// Helper function to convert TimeOfDay to HH:mm string
-  String timeToString(TimeOfDay time) {
-    int hour = time.hour;
-    int minute = time.minute;
+  void initializeNotificationService() async {
+    await NotificationService.instance.initialize();
+  }
 
-    // Return the formatted string
-    return '${hour.toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')}';
+  void sendBookingRequest() async {
+    try {
+      // Prepare the request body
+      var reqBody = {
+        "lineId": widget.lineId,
+        "lineName": widget.lineName,
+        'ownerUsername': widget.ownerUsername,
+        "userPhone": phoneController.text,
+        "userImage": customerImage,
+        "userFirstName": customerFirstName,
+        "userLastName": customerLastName,
+        "customerUsername": customerUsername,
+        "quantity": int.tryParse(quantityController.text),
+        "date": _startDate.toIso8601String(),
+        "startTime": selectedDateTime.toIso8601String(),
+        "endTime": endDateTime.toIso8601String(),
+        "totalPrice": finalPrice,
+        "revenuePrice": revenue,
+        "cropType": cropController.text,
+      };
+
+      // Make the POST request
+      var response = await http.post(
+        Uri.parse(newBooking), // Ensure the URL is correct
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: jsonEncode(reqBody),
+      );
+
+      if (response.statusCode == 201) {
+        var jsonResponse = jsonDecode(response.body);
+        if (jsonResponse['status']) {
+          print('Request sent successfully');
+          fetchCustomerFcmToken(ownerEmail);
+        } else {
+          print('Error sending request: ${jsonResponse['message']}');
+        }
+      } else {
+        var errorResponse = jsonDecode(response.body);
+        print('Error: ${errorResponse['message'] ?? response.statusCode}');
+      }
+    } catch (e) {
+      print('An error occurred: $e');
+    }
+  }
+
+  void getBooked() async {
+    try {
+      // Prepare the request body
+      var reqBody = {
+        "lineId": widget.lineId,
+        "date": _startDate.toIso8601String(),
+      };
+
+      // Make the POST request
+      var response = await http.post(
+        Uri.parse(getPrevBooked), // Ensure the URL is correct
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: jsonEncode(reqBody),
+      );
+
+      if (response.statusCode == 200) {
+        var jsonResponse = jsonDecode(response.body);
+        if (jsonResponse['status']) {
+          bookedTimes = List<String>.from(jsonResponse['bookedTimes']);
+          print('Booked times fetched successfully: $bookedTimes');
+          flag = 1;
+        } else {
+          print('Error fetching: ${jsonResponse['message']}');
+        }
+      } else {
+        var errorResponse = jsonDecode(response.body);
+        print('Error: ${errorResponse['message'] ?? response.statusCode}');
+      }
+    } catch (e) {
+      print('An error occurred: $e');
+    }
   }
 
   bool isDayAndTimeValid(DateTime selectedDate, TimeOfDay selectedTime) {
     // Step 1: Validate the day
     String selectedDay = DateFormat('EEEE', 'en_US').format(selectedDate);
     print("selectedDay in English: $selectedDay");
-    print("Widget Start Time: ${widget.startTime}");
-    print("Widget End Time: ${widget.endTime}");
 
     Map<String, String> englishToArabicDayMap = {
       'Monday': 'الإثنين',
@@ -114,28 +195,32 @@ class _BookingWidgetState extends State<BookingWidget> {
 
     selectedDayInArabic = englishToArabicDayMap[selectedDay] ?? selectedDay;
     print("selectedDay in Arabic: $selectedDayInArabic");
+    List<String> cleanedDays = widget.days.map((day) {
+      return day.replaceAll('[', '').replaceAll(']', '').trim();
+    }).toList();
 
-    if (!widget.days.contains(selectedDayInArabic)) {
+    print("Cleaned Days: $cleanedDays");
+
+// Step 2: Check if the selected day in Arabic is in the cleaned days
+    if (!cleanedDays.contains(selectedDayInArabic)) {
       print("Invalid day: $selectedDayInArabic");
       return false; // Invalid day
     }
-    // // Step 2: Convert startTime and endTime from TimeOfDay to HH:mm format string
-    // String startTimeString = timeToString(widget.startTime);
-    // String endTimeString = timeToString(widget.endTime);
+    // if (!widget.days.contains(selectedDayInArabic)) {
+    //   print("Invalid day: $selectedDayInArabic");
+    //   return false; // Invalid day
+    // }
 
-    // print("Converted Start Time String: $startTimeString");
-    // print("Converted End Time String: $endTimeString");
-    //   // Step 2: Validate the time
+    // Step 2: Validate the time
     DateTime startWorkTime = DateFormat("HH:mm").parse(widget.startTime);
     DateTime endWorkTime = DateFormat("HH:mm").parse(widget.endTime);
 
-    // Convert TimeOfDay to DateTime
-    DateTime selectedDateTime = DateTime(
+    selectedDateTime = DateTime(
       selectedDate.year,
       selectedDate.month,
       selectedDate.day,
-      selectedTime.hour, // Use TimeOfDay's hour
-      selectedTime.minute, // Use TimeOfDay's minute
+      selectedTime.hour,
+      selectedTime.minute,
     );
 
     DateTime startWorkDateTime = DateTime(
@@ -153,46 +238,59 @@ class _BookingWidgetState extends State<BookingWidget> {
       endWorkTime.hour,
       endWorkTime.minute,
     );
-    print("Parsed Start Work Time: $startWorkDateTime");
-    print("Parsed End Work Time: $endWorkDateTime");
+    print(selectedDateTime);
     if (selectedDateTime.isBefore(startWorkDateTime) ||
         selectedDateTime.isAfter(endWorkDateTime)) {
       return false; // Invalid time
     }
-
+    print(selectedDateTime);
     // Step 3: Calculate the end time based on preparation time and quantity
+    // Assuming preparationTime is in minutes as a string, e.g., "20" minutes
     int preparationMinutes = 0;
 
     try {
-      preparationMinutes = int.parse(widget.preparationTime);
+      preparationMinutes = int.parse(
+          widget.preparationTime); // Parse the preparation time (in minutes)
     } catch (e) {
       print("Invalid preparation time format.");
       return false; // Invalid preparation time
     }
 
+    // Get the quantity input and convert it to an integer
     int quantity = 0;
     try {
-      quantity = int.parse(quantityController.text);
+      quantity = int.parse(quantityController.text); // Convert quantity to int
     } catch (e) {
       print("Invalid quantity input.");
       return false; // If quantity is invalid, return false
     }
 
-    Duration unitTime = Duration(minutes: preparationMinutes);
-    Duration totalDuration = unitTime * quantity;
+    // Calculate the total duration needed for the selected quantity
+    Duration unitTime = Duration(
+        minutes: preparationMinutes); // Duration per quantity in minutes
+    Duration totalDuration =
+        unitTime * quantity; // Multiply by quantity to get total time
 
+    // Calculate the end time by adding the total duration to the selected start time
     endDateTime = selectedDateTime.add(totalDuration);
 
     print("Start Time: $selectedDateTime");
     print("End Time: $endDateTime");
 
-    // Step 4: Check if the selected time range conflicts with any already booked time
+    // Step 4: Check if the selected time range (start time to end time) conflicts with any already booked time
+
     for (String bookedTimeRange in bookedTimes) {
       List<String> times = bookedTimeRange.split('-');
-      if (times.length != 2) continue;
-
+      print("Split result: $times");
+      if (times.length != 2) {
+        print("Invalid format, skipping this entry.");
+        continue;
+      }
       DateTime bookedStartTime = DateFormat("HH:mm").parse(times[0]);
       DateTime bookedEndTime = DateFormat("HH:mm").parse(times[1]);
+
+      print("Booked Start Time: $bookedStartTime");
+      print("Booked End Time: $bookedEndTime");
 
       DateTime bookedStartDateTime = DateTime(
         selectedDate.year,
@@ -208,7 +306,11 @@ class _BookingWidgetState extends State<BookingWidget> {
         bookedEndTime.hour,
         bookedEndTime.minute,
       );
+//       print("Checking against booked time range: $bookedTimeRange");
+// print("Booked Start Time: $bookedStartDateTime");
+// print("Booked End Time: $bookedEndDateTime");
 
+      // Check if the selected time range conflicts with the booked time range
       if ((selectedDateTime.isBefore(bookedEndDateTime) &&
               endDateTime.isAfter(bookedStartDateTime)) ||
           (selectedDateTime.isBefore(bookedEndDateTime) &&
@@ -326,7 +428,7 @@ class _BookingWidgetState extends State<BookingWidget> {
                             ),
                             const SizedBox(height: 8),
                             Text(
-                              "${widget.startTime.toString().substring(10, 15)} - ${widget.endTime.substring(10, 15)}",
+                              "${widget.startTime.toString()} - ${widget.endTime}",
                               textAlign: TextAlign.center,
                               style: const TextStyle(fontSize: 16),
                             ),
@@ -665,11 +767,78 @@ class _BookingWidgetState extends State<BookingWidget> {
     );
   }
 
+  void fetchUser() async {
+    try {
+      final response = await http.get(
+        Uri.parse('$getUser/${widget.ownerUsername}'),
+        headers: {'Content-Type': 'application/json'},
+      );
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        if (data['status'] == true) {
+          final userInfo = data['data'];
+          setState(() {
+            // customerFirstname = userInfo['firstName'] ?? "";
+            // customerLasttname = userInfo['lastName'] ?? "";
+            ownerEmail = userInfo['email'] ?? "";
+          });
+
+          // Fetch owner FCM token after updating owneremail
+        } else {
+          print("Error fetching user: ${data['message']}");
+        }
+      } else {
+        print("Failed to load user: ${response.statusCode}");
+      }
+    } catch (e) {
+      print("An error occurred: $e");
+    }
+  }
+
+  Future<void> fetchCustomerFcmToken(String customerEmail) async {
+    try {
+      print("on fetch");
+      // Query Firestore for a user with the same email as the owner
+      final querySnapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .where('email', isEqualTo: customerEmail)
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        final userDoc = querySnapshot.docs.first;
+        setState(() {
+          ownerFCM = userDoc['fcmToken'] ?? "";
+          ownerID = userDoc.id; // Get the FCM token
+        });
+        print("Customer's FCM token: $ownerFCM");
+        print("Customer's document ID: $ownerID");
+        // Send the notification
+        await NotificationService.instance.sendNotificationToSpecific(
+          ownerFCM,
+          'حجز موعد جديد',
+          'يوجد حجز جديد في ${widget.lineName}',
+        );
+
+        // Save the notification
+        await NotificationService.instance.saveNotificationToFirebase(
+          ownerFCM,
+          'حجز موعد جديد',
+          'قام ${customerFirstName} ${customerLastName} بحجز موعد جديد في ${widget.lineName}. انقر للمزيد من التفاصيل',
+          ownerID,
+          'lineBooking',
+        );
+      } else {
+        print("No user found with the email: $customerEmail");
+      }
+    } catch (e) {
+      print("Error fetching FCM token: $e");
+    }
+  }
+
 // Confirm booking button logic
   void confirmBooking() {
     if (_startDate != null && selectedTime != null) {
-      print("Selected Date: $_startDate, Selected Time: $selectedTime");
-
       final timeOfDay = stringToTimeOfDay(selectedTime!);
       if (timeOfDay != null && isDayAndTimeValid(_startDate!, timeOfDay)) {
         selectedDateAndTime =
@@ -680,6 +849,7 @@ class _BookingWidgetState extends State<BookingWidget> {
         print("Revenue: $revenue");
         sendBookingRequest();
 
+        // Add booking logic to save to the database
         _showBookingConfirmation(selectedDateAndTime.toString());
       } else {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
@@ -692,31 +862,6 @@ class _BookingWidgetState extends State<BookingWidget> {
         content: Text('يرجى تعبئة جميع الحقول.'),
         backgroundColor: Colors.red,
       ));
-    }
-  }
-
-  TimeOfDay? stringToTimeOfDay(String time) {
-    try {
-      // Check if the input string matches the "HH:mm" format using a RegExp
-      final timeRegex = RegExp(r'^\d{2}:\d{2}$');
-      if (!timeRegex.hasMatch(time)) {
-        print("Invalid time format: $time");
-        return null;
-      }
-
-      final parts = time.split(':');
-      final hour = int.parse(parts[0]);
-      final minute = int.parse(parts[1]);
-
-      if (hour < 0 || hour > 23 || minute < 0 || minute > 59) {
-        print("Time values out of range: hour=$hour, minute=$minute");
-        return null;
-      }
-
-      return TimeOfDay(hour: hour, minute: minute);
-    } catch (e) {
-      print("Error parsing time: $e");
-      return null; // Return null if the string format is invalid
     }
   }
 
@@ -816,6 +961,17 @@ class _BookingWidgetState extends State<BookingWidget> {
         ],
       ),
     );
+  }
+
+  TimeOfDay? stringToTimeOfDay(String time) {
+    try {
+      final parts = time.split(':');
+      final hour = int.parse(parts[0]);
+      final minute = int.parse(parts[1]);
+      return TimeOfDay(hour: hour, minute: minute);
+    } catch (e) {
+      return null; // Return null if the string format is invalid
+    }
   }
 
   void _showAvailableTimes() {
@@ -954,86 +1110,5 @@ class _BookingWidgetState extends State<BookingWidget> {
     revenue = totalPrice * 0.05;
     finalPrice = revenue + totalPrice;
     return revenue + totalPrice;
-  }
-
-  void sendBookingRequest() async {
-    try {
-      // Prepare the request body
-      var reqBody = {
-        "lineId": widget.lineId,
-        "lineName": widget.lineName,
-        'ownerUsername': widget.ownerUsername,
-        "userPhone": phoneController.text,
-        "userImage": customerImage,
-        "userFirstName": customerFirstName,
-        "userLastName": customerLastName,
-        "customerUsername": customerUsername,
-        "quantity": int.tryParse(quantityController.text),
-        "date": _startDate.toIso8601String(),
-        "startTime": selectedDateTime.toIso8601String(),
-        "endTime": endDateTime.toIso8601String(),
-        "totalPrice": finalPrice,
-        "revenuePrice": revenue,
-        "cropType": cropController.text,
-      };
-
-      // Make the POST request
-      var response = await http.post(
-        Uri.parse(newBooking), // Ensure the URL is correct
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: jsonEncode(reqBody),
-      );
-
-      if (response.statusCode == 201) {
-        var jsonResponse = jsonDecode(response.body);
-        if (jsonResponse['status']) {
-          print('Request sent successfully');
-        } else {
-          print('Error sending request: ${jsonResponse['message']}');
-        }
-      } else {
-        var errorResponse = jsonDecode(response.body);
-        print('Error: ${errorResponse['message'] ?? response.statusCode}');
-      }
-    } catch (e) {
-      print('An error occurred: $e');
-    }
-  }
-
-  void getBooked() async {
-    try {
-      // Prepare the request body
-      var reqBody = {
-        "lineId": widget.lineId,
-        "date": _startDate.toIso8601String(),
-      };
-
-      // Make the POST request
-      var response = await http.post(
-        Uri.parse(getPrevBooked), // Ensure the URL is correct
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: jsonEncode(reqBody),
-      );
-
-      if (response.statusCode == 200) {
-        var jsonResponse = jsonDecode(response.body);
-        if (jsonResponse['status']) {
-          bookedTimes = List<String>.from(jsonResponse['bookedTimes']);
-          print('Booked times fetched successfully: $bookedTimes');
-          flag = 1;
-        } else {
-          print('Error fetching: ${jsonResponse['message']}');
-        }
-      } else {
-        var errorResponse = jsonDecode(response.body);
-        print('Error: ${errorResponse['message'] ?? response.statusCode}');
-      }
-    } catch (e) {
-      print('An error occurred: $e');
-    }
   }
 }

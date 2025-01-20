@@ -33,6 +33,7 @@ class _CustomerProfileState extends State<CustomerProfile> {
   File? selectedImage;
   late String username;
   late int rate;
+  late int points;
   void userUpdate() async {
     try {
       // Convert image to base64 if an image is selected
@@ -109,6 +110,7 @@ class _CustomerProfileState extends State<CustomerProfile> {
     String? base64Image =
         jwtDecoderToken['profilePhoto']; // Get the base64 image string
     rate = jwtDecoderToken['rate'];
+    points = jwtDecoderToken['points'];
     // Split full name into first and last name
     // List<String> nameParts = fullName.split(' ');
     _firstNameController.text = firstName; // First name
@@ -213,8 +215,8 @@ class _CustomerProfileState extends State<CustomerProfile> {
                       ),
                     ),
                     const SizedBox(width: 5),
-                    const Text(
-                      '120  ',
+                    Text(
+                      points.toString(),
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,

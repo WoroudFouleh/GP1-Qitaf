@@ -30,7 +30,9 @@ class _ProfilePageState extends State<ProfilePage>
   List<dynamic> products = [];
   List<dynamic> lands = [];
   List<dynamic> lines = [];
-
+  late int posts;
+  late int points;
+  late int rate;
   @override
   void initState() {
     super.initState();
@@ -42,6 +44,9 @@ class _ProfilePageState extends State<ProfilePage>
     email = jwtDecoderToken['email'] ?? 'No Email';
     profilePhotoBase64 = jwtDecoderToken['profilePhoto'];
     username = jwtDecoderToken['username'];
+    points = jwtDecoderToken['points'];
+    posts = jwtDecoderToken['postsCount'];
+    rate = jwtDecoderToken['rate'];
     fetchLands();
     fetchLines();
     fetchProducts();
@@ -246,8 +251,8 @@ class _ProfilePageState extends State<ProfilePage>
                   ),
                 ),
                 const SizedBox(width: 5),
-                const Text(
-                  '4.5  ',
+                Text(
+                  rate.toString(),
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -264,8 +269,8 @@ class _ProfilePageState extends State<ProfilePage>
                   ),
                 ),
                 const SizedBox(width: 5),
-                const Text(
-                  '120  ',
+                Text(
+                  points.toString(),
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -282,8 +287,8 @@ class _ProfilePageState extends State<ProfilePage>
                   ),
                 ),
                 const SizedBox(width: 5),
-                const Text(
-                  '6  ',
+                Text(
+                  posts.toString(),
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,

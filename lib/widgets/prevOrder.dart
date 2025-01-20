@@ -23,6 +23,15 @@ class Prevorder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Determine the final status
+    String finalStatus = status;
+    if (status == 'غير مستلم') {
+      // Check if all items have itemStatus == 'delivered'
+      bool allDelivered =
+          items.every((item) => item['itemStatus'] == 'delivered');
+      finalStatus = allDelivered ? 'مستلم' : 'غير مستلم';
+    }
+
     final String formattedDate = orderDate.split(" ")[0];
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
@@ -59,7 +68,7 @@ class Prevorder extends StatelessWidget {
                     child: Padding(
                       padding: const EdgeInsets.all(15.0),
                       child: Text(
-                        status,
+                        finalStatus,
                         style: const TextStyle(
                           fontSize: 16,
                         ),
@@ -109,7 +118,7 @@ class Prevorder extends StatelessWidget {
                         MaterialPageRoute(
                           builder: (context) => Orderdetails(
                             price: price,
-                            status: status,
+                            status: finalStatus,
                             date: orderDate,
                             items: items,
                           ),

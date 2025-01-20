@@ -308,14 +308,26 @@ class _HomePageState extends State<Orderdetails> {
                 Align(
                   alignment: Alignment.bottomRight,
                   child: Material(
-                    color: const Color.fromRGBO(15, 99, 43, 1),
+                    color: item['itemStatus'] == 'delivered'
+                        ? const Color.fromRGBO(15, 99, 43, 1)
+                        : Colors.grey, // Disable button for undelivered items
                     borderRadius: const BorderRadius.only(
                       topLeft: Radius.circular(16),
                       bottomRight: Radius.circular(16),
                     ),
                     child: InkWell(
-                      onTap: () => showRatingDialog(
-                          context, itemId, item['productName']),
+                      onTap: item['itemStatus'] == 'delivered'
+                          ? () => showRatingDialog(
+                              context, itemId, item['productName'])
+                          : () {
+                              // Show a message when the item is not delivered
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content:
+                                      Text("لا يمكن تقييم المنتج قبل الاستلام"),
+                                ),
+                              );
+                            },
                       child: const Padding(
                         padding: EdgeInsets.all(8),
                         child: Icon(Icons.add, color: Colors.white),

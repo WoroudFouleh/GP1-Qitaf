@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 
 import 'package:login_page/screens/CustomerWork.dart';
+import 'package:login_page/screens/OwnerBooking.dart';
 import 'package:login_page/screens/OwnerWorking.dart';
 import 'package:login_page/screens/allInbox.dart';
 import 'package:login_page/screens/customersBuying.dart'; // Required for formatting relative time.
@@ -96,6 +97,15 @@ class _NotificationsPageState extends State<NotificationsPage> {
                   userId: widget.currentUserId,
                 )),
       );
+    } else if (page == 'lineBooking') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => OwnerBookingPage(
+                  token: widget.token,
+                  userId: widget.currentUserId,
+                )),
+      );
     } else {
       print("Unknown page: $page");
     }
@@ -115,6 +125,9 @@ class _NotificationsPageState extends State<NotificationsPage> {
       case 'report':
         return Icon(Icons.warning,
             color: const Color.fromARGB(255, 171, 8, 8), size: 24);
+      case 'lineBooking':
+        return Icon(Icons.table_chart,
+            color: const Color.fromARGB(255, 5, 97, 88), size: 24);
 
       default:
         return Icon(Icons.notifications, color: Colors.grey, size: 24);

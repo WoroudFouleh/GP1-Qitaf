@@ -128,8 +128,8 @@ class _AddProductionLineState extends State<AddProductionLine> {
         "unitTimeOfPreparation": _selectedTimeUnit,
         "price": int.tryParse(_priceController.text),
         "quantityUnit": _selectedUnit,
-        "startWorkTime": _startTime.toString(),
-        "endWorkTime": _endTime.toString(),
+        "startWorkTime": _startTime.toString().substring(10, 15),
+        "endWorkTime": _endTime.toString().substring(10, 15),
         "datesOfWork": _selectedDays,
       };
 
