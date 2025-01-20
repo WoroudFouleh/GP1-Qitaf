@@ -62,6 +62,8 @@ const userSchema = new mongoose.Schema({
         type: Number,
         default: 0, // Initial value
     },
+    suspensionStartDate: { type: Date }, // Date when suspension starts
+    isSuspended: { type: Boolean, default: false }, // Suspension flag
 
 }, {
     timestamps: true // Automatically adds createdAt and updatedAt fields

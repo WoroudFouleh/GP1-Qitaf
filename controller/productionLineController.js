@@ -61,7 +61,7 @@ exports.getProductionLines = async (req, res, next) => {
       const { search, category } = req.query; // Extract search query and category from URL query parameters
 
       // Base filter to exclude lands by the same username
-      let filter = { username: { $ne: username } };
+      let filter = { ownerUsername: { $ne: username } };
 
       // Add dynamic search filter
       if (search && category) {

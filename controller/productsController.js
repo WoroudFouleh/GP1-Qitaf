@@ -49,85 +49,73 @@ exports.addProduct = async (req, res, next) => {
 };
 exports.getProducts1 = async (req, res, next) => {
   try {
-      const { username } = req.params; // Extract username from URL params
-      const { search } = req.query; // Extract search query and category from URL query parameters
+    const { username } = req.params; // Extract username from URL params
+    const { search } = req.query; // Extract search query
 
-      // Base filter to exclude lands by the same username
-      let filter = { type: "محصول",  username: { $ne: username } };
+    // Base filter to exclude products by the same username and check quantity > 0
+    let filter = { type: "محصول", username: { $ne: username }, quantity: { $gt: 0 } };
 
-      // Add dynamic search filter
-      if (search ) {
-          const searchRegex = new RegExp(search, 'i'); // Case-insensitive regex for flexible matching
+    // Add dynamic search filter
+    if (search) {
+      const searchRegex = new RegExp(search, 'i'); // Case-insensitive regex for flexible matching
+      filter.name = searchRegex; // Filter by product name
+    }
 
-          
-              filter.name = searchRegex; // Filter by crop type
-         
-               // Filter by location (city)
-          
-      }
+    // Fetch products based on the filters
+    const products = await Product.find(filter);
 
-      // Fetch lands based on the filters
-      const products = await Product.find(filter);
-
-      res.status(200).json({ status: true, products });
+    res.status(200).json({ status: true, products });
   } catch (err) {
-      console.error("---> Error fetching lands -->", err);
-      next(err);
+    console.error("---> Error fetching products -->", err);
+    next(err);
   }
 };
+
 exports.getProducts2 = async (req, res, next) => {
   try {
-      const { username } = req.params; // Extract username from URL params
-      const { search } = req.query; // Extract search query and category from URL query parameters
+    const { username } = req.params; // Extract username from URL params
+    const { search } = req.query; // Extract search query
 
-      // Base filter to exclude lands by the same username
-      let filter = { type: "منتج غذائي",   username: { $ne: username } };
+    // Base filter to exclude products by the same username and check quantity > 0
+    let filter = { type: "منتج غذائي", username: { $ne: username }, quantity: { $gt: 0 } };
 
-      // Add dynamic search filter
-      if (search ) {
-          const searchRegex = new RegExp(search, 'i'); // Case-insensitive regex for flexible matching
+    // Add dynamic search filter
+    if (search) {
+      const searchRegex = new RegExp(search, 'i'); // Case-insensitive regex for flexible matching
+      filter.name = searchRegex; // Filter by product name
+    }
 
-          
-              filter.name = searchRegex; // Filter by crop type
-         
-               // Filter by location (city)
-          
-      }
+    // Fetch products based on the filters
+    const products = await Product.find(filter);
 
-      // Fetch lands based on the filters
-      const products = await Product.find(filter);
-
-      res.status(200).json({ status: true, products });
+    res.status(200).json({ status: true, products });
   } catch (err) {
-      console.error("---> Error fetching lands -->", err);
-      next(err);
+    console.error("---> Error fetching products -->", err);
+    next(err);
   }
 };
+
 exports.getProducts3 = async (req, res, next) => {
   try {
-      const { username } = req.params; // Extract username from URL params
-      const { search } = req.query; // Extract search query and category from URL query parameters
-      // Base filter to exclude lands by the same username
-      let filter = { type: "منتج غير غذائي",   username: { $ne: username } };
+    const { username } = req.params; // Extract username from URL params
+    const { search } = req.query; // Extract search query
 
-      // Add dynamic search filter
-      if (search ) {
-          const searchRegex = new RegExp(search, 'i'); // Case-insensitive regex for flexible matching
+    // Base filter to exclude products by the same username and check quantity > 0
+    let filter = { type: "منتج غير غذائي", username: { $ne: username }, quantity: { $gt: 0 } };
 
-          
-              filter.name = searchRegex; // Filter by crop type
-         
-               // Filter by location (city)
-          
-      }
+    // Add dynamic search filter
+    if (search) {
+      const searchRegex = new RegExp(search, 'i'); // Case-insensitive regex for flexible matching
+      filter.name = searchRegex; // Filter by product name
+    }
 
-      // Fetch lands based on the filters
-      const products = await Product.find(filter);
+    // Fetch products based on the filters
+    const products = await Product.find(filter);
 
-      res.status(200).json({ status: true, products });
+    res.status(200).json({ status: true, products });
   } catch (err) {
-      console.error("---> Error fetching lands -->", err);
-      next(err);
+    console.error("---> Error fetching products -->", err);
+    next(err);
   }
 };
 

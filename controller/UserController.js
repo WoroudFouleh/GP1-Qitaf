@@ -106,7 +106,9 @@ exports.login = async (req, res, next) => {
             lastName: user.lastName,
             gender: user.gender,
             password: user.password,
-            rate: user.rate
+            rate: user.rate,
+            points: user.points,
+            postsCount: user.postsCount
         };
         const userToken = await UserServices.generateToken(userTokenData, "secretKey", '1h');
 
@@ -591,5 +593,77 @@ exports.incrementUserReports = async (req, res) => {
       res.status(500).json({ message: 'Internal server error.', error });
     }
   };
+  exports.checkUserSuspension = async (req, res) => {
+    console.log("in sus");
+    
+    const { email } = req.body; // Extract the email from the request body
   
+    if (!email) {
+        console.log("in sus2");
+        return res.status(400).json({ message: 'Email is required.' });
+    }
+
+    try {
+        const user = await User.findOne({ email: email });
+
+        if (!user) {
+            console.log("in sus3");
+            return res.status(404).json({ message: 'User not found.' });
+        }
+
+        const suspensionPeriod = 3 * 24 * 60 * 60 * 1000; // 3 days in milliseconds
+
+        if (user.isSuspended) {//true
+            console.log("in sus3");
+            // Check if suspension period has ended
+            const suspensionEndDate = new Date(user.suspensionStartDate.getTime() + suspensionPeriod);
+            const now = new Date();
+            console.log(now);
+            console.log(suspensionEndDate);
+            if (now >= suspensionEndDate) {//not suspend
+                console.log("in sus4");
+                // Reset suspension and reports
+                user.isSuspended = false;
+                user.reports = 0;
+                user.suspensionStartDate = null;
+                await user.save();
+
+                return res.status(200).json({
+                    suspended: false,
+                    message: 'Suspension period ended. User is no longer suspended.',
+                });
+            } else {//susbended
+                console.log("in sus5");
+                return res.status(200).json({
+                    suspended: true,
+                    remainingTime: suspensionEndDate - now,
+                    message: 'User is currently suspended.',
+                });
+            }
+        } else if (user.reports >= 3) {
+            // Suspend the user
+            console.log("suspended");
+            user.isSuspended = true;
+            user.suspensionStartDate = new Date();
+            await user.save();
+
+            return res.status(200).json({
+                suspended: true,
+                remainingTime: suspensionPeriod,
+                message: 'User has been suspended due to excessive reports.',
+            });
+        }
+
+        console.log("not suspended");
+        return res.status(200).json({
+            suspended: false,
+            message: 'User is not suspended.',
+        });
+    } catch (err) {
+        console.error("Error in suspension check:", err);
+        return res.status(500).json({ message: 'Internal server error.', error: err.message });
+    }
+};
+
+
   
