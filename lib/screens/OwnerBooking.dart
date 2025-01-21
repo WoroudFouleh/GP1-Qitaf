@@ -1,6 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:login_page/screens/customerProfile.dart';
+import 'package:login_page/services/notification_service.dart';
 
 import 'dart:convert'; // To handle JSON decoding
 import 'config.dart';
@@ -9,7 +11,8 @@ import 'package:jwt_decoder/jwt_decoder.dart';
 class OwnerBookingPage extends StatefulWidget {
   final String token;
   final userId;
-  const OwnerBookingPage({required this.token, Key? key, this.userId}) : super(key: key);
+  const OwnerBookingPage({required this.token, Key? key, this.userId})
+      : super(key: key);
 
   @override
   _OwnerBookingPageState createState() => _OwnerBookingPageState();
@@ -23,6 +26,9 @@ class _OwnerBookingPageState extends State<OwnerBookingPage> {
   String buttonStatus = "Not Yet"; // Default status
   Color buttonColor = Colors.red; // Default color
   IconData buttonIcon = Icons.pending; // Default icon
+  late String customerEmail;
+  late String customerFCM;
+  late String customerID;
   @override
   void initState() {
     super.initState();
@@ -106,6 +112,199 @@ class _OwnerBookingPageState extends State<OwnerBookingPage> {
     } else {
       print("Failed to load requests: ${response.statusCode}");
     }
+  }
+
+  void fetchUser(String customerusername, String lineName) async {
+    try {
+      final response = await http.get(
+        Uri.parse('$getUser/${customerusername}'),
+        headers: {'Content-Type': 'application/json'},
+      );
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        if (data['status'] == true) {
+          final userInfo = data['data'];
+          setState(() {
+            customerEmail = userInfo['email'] ?? "";
+          });
+
+          // Fetch owner FCM token after updating owneremail
+          fetchCustomerFcmToken(customerEmail, lineName);
+        } else {
+          print("Error fetching user: ${data['message']}");
+        }
+      } else {
+        print("Failed to load user: ${response.statusCode}");
+      }
+    } catch (e) {
+      print("An error occurred: $e");
+    }
+  }
+
+  Future<void> fetchCustomerFcmToken(
+      String customerEmail, String lineName) async {
+    try {
+      print("on fetch");
+      // Query Firestore for a user with the same email as the owner
+      final querySnapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .where('email', isEqualTo: customerEmail)
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        final userDoc = querySnapshot.docs.first;
+        setState(() {
+          customerFCM = userDoc['fcmToken'] ?? "";
+          customerID = userDoc.id; // Get the FCM token
+        });
+        print("Customer's FCM token: $customerFCM");
+        print("Customer's document ID: $customerID");
+        // Send the notification
+        await NotificationService.instance.sendNotificationToSpecific(
+          customerFCM,
+          'تنبيه للحساب!  ',
+          'لقد تلقى حسابك تنبيها جديدا من أحد المالكين',
+        );
+
+        // Save the notification
+        await NotificationService.instance.saveNotificationToFirebase(
+          customerFCM,
+          '  تنبيه جديد',
+          'لقد تلقيت تنبيها لحسابك نتيجة لعدم لعدم الحضور في الموعد المحدد لحجزك في ${lineName}، يرجى العلم بأنه سيتم تقييد الحساب عند تجاوز ثلاثة تنبيهات',
+          customerID,
+          'report',
+        );
+      } else {
+        print("No user found with the email: $customerEmail");
+      }
+    } catch (e) {
+      print("Error fetching FCM token: $e");
+    }
+  }
+
+  Future<void> reportCustomer(String customerUsername, String lineName) async {
+    try {
+      final response = await http.post(
+        Uri.parse(reportUser), // Replace with your API URL
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode({'username': customerUsername}),
+      );
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        print("Report incremented: ${data['updatedReports']}");
+        // ScaffoldMessenger.of(context).showSnackBar(
+        //   SnackBar(content: Text('تم إرسال التنبيه بنجاح.')),
+        // );
+        fetchUser(customerUsername, lineName);
+      } else {
+        print("Error incrementing reports: ${response.body}");
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('حدث خطأ أثناء إرسال التنبيه.')),
+        );
+      }
+    } catch (e) {
+      print("Error: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('فشل الاتصال بالخادم.')),
+      );
+    }
+  }
+
+  void handleCancelledItem(
+      BuildContext context, String customerusername, String lineName) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Row(
+            children: [
+              Text(
+                'لم يحضر الزبون في الموعد المخصص له',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                textAlign: TextAlign.left,
+              ),
+              SizedBox(width: 10),
+              Icon(
+                Icons.warning_amber_rounded,
+                color: Colors.red,
+                size: 30,
+              ),
+            ],
+          ),
+          content: Directionality(
+            textDirection: TextDirection.rtl,
+            child: Text(
+              'هل تريد إعطاء هذا المستخدم تنبيهاً؟',
+              style: TextStyle(fontSize: 16),
+              textAlign: TextAlign.right,
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.black,
+                padding: EdgeInsets.symmetric(horizontal: 15, vertical: 8),
+                shape: RoundedRectangleBorder(
+                  side: BorderSide(color: Colors.black),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    Icons.cancel,
+                    size: 20,
+                    color: Colors.black,
+                  ),
+                  SizedBox(width: 5),
+                  Text(
+                    'إلغاء',
+                    style: TextStyle(fontSize: 14),
+                  ),
+                ],
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                reportCustomer(customerusername, lineName);
+                Navigator.of(context).pop();
+                //print("Report submitted for $productName");
+              },
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.white,
+                backgroundColor: Colors.red,
+                padding: EdgeInsets.symmetric(horizontal: 15, vertical: 8),
+                shape: RoundedRectangleBorder(
+                  side: BorderSide(color: Colors.red),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    Icons.report,
+                    size: 20,
+                    color: Colors.white,
+                  ),
+                  SizedBox(width: 5),
+                  Text(
+                    'تنبيه المستخدم',
+                    style: TextStyle(fontSize: 14),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   void showStatusDialog(String bookingId) {
@@ -306,9 +505,10 @@ class _OwnerBookingPageState extends State<OwnerBookingPage> {
                                         context,
                                         MaterialPageRoute(
                                           builder: (context) => Customerprofile(
-                                            username: booking[
-                                                'customerUsername'],
-                                                userId: widget.userId, // Pass the worker's username
+                                            username:
+                                                booking['customerUsername'],
+                                            userId: widget
+                                                .userId, // Pass the worker's username
                                           ),
                                         ),
                                       );
@@ -531,8 +731,16 @@ class _OwnerBookingPageState extends State<OwnerBookingPage> {
 
                               ElevatedButton(
                                 onPressed: () {
-                                  showStatusDialog(
-                                      booking['_id']); // Open the dialog
+                                  if (booking['status'] == "canceled") {
+                                    // Show dialog to report customer
+                                    handleCancelledItem(
+                                        context,
+                                        booking['customerUsername'],
+                                        booking['lineName']);
+                                  } else {
+                                    // Open the status dialog for other cases
+                                    showStatusDialog(booking['_id']);
+                                  }
                                 },
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: booking['status'] ==

@@ -16,7 +16,7 @@ class Previousorders extends StatefulWidget {
 
 class _PreviousOrdersState extends State<Previousorders> {
   List<dynamic> orders = [];
-  String? username;
+  late String username;
   int num = 1;
   @override
   void initState() {
@@ -109,13 +109,14 @@ class _PreviousOrdersState extends State<Previousorders> {
                 return Padding(
                   padding: const EdgeInsets.symmetric(vertical: 8.0),
                   child: Prevorder(
-                    num: num++,
-                    status: order['status'],
-                    orderId: order['_id'], // Replace with actual field
-                    orderDate: order['orderDate'], // Replace with actual field
-                    price: order['totalPrice'], // Replace with actual field
-                    items: order['items'], // Replace with actual field
-                  ),
+                      num: num++,
+                      status: order['status'],
+                      orderId: order['_id'], // Replace with actual field
+                      orderDate:
+                          order['orderDate'], // Replace with actual field
+                      price: order['totalPrice'], // Replace with actual field
+                      items: order['items'], // Replace with actual field
+                      username: username),
                 );
               },
             ),

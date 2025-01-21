@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -8,6 +9,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
 import 'package:login_page/screens/ProfilePage.dart';
 import 'package:login_page/screens/owner_home.dart';
+import 'package:login_page/services/notification_service.dart';
 import 'dart:convert'; // To handle JSON decoding
 import 'config.dart';
 import 'custom_drawer.dart'; // استدعاء الـ Drawer المخصص
@@ -72,7 +74,10 @@ class _EditLandState extends State<EditLand> {
   bool agreePersonalData = true;
 
   List<dynamic> workers = [];
-
+  late String customerEmail;
+  late String customerFCM;
+  late String customerID;
+  @override
   void LandUpdate() async {
     try {
       // Convert image to base64 if an image is selected
@@ -275,14 +280,15 @@ class _EditLandState extends State<EditLand> {
         var jsonResponse = jsonDecode(response.body);
         if (jsonResponse['status']) {
           print('user rated successfully');
-          showCustomDialog(
-            context: context,
-            icon: Icons.check,
-            iconColor: Colors.green,
-            title: "تمّ بنجاح",
-            message: "!تمّ تقييم العامل بنجاح",
-            buttonText: "حسناً",
-          );
+          // showCustomDialog(
+          //   context: context,
+          //   icon: Icons.check,
+          //   iconColor: Colors.green,
+          //   title: "تمّ بنجاح",
+          //   message: "!تمّ تقييم العامل بنجاح",
+          //   buttonText: "حسناً",
+          // );
+          await addWorkerPoints(widget.ownerusername, 2);
         } else {
           print('Error rating user: ${jsonResponse['message']}');
         }
@@ -293,6 +299,51 @@ class _EditLandState extends State<EditLand> {
     } catch (e) {
       print('An error occurred: $e');
     }
+  }
+
+  Future<void> addWorkerPoints(String username, int points) async {
+    try {
+      // Prepare the request body for adding points
+      var reqBody = {
+        'username': username,
+        "points": points,
+      };
+
+      // Make the POST request to add points
+      var response = await http.post(
+        Uri.parse(addPoints), // Replace with your "add points" API URL
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: jsonEncode(reqBody),
+      );
+
+      if (response.statusCode == 200) {
+        var jsonResponse = jsonDecode(response.body);
+        if (jsonResponse['status']) {
+          print('Points added successfully');
+          showCongratsDialog(2);
+        } else {
+          print('Error adding points: ${jsonResponse['message']}');
+        }
+      } else {
+        var errorResponse = jsonDecode(response.body);
+        print('Error: ${errorResponse['message'] ?? response.statusCode}');
+      }
+    } catch (e) {
+      print('An error occurred while adding points: $e');
+    }
+  }
+
+  void showCongratsDialog(int points) {
+    showCustomDialog(
+      context: context,
+      icon: Icons.star,
+      iconColor: Colors.amber,
+      title: "تهانينا!",
+      message: "لقد حصلت على $points نقطة جديدة. استمر في التقييم !",
+      buttonText: "شكراً",
+    );
   }
 
   void showCustomDialog({
@@ -845,24 +896,30 @@ class _EditLandState extends State<EditLand> {
         return Directionality(
           textDirection: TextDirection.rtl,
           child: AlertDialog(
-            title: const Text(
-              'قائمة العمال',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 18,
-                color: Colors.green,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15), // Rounded corners
+            ),
+            title: Center(
+              child: Text(
+                'قائمة العمال',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                  color: Colors.green[700],
+                ),
               ),
             ),
             content: SizedBox(
               width: double.maxFinite,
-              height: 300,
+              height: 400, // Adjust height for better display
               child: Column(
                 children: [
-                  // Title with border and frame
+                  // Title with border
                   Container(
                     padding: const EdgeInsets.all(10),
+                    margin: const EdgeInsets.only(bottom: 10),
                     decoration: BoxDecoration(
-                      border: Border.all(color: Colors.green),
+                      border: Border.all(color: Colors.green, width: 1.5),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: const Text(
@@ -872,54 +929,124 @@ class _EditLandState extends State<EditLand> {
                         fontSize: 16,
                         color: Colors.green,
                       ),
+                      textAlign: TextAlign.center,
                     ),
                   ),
-                  const SizedBox(height: 10),
                   // Worker list
                   Expanded(
                     child: ListView.builder(
                       itemCount: workers.length,
                       itemBuilder: (context, index) {
                         var worker = workers[index];
-                        return ListTile(
-                          leading: CircleAvatar(
-                            backgroundImage: MemoryImage(
-                                base64Decode(worker['workerProfileImage'])),
+                        return Card(
+                          elevation: 2,
+                          margin: const EdgeInsets.symmetric(vertical: 5),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
                           ),
-                          title: Text(
-                              "${worker['workerFirstname']} ${worker['workerLastname']}"),
-                          trailing: IconButton(
-                            icon: const Icon(
-                              Icons.delete,
-                              color: Colors.red,
-                              size: 30, // Red color for delete icon
-                            ),
-                            onPressed: () {
-                              showDeleteConfirmationDialog2(context, worker);
-                            },
-                          ),
-                          subtitle: ElevatedButton.icon(
-                            icon: const Icon(
-                              Icons.star,
-                              color: Colors.amber,
-                              size: 20,
-                            ),
-                            label: const Text('قيّم '),
-                            onPressed: () {
-                              showRatingDialog(context, worker);
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor:
-                                  Colors.green, // Set the button color
-                              foregroundColor:
-                                  Colors.white, // Set the text/icon color
-                              // padding: const EdgeInsets.symmetric(
-                              //     horizontal: 10, vertical: 7),
-                              // Button size
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(
-                                    30), // Rounded corners
-                              ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Row(
+                              children: [
+                                // Profile Image
+                                Flexible(
+                                  flex: 1, // 25% of the row
+                                  child: CircleAvatar(
+                                    backgroundImage: MemoryImage(
+                                      base64Decode(
+                                          worker['workerProfileImage']),
+                                    ),
+                                    radius: 30,
+                                  ),
+                                ),
+                                const SizedBox(width: 10),
+                                // Worker Info and Buttons
+                                Flexible(
+                                  flex: 4, // 50% of the row
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "${worker['workerFirstname']} ${worker['workerLastname']}",
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 5),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          // Rating Button
+                                          Expanded(
+                                            child: ElevatedButton.icon(
+                                              icon: const Icon(
+                                                Icons.star,
+                                                color: Colors.amber,
+                                                size: 18,
+                                              ),
+                                              label: const Text('قيّم'),
+                                              onPressed: () {
+                                                showRatingDialog(
+                                                    context, worker);
+                                              },
+                                              style: ElevatedButton.styleFrom(
+                                                backgroundColor: Colors.green,
+                                                foregroundColor: Colors.white,
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(20),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          const SizedBox(width: 5),
+                                          // Report Button
+                                          Expanded(
+                                            child: ElevatedButton.icon(
+                                              icon: const Icon(
+                                                Icons.report,
+                                                color: Colors.white,
+                                                size: 18,
+                                              ),
+                                              label: const Text('أبلغ عن'),
+                                              onPressed: () {
+                                                showReportConfirmationDialog(
+                                                    context, worker);
+                                              },
+                                              style: ElevatedButton.styleFrom(
+                                                backgroundColor: Colors.red,
+                                                foregroundColor: Colors.white,
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(20),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                // Delete Icon
+                                Flexible(
+                                  flex: 1, // 25% of the row
+                                  child: IconButton(
+                                    icon: const Icon(
+                                      Icons.delete,
+                                      color: Colors.red,
+                                      size: 24,
+                                    ),
+                                    onPressed: () {
+                                      showDeleteConfirmationDialog2(
+                                          context, worker);
+                                    },
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         );
@@ -930,24 +1057,244 @@ class _EditLandState extends State<EditLand> {
               ),
             ),
             actions: [
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                style: ElevatedButton.styleFrom(
-                  foregroundColor: Colors.white,
-                  backgroundColor: Colors.green, // Text color (white)
-                  textStyle: const TextStyle(
-                    fontWeight: FontWeight.bold, // Bold text
+              Center(
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.green,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 30, vertical: 10),
+                    textStyle: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
                   ),
+                  child: const Text("إغلاق"),
                 ),
-                child: const Text("إغلاق"),
               ),
             ],
           ),
         );
       },
     );
+  }
+
+  void showReportConfirmationDialog(
+      BuildContext context, Map<String, dynamic> worker) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Directionality(
+          textDirection: TextDirection.rtl, // Align text to Arabic layout
+          child: AlertDialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15), // Rounded corners
+            ),
+            title: Row(
+              children: [
+                Icon(
+                  Icons.warning_amber_rounded,
+                  color: Colors.red, // Attention-grabbing red icon
+                  size: 30,
+                ),
+                const SizedBox(width: 10),
+                const Text(
+                  'تأكيد الإبلاغ',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                    color: Colors.red,
+                  ),
+                  textAlign: TextAlign.right, // Align title text
+                ),
+              ],
+            ),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'هل أنت متأكد أنك تريد الإبلاغ عن:',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.grey[800],
+                  ),
+                  textAlign: TextAlign.right, // Align content text
+                ),
+                const SizedBox(height: 10),
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: Colors.grey[100],
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(color: Colors.redAccent, width: 1),
+                  ),
+                  child: Text(
+                    worker['workerFirstname']!,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                      color: Colors.black,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                const SizedBox(height: 20),
+                const Text(
+                  'يرجى التأكد قبل المتابعة.',
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.grey,
+                  ),
+                  textAlign: TextAlign.right, // Align final message
+                ),
+              ],
+            ),
+            actions: [
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.grey[300],
+                  foregroundColor: Colors.black,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                ),
+                child: const Text(
+                  'إلغاء',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  reportCustomer(worker['workerUsername']);
+                  print("Reported worker: ${worker['workerFirstname']}");
+                  Navigator.pop(context); // Close confirmation dialog
+                  Navigator.pop(context); // Close workers dialog
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.red,
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                ),
+                child: const Text(
+                  'إبلاغ',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void fetchUser(String customerusername) async {
+    try {
+      final response = await http.get(
+        Uri.parse('$getUser/${customerusername}'),
+        headers: {'Content-Type': 'application/json'},
+      );
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        if (data['status'] == true) {
+          final userInfo = data['data'];
+          setState(() {
+            //customerFirstname = userInfo['firstName'] ?? "";
+            //customerLasttname = userInfo['lastName'] ?? "";
+            customerEmail = userInfo['email'] ?? "";
+          });
+
+          // Fetch owner FCM token after updating owneremail
+          fetchCustomerFcmToken(customerEmail);
+        } else {
+          print("Error fetching user: ${data['message']}");
+        }
+      } else {
+        print("Failed to load user: ${response.statusCode}");
+      }
+    } catch (e) {
+      print("An error occurred: $e");
+    }
+  }
+
+  Future<void> fetchCustomerFcmToken(String customerEmail) async {
+    try {
+      print("on fetch");
+      // Query Firestore for a user with the same email as the owner
+      final querySnapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .where('email', isEqualTo: customerEmail)
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        final userDoc = querySnapshot.docs.first;
+        setState(() {
+          customerFCM = userDoc['fcmToken'] ?? "";
+          customerID = userDoc.id; // Get the FCM token
+        });
+        print("Customer's FCM token: $customerFCM");
+        print("Customer's document ID: $customerID");
+        // Send the notification
+        await NotificationService.instance.sendNotificationToSpecific(
+          customerFCM,
+          'تنبيه للحساب!  ',
+          'لقد تلقى حسابك تنبيها جديدا من أحد المالكين',
+        );
+
+        // Save the notification
+        await NotificationService.instance.saveNotificationToFirebase(
+          customerFCM,
+          '  تنبيه جديد',
+          'لقد تلقيت تنبيها لحسابك من مالك أرض ${widget.landName}      يرجى العلم بأنه سيتم تقييد الحساب عند تجاوز ثلاثة تنبيهات',
+          customerID,
+          'report',
+        );
+      } else {
+        print("No user found with the email: $customerEmail");
+      }
+    } catch (e) {
+      print("Error fetching FCM token: $e");
+    }
+  }
+
+  Future<void> reportCustomer(String customerUsername) async {
+    try {
+      final response = await http.post(
+        Uri.parse(reportUser), // Replace with your API URL
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode({'username': customerUsername}),
+      );
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        print("Report incremented: ${data['updatedReports']}");
+        // ScaffoldMessenger.of(context).showSnackBar(
+        //   SnackBar(content: Text('تم إرسال التنبيه بنجاح.')),
+        // );
+        fetchUser(customerUsername);
+      } else {
+        print("Error incrementing reports: ${response.body}");
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('حدث خطأ أثناء إرسال التنبيه.')),
+        );
+      }
+    } catch (e) {
+      print("Error: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('فشل الاتصال بالخادم.')),
+      );
+    }
   }
 
   void showDeleteConfirmationDialog2(

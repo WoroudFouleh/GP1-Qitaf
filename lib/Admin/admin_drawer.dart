@@ -24,7 +24,7 @@ class AdminDrawer extends StatelessWidget {
               textAlign: TextAlign.right,
             ),
             accountEmail: const Text(
-              'admin@gmail.com',
+              'qitaf2025@gmail.com',
               textAlign: TextAlign.right,
             ),
             currentAccountPicture: CircleAvatar(

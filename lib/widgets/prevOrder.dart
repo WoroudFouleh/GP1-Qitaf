@@ -9,7 +9,7 @@ class Prevorder extends StatelessWidget {
   final String imagePath;
   final List<dynamic> items;
   final int num;
-
+  final String username;
   const Prevorder({
     Key? key,
     required this.orderId,
@@ -18,7 +18,8 @@ class Prevorder extends StatelessWidget {
     required this.orderDate,
     required this.items,
     required this.num,
-    this.imagePath = 'assets/images/vegBag.png', // Default image
+    this.imagePath = 'assets/images/vegBag.png',
+    required this.username, // Default image
   }) : super(key: key);
 
   @override
@@ -117,11 +118,11 @@ class Prevorder extends StatelessWidget {
                         context,
                         MaterialPageRoute(
                           builder: (context) => Orderdetails(
-                            price: price,
-                            status: finalStatus,
-                            date: orderDate,
-                            items: items,
-                          ),
+                              price: price,
+                              status: finalStatus,
+                              date: orderDate,
+                              items: items,
+                              username: username),
                         ),
                       );
                     },

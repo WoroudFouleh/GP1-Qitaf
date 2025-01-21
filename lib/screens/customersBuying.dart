@@ -131,22 +131,6 @@ class _CustomersBuyingState extends State<CustomersBuying> {
     }
   }
 
-  Future<void> updateItemPreparation(String itemId, String status) async {
-    final response = await http.put(
-      Uri.parse('$updatePreparationStatus/$itemId'),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: json.encode({'status': status}),
-    );
-
-    if (response.statusCode == 200) {
-      print("Item preparation status updated successfully");
-    } else {
-      print("Failed to update item preparation status: ${response.body}");
-    }
-  }
-
   Future<void> reportCustomer(String customerUsername) async {
     try {
       final response = await http.post(
@@ -173,6 +157,22 @@ class _CustomersBuyingState extends State<CustomersBuying> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('فشل الاتصال بالخادم.')),
       );
+    }
+  }
+
+  Future<void> updateItemPreparation(String itemId, String status) async {
+    final response = await http.put(
+      Uri.parse('$updatePreparationStatus/$itemId'),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: json.encode({'status': status}),
+    );
+
+    if (response.statusCode == 200) {
+      print("Item preparation status updated successfully");
+    } else {
+      print("Failed to update item preparation status: ${response.body}");
     }
   }
 

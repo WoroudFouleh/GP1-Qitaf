@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:login_page/Admin/Delivery.dart';
 import 'package:login_page/Admin/Posts.dart';
 import 'package:login_page/Admin/Statistics.dart';
+import 'package:login_page/Admin/adminNotifications.dart';
 import 'package:login_page/Admin/admin_drawer.dart';
+import 'package:login_page/screens/welcome_screen.dart';
 
 class AdminPage extends StatefulWidget {
   @override
@@ -65,8 +67,10 @@ class _AdminPageState extends State<AdminPage> {
               ),
               TextButton.icon(
                 onPressed: () {
-                  Navigator.of(context).pop();
-                  print('تم تسجيل الخروج');
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => WelcomeScreen()),
+                  );
                 },
                 icon: const Icon(Icons.check, color: Color(0xFF556B2F)),
                 label: const Text(
@@ -105,7 +109,11 @@ class _AdminPageState extends State<AdminPage> {
           actions: [
             IconButton(
               onPressed: () {
-                print('تم فتح الإشعارات');
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => AdminNotificationsPage()),
+                );
               },
               icon: const Icon(Icons.notifications, color: Colors.white),
             ),

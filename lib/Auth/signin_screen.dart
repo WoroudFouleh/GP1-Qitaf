@@ -166,16 +166,7 @@ class _SigninScreenState extends State<SigninScreen> {
         bool firebaseLoginSuccess = false;
 
         // Check for hardcoded admin credentials
-        if (_usernameController.text == "admin" &&
-            _passController.text == "admin") {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => AdminPage(), // Replace with your AdminPage
-            ),
-          );
-          return;
-        }
+
 //Check for user suspension
         var suspensionCheckResponse = await http.post(
           Uri.parse(
@@ -238,6 +229,16 @@ class _SigninScreenState extends State<SigninScreen> {
         } catch (e) {
           showNotification('خطأ في تسجيل الدخول عبر Firebase',
               backgroundColor: Colors.red);
+        }
+        if (_usernameController.text == "qitaf2025@gmail.com" &&
+            _passController.text == "qitaf123456") {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => AdminPage(), // Replace with your AdminPage
+            ),
+          );
+          return;
         }
 
         // Proceed with API call for other users

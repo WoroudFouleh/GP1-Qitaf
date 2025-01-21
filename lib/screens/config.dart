@@ -115,3 +115,5 @@ final getDiscount = "${url}api/users/getDiscountPercentage";
 //////////////reports
 final reportUser = "${url}api/users/reportCustomer";
 final checkUserSuspension = "${url}api/users/isSuspended";
+//////points
+final addPoints = "${url}api/users/addPoints";

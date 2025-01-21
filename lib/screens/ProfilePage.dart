@@ -38,7 +38,7 @@ class _ProfilePageState extends State<ProfilePage>
     super.initState();
     _tabController = TabController(length: 1, vsync: this);
     Map<String, dynamic> jwtDecoderToken = JwtDecoder.decode(widget.token);
-    print(jwtDecoderToken);
+    // print(jwtDecoderToken);
     firstName = jwtDecoderToken['firstName'] ?? 'No First Name';
     lastName = jwtDecoderToken['lastName'] ?? 'No Last Name';
     email = jwtDecoderToken['email'] ?? 'No Email';
@@ -47,8 +47,9 @@ class _ProfilePageState extends State<ProfilePage>
     points = jwtDecoderToken['points'];
     posts = jwtDecoderToken['postsCount'];
     rate = jwtDecoderToken['rate'];
-    fetchLands();
+
     fetchLines();
+    fetchLands();
     fetchProducts();
     // تعديل طول TabController إلى 1
   }
@@ -74,7 +75,7 @@ class _ProfilePageState extends State<ProfilePage>
           setState(() {
             products = data['products'];
           });
-          print("Fetched cart items: $products");
+          //print("Fetched cart items: $products");
         } else {
           print("Error fetching items: ${data['message']}");
         }
@@ -140,7 +141,7 @@ class _ProfilePageState extends State<ProfilePage>
           setState(() {
             lines = data['lines'];
           });
-          print("Fetched cart items: $lines");
+          // print("Fetched cart items: $lines");
         } else {
           print("Error fetching items: ${data['message']}");
         }
@@ -242,9 +243,9 @@ class _ProfilePageState extends State<ProfilePage>
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const Icon(Icons.star, color: Colors.amber),
-                const SizedBox(width: 5),
+                const SizedBox(width: 1),
                 const Text(
-                  'التقييم:  ',
+                  'التقييم:',
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -258,11 +259,11 @@ class _ProfilePageState extends State<ProfilePage>
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const SizedBox(width: 20),
+                const SizedBox(width: 3),
                 const Icon(Icons.score, color: Colors.blue),
-                const SizedBox(width: 5),
+                const SizedBox(width: 1),
                 const Text(
-                  '  عدد النقاط:',
+                  'عدد النقاط:',
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -278,15 +279,15 @@ class _ProfilePageState extends State<ProfilePage>
                 ),
                 const Icon(Icons.score,
                     color: Color.fromARGB(255, 91, 179, 14)),
-                const SizedBox(width: 5),
+                const SizedBox(width: 1),
                 const Text(
-                  '  عدد المنشورات:',
+                  'عدد المنشورات:',
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const SizedBox(width: 5),
+                const SizedBox(width: 3),
                 Text(
                   posts.toString(),
                   style: TextStyle(
@@ -338,16 +339,16 @@ class _ProfilePageState extends State<ProfilePage>
               fontFamily: 'CustomArabicFont',
             ), // جعل العناوين بولد
             tabs: [
-              Tab(text: "أراضي"),
               Tab(text: "منتجات"),
+              Tab(text: "أراضي"),
               Tab(text: "خط إنتاج"),
             ],
           ),
           Expanded(
             child: TabBarView(
               children: [
-                _buildLandsList(),
                 _buildProductsList(),
+                _buildLandsList(),
                 _buildProductionLineList(),
               ],
             ),
@@ -605,7 +606,7 @@ class RecipeCard extends StatelessWidget {
                 const SizedBox(height: 5),
                 Text(
                   "تاريخ النشر: ${publishDate.toString().substring(0, 10)}",
-                  style: const TextStyle(fontSize: 15, color: Colors.grey),
+                  style: const TextStyle(fontSize: 12, color: Colors.grey),
                 ),
               ],
             ),

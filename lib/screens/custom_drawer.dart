@@ -33,7 +33,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
 
     // Decode the token using jwt_decoder and extract necessary fields
     Map<String, dynamic> jwtDecoderToken = JwtDecoder.decode(widget.token);
-    print(jwtDecoderToken);
+    //print(jwtDecoderToken);
     firstName = jwtDecoderToken['firstName'] ?? 'No First Name';
     lastName = jwtDecoderToken['lastName'] ?? 'No Last Name';
     email = jwtDecoderToken['email'] ?? 'No Email';

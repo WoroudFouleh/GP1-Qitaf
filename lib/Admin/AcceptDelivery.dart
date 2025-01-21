@@ -229,22 +229,59 @@ class _DeliveryRequestsPageState extends State<DeliveryRequestsPage> {
   }
 
   // فتح ملف PDF
-  Future<void> _openPDF(String url) async {
-    final Uri uri = Uri.parse(url);
-    print("uri:$uri");
-    if (await canLaunchUrl(uri)) {
-      await launchUrl(
-        uri,
-        mode: LaunchMode.externalApplication, // لفتح الملف في التطبيق الافتراضي
-      );
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('لا يمكن فتح الملف.'),
-          backgroundColor: Colors.red,
-        ),
-      );
-    }
+
+  Future<void> _openImage(String url, BuildContext context) async {
+    Uri uri = Uri.parse(url);
+    print("uri: $uri");
+
+    // Show a dialog to display the image
+    showDialog(
+      context: context,
+      barrierDismissible: true, // Allows closing the dialog by tapping outside
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+          child: Container(
+            padding: EdgeInsets.all(10.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Image.network(
+                  url,
+                  width: double.infinity,
+                  fit: BoxFit.contain,
+                  loadingBuilder: (context, child, loadingProgress) {
+                    if (loadingProgress == null) {
+                      return child;
+                    } else {
+                      return Center(
+                        child: CircularProgressIndicator(
+                          value: loadingProgress.expectedTotalBytes != null
+                              ? loadingProgress.cumulativeBytesLoaded /
+                                  (loadingProgress.expectedTotalBytes ?? 1)
+                              : null,
+                        ),
+                      );
+                    }
+                  },
+                  errorBuilder: (context, error, stackTrace) {
+                    return Center(
+                      child: Icon(
+                        Icons.error,
+                        color: Colors.red,
+                        size: 50,
+                      ),
+                    );
+                  },
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 
   Future<void> fetchRequests() async {
@@ -481,8 +518,8 @@ class _DeliveryRequestsPageState extends State<DeliveryRequestsPage> {
                     if (filePath != null) {
                       print("file path: $filePath");
                       // Construct the full file path dynamically
-                      Uri fileUri = Uri.parse(filePath);
-                      _openPDF(filePath);
+                      String fileUri = Uri.encodeFull(filePath);
+                      _openImage(filePath, context);
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
