@@ -67,10 +67,10 @@ class _EditLand2State extends State<EditLand2> {
           appBar: AppBar(
             backgroundColor: Colors.white,
             iconTheme: const IconThemeData(
-              color: Color.fromARGB(255, 12, 123, 17),
+              color: const Color.fromRGBO(15, 99, 43, 1),
             ),
             titleTextStyle: const TextStyle(
-              color: Color.fromARGB(255, 11, 130, 27),
+              color: const Color.fromRGBO(15, 99, 43, 1),
               fontWeight: FontWeight.bold,
               fontSize: 20,
             ),
@@ -133,7 +133,7 @@ class _EditLand2State extends State<EditLand2> {
                     },
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 10),
-                      backgroundColor: Colors.green,
+                      backgroundColor: const Color.fromRGBO(15, 99, 43, 1),
                       textStyle: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 18,
@@ -194,13 +194,13 @@ class _EditLand2State extends State<EditLand2> {
                       textStyle: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 18,
-                        color: Colors.green,
+                        color: const Color.fromRGBO(15, 99, 43, 1),
                       ),
                     ),
                     child: const Text(
                       'حفظ التغييرات',
                       style: TextStyle(
-                        color: Colors.green,
+                        color: const Color.fromRGBO(15, 99, 43, 1),
                         fontWeight: FontWeight.bold,
                         fontSize: 18,
                       ),
@@ -252,7 +252,7 @@ class _EditLand2State extends State<EditLand2> {
         boxShadow: [
           BoxShadow(
             offset: const Offset(0, 5),
-            color: const Color.fromARGB(255, 14, 101, 23).withOpacity(.2),
+            color: const Color.fromRGBO(15, 99, 43, 1).withOpacity(.2),
             spreadRadius: 2,
             blurRadius: 10,
           )
@@ -282,7 +282,7 @@ class _EditLand2State extends State<EditLand2> {
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 18,
-                color: Colors.green,
+                color: const Color.fromRGBO(15, 99, 43, 1),
               ),
             ),
             content: SizedBox(
@@ -294,7 +294,8 @@ class _EditLand2State extends State<EditLand2> {
                   Container(
                     padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
-                      border: Border.all(color: Colors.green),
+                      border: Border.all(
+                          color: const Color.fromRGBO(15, 99, 43, 1)),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: const Text(
@@ -302,7 +303,7 @@ class _EditLand2State extends State<EditLand2> {
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
-                        color: Colors.green,
+                        color: const Color.fromRGBO(15, 99, 43, 1),
                       ),
                     ),
                   ),
@@ -355,7 +356,8 @@ class _EditLand2State extends State<EditLand2> {
                 },
                 style: ElevatedButton.styleFrom(
                   foregroundColor: Colors.white,
-                  backgroundColor: Colors.green, // Text color (white)
+                  backgroundColor:
+                      const Color.fromRGBO(15, 99, 43, 1), // Text color (white)
                   textStyle: const TextStyle(
                     fontWeight: FontWeight.bold, // Bold text
                   ),

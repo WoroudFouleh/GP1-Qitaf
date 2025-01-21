@@ -11,7 +11,8 @@ class Workerprofile extends StatefulWidget {
   final String username;
   final String userId;
 
-  const Workerprofile({required this.username, Key? key, required this.userId}) : super(key: key);
+  const Workerprofile({required this.username, Key? key, required this.userId})
+      : super(key: key);
 
   @override
   _WorkerprofileState createState() => _WorkerprofileState();
@@ -68,7 +69,8 @@ class _WorkerprofileState extends State<Workerprofile> {
       print("An error occurred: $e");
     }
   }
-Future<void> navigateToChat() async {
+
+  Future<void> navigateToChat() async {
     try {
       // استعلام Firestore للحصول على userId بناءً على البريد الإلكتروني
       final querySnapshot = await FirebaseFirestore.instance
@@ -105,6 +107,7 @@ Future<void> navigateToChat() async {
       );
     }
   }
+
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
@@ -180,7 +183,8 @@ Future<void> navigateToChat() async {
                                     Text(
                                       '$firstName $lastName',
                                       style: const TextStyle(
-                                        color: Color.fromRGBO(52, 121, 40, 1),
+                                        color:
+                                            const Color.fromRGBO(15, 99, 43, 1),
                                         fontSize: 30,
                                       ),
                                     ),
@@ -212,8 +216,8 @@ Future<void> navigateToChat() async {
                                                   ),
                                                   const Icon(
                                                     AntDesign.message1,
-                                                    color: Color.fromRGBO(
-                                                        52, 121, 40, 1),
+                                                    color: const Color.fromRGBO(
+                                                        15, 99, 43, 1),
                                                     size: 25,
                                                   ),
                                                 ],
@@ -269,7 +273,7 @@ Future<void> navigateToChat() async {
                           const Text(
                             'معلومات المالك',
                             style: TextStyle(
-                              color: Color.fromRGBO(52, 121, 40, 1),
+                              color: const Color.fromRGBO(15, 99, 43, 1),
                               fontSize: 27,
                             ),
                           ),

@@ -533,7 +533,10 @@ class _CommentSectionState extends State<CommentSection> {
               ),
             ),
             IconButton(
-              icon: Icon(Icons.image, color: Colors.green),
+              icon: Icon(
+                Icons.image,
+                color: const Color.fromRGBO(15, 99, 43, 1),
+              ),
               onPressed: _pickImage,
             ),
           ],

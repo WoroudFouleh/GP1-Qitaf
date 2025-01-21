@@ -39,7 +39,8 @@ class _DeliveryOrdersPageState extends State<DeliveryOrdersPage> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              _buildStatusButton('متاح', _status == 'متاح', Colors.green[800]!),
+              _buildStatusButton('متاح', _status == 'متاح',
+                  const Color.fromRGBO(15, 99, 43, 1)!),
               const SizedBox(width: 8.0),
               _buildStatusButton('مشغول', _status == 'مشغول', Colors.orange),
               const SizedBox(width: 8.0),

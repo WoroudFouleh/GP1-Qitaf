@@ -61,7 +61,7 @@ class _CustomerAdvertisementState extends State<CustomerAdvertisement> {
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
           textAlign: TextAlign.right,
         ),
-        backgroundColor: Color(0xFF556B2F),
+        backgroundColor: const Color.fromRGBO(15, 99, 43, 1),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Navigator.pop(context),
@@ -93,7 +93,9 @@ class _CustomerAdvertisementState extends State<CustomerAdvertisement> {
                             blurRadius: 10,
                           ),
                         ],
-                        border: Border.all(color: Color(0xFF556B2F), width: 2),
+                        border: Border.all(
+                            color: const Color.fromRGBO(15, 99, 43, 1),
+                            width: 2),
                       ),
                       child: Padding(
                         padding: const EdgeInsets.all(16.0),
@@ -184,7 +186,8 @@ class _CustomerAdvertisementState extends State<CustomerAdvertisement> {
                                 },
                                 style: ElevatedButton.styleFrom(
                                   foregroundColor: Colors.white,
-                                  backgroundColor: Color(0xFF556B2F),
+                                  backgroundColor:
+                                      const Color.fromRGBO(15, 99, 43, 1),
                                   textStyle: const TextStyle(
                                     fontSize: 24, // Larger font size
                                     fontWeight: FontWeight.bold,

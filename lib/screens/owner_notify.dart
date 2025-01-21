@@ -20,10 +20,10 @@ class _OwnerNotifyState extends State<OwnerNotify> {
           appBar: AppBar(
             backgroundColor: Colors.white,
             iconTheme: const IconThemeData(
-              color: Color.fromARGB(255, 12, 123, 17),
+              color: const Color.fromRGBO(15, 99, 43, 1),
             ),
             titleTextStyle: const TextStyle(
-              color: Color.fromARGB(255, 11, 130, 27),
+              color: const Color.fromRGBO(15, 99, 43, 1),
               fontWeight: FontWeight.bold,
               fontSize: 20,
             ),

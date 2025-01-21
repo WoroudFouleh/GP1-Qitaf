@@ -103,13 +103,14 @@ class _DeliveryProfileState extends State<DeliveryProfile> {
                       textStyle: const TextStyle(
                         fontWeight: FontWeight.bold, // خط عريض
                         fontSize: 18, // حجم أكبر للنص
-                        color: Colors.green, // اللون الأخضر للنص
+                        color: const Color.fromRGBO(
+                            15, 99, 43, 1), // اللون الأخضر للنص
                       ),
                     ),
                     child: const Text(
                       'حفظ التغييرات',
                       style: TextStyle(
-                        color: Colors.green, // النص أخضر
+                        color: const Color.fromRGBO(15, 99, 43, 1), // النص أخضر
                         fontWeight: FontWeight.bold, // خط عريض
                         fontSize: 18, // تكبير الخط
                       ),
@@ -132,7 +133,8 @@ class _DeliveryProfileState extends State<DeliveryProfile> {
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(
                           vertical: 10), // تصغير حجم الزر
-                      backgroundColor: Colors.green, // اللون الأخضر للخلفية
+                      backgroundColor: const Color.fromRGBO(
+                          15, 99, 43, 1), // اللون الأخضر للخلفية
                       textStyle: const TextStyle(
                         fontWeight: FontWeight.bold, // خط عريض
                         fontSize: 18, // حجم أكبر للنص
@@ -166,7 +168,7 @@ class _DeliveryProfileState extends State<DeliveryProfile> {
         boxShadow: [
           BoxShadow(
             offset: const Offset(0, 5),
-            color: const Color.fromARGB(255, 14, 101, 23).withOpacity(.2),
+            color: const Color.fromRGBO(15, 99, 43, 1).withOpacity(.2),
             spreadRadius: 2,
             blurRadius: 10,
           )
@@ -229,7 +231,7 @@ class _DeliveryProfileState extends State<DeliveryProfile> {
                     children: [
                       Icon(
                         Icons.camera,
-                        color: Colors.green,
+                        color: const Color.fromRGBO(15, 99, 43, 1),
                         size: 35,
                       ),
                       SizedBox(height: 5),

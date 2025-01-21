@@ -158,7 +158,7 @@ class _ItemPageState extends State<ItemPage> {
               color: Colors.white,
               boxShadow: [
                 BoxShadow(
-                  color: const Color.fromARGB(255, 23, 57, 28).withOpacity(0.5),
+                  color: const Color.fromRGBO(15, 99, 43, 1).withOpacity(0.5),
                   spreadRadius: 5,
                   blurRadius: 10,
                   offset: const Offset(0, 3),
@@ -244,7 +244,7 @@ class _ItemPageState extends State<ItemPage> {
                           style: TextStyle(
                             fontSize: 26, // Adjusted font size for web
                             fontWeight: FontWeight.bold,
-                            color: const Color.fromARGB(255, 21, 80, 13),
+                            color: const Color.fromRGBO(15, 99, 43, 1),
                             shadows: [
                               Shadow(
                                 blurRadius: 5.0,
@@ -284,7 +284,7 @@ class _ItemPageState extends State<ItemPage> {
                               child: IconButton(
                                 icon:
                                     const Icon(CupertinoIcons.minus, size: 20),
-                                color: const Color.fromARGB(255, 21, 80, 13),
+                                color: const Color.fromRGBO(15, 99, 43, 1),
                                 onPressed: () {
                                   setState(() {
                                     if (quantity > 1) {
@@ -341,7 +341,7 @@ class _ItemPageState extends State<ItemPage> {
                               ),
                               child: IconButton(
                                 icon: const Icon(CupertinoIcons.plus, size: 20),
-                                color: const Color.fromARGB(255, 21, 80, 13),
+                                color: const Color.fromRGBO(15, 99, 43, 1),
                                 onPressed: () {
                                   setState(() {
                                     if (quantity < widget.quantityAvailable) {
@@ -399,7 +399,7 @@ class _ItemPageState extends State<ItemPage> {
                       children: [
                         const Icon(
                           Icons.access_time,
-                          color: Color.fromARGB(255, 21, 80, 13),
+                          color: const Color.fromRGBO(15, 99, 43, 1),
                           size: 33,
                         ),
                         const SizedBox(width: 8),
@@ -410,7 +410,7 @@ class _ItemPageState extends State<ItemPage> {
                               "  ${widget.preparationTime} ${widget.preparationUnit}",
                               style: const TextStyle(
                                 fontSize: 20,
-                                color: Color.fromARGB(255, 21, 80, 13),
+                                color: const Color.fromRGBO(15, 99, 43, 1),
                                 fontWeight: FontWeight.bold,
                               ),
                             ),

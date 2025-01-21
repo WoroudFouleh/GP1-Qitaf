@@ -152,7 +152,7 @@ class _ViewAdvertisementState extends State<ViewAdvertisement> {
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
           textAlign: TextAlign.right,
         ),
-        backgroundColor: const Color(0xFF556B2F),
+        backgroundColor: const Color.fromRGBO(15, 99, 43, 1),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Navigator.pop(context),
@@ -185,7 +185,8 @@ class _ViewAdvertisementState extends State<ViewAdvertisement> {
                           ),
                         ],
                         border: Border.all(
-                            color: const Color(0xFF556B2F), width: 2),
+                            color: const Color.fromRGBO(15, 99, 43, 1),
+                            width: 2),
                       ),
                       child: Padding(
                         padding: const EdgeInsets.all(16.0),
@@ -299,7 +300,8 @@ class _ViewAdvertisementState extends State<ViewAdvertisement> {
                                 },
                                 style: ElevatedButton.styleFrom(
                                   foregroundColor: Colors.white,
-                                  backgroundColor: const Color(0xFF556B2F),
+                                  backgroundColor:
+                                      const Color.fromRGBO(15, 99, 43, 1),
                                   textStyle: const TextStyle(
                                       fontSize: 18,
                                       fontWeight:
@@ -363,7 +365,7 @@ class _ViewAdvertisementState extends State<ViewAdvertisement> {
                 label: const Text('اختر صورة جديدة'),
                 style: ElevatedButton.styleFrom(
                   foregroundColor: Colors.white,
-                  backgroundColor: Color(0xFF556B2F),
+                  backgroundColor: const Color.fromRGBO(15, 99, 43, 1),
                   textStyle: const TextStyle(fontWeight: FontWeight.bold),
                 ),
               ),
@@ -375,7 +377,7 @@ class _ViewAdvertisementState extends State<ViewAdvertisement> {
             onPressed: () => Navigator.pop(context),
             child: const Text('إلغاء'),
             style: TextButton.styleFrom(
-              foregroundColor: Color(0xFF556B2F),
+              foregroundColor: const Color.fromRGBO(15, 99, 43, 1),
             ),
           ),
           TextButton(
@@ -388,7 +390,7 @@ class _ViewAdvertisementState extends State<ViewAdvertisement> {
             },
             child: const Text('حفظ'),
             style: TextButton.styleFrom(
-              foregroundColor: Color(0xFF556B2F),
+              foregroundColor: const Color.fromRGBO(15, 99, 43, 1),
             ),
           ),
         ],

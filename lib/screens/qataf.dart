@@ -85,10 +85,10 @@ class _QatafPageState extends State<QatafPage> {
         appBar: AppBar(
           backgroundColor: Colors.white,
           iconTheme: const IconThemeData(
-            color: Color.fromARGB(255, 12, 123, 17),
+            color: const Color.fromRGBO(15, 99, 43, 1),
           ),
           titleTextStyle: const TextStyle(
-              color: Color.fromARGB(255, 11, 130, 27),
+              color: const Color.fromRGBO(15, 99, 43, 1),
               fontWeight: FontWeight.bold,
               fontSize: 20,
               fontFamily: 'CustomArabicFont'),
@@ -119,10 +119,10 @@ class _QatafPageState extends State<QatafPage> {
                           iconSize: 24,
                           elevation: 16,
                           style: const TextStyle(
-                              color: Color.fromARGB(255, 12, 123, 17)),
+                              color: const Color.fromRGBO(15, 99, 43, 1)),
                           underline: Container(
                             height: 2,
-                            color: Color.fromARGB(255, 12, 123, 17),
+                            color: const Color.fromRGBO(15, 99, 43, 1),
                           ),
                           onChanged: (String? newValue) {
                             setState(() {
@@ -178,7 +178,7 @@ class _QatafPageState extends State<QatafPage> {
                                         : 'ابحث عن الموقع',
                                 prefixIcon: const Icon(
                                   Icons.search,
-                                  color: Color.fromARGB(255, 12, 123, 17),
+                                  color: const Color.fromRGBO(15, 99, 43, 1),
                                 ),
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(9.0),
@@ -201,7 +201,7 @@ class _QatafPageState extends State<QatafPage> {
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
-                    color: Color(0xFF556B2F),
+                    color: const Color.fromRGBO(15, 99, 43, 1),
                     shadows: [
                       Shadow(
                         color: Color(0xFFD1E7D6),

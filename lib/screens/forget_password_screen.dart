@@ -22,11 +22,11 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
   final TextEditingController _resetEmailController = TextEditingController();
 
   String _notificationMessage = '';
-  Color _notificationColor = Colors.green;
+  Color _notificationColor = const Color.fromRGBO(15, 99, 43, 1);
   bool _showNotification = false;
 
   void showNotification(String message,
-      {Color backgroundColor = Colors.green}) {
+      {Color backgroundColor = const Color.fromRGBO(15, 99, 43, 1)}) {
     setState(() {
       _notificationMessage = message;
       _notificationColor = backgroundColor;
@@ -125,7 +125,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                           style: TextStyle(
                             fontSize: 25.0,
                             fontWeight: FontWeight.bold,
-                            color: Color.fromARGB(255, 21, 80, 13),
+                            color: const Color.fromRGBO(15, 99, 43, 1),
                           ),
                         ),
                       ),
@@ -174,7 +174,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor:
-                                const Color.fromARGB(255, 17, 118, 21),
+                                const Color.fromRGBO(15, 99, 43, 1),
                             foregroundColor: Colors.white,
                             padding: const EdgeInsets.symmetric(vertical: 18.0),
                             textStyle: const TextStyle(
@@ -202,7 +202,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                               'تسجيل دخول',
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
-                                color: Color.fromARGB(255, 18, 87, 38),
+                                color: const Color.fromRGBO(15, 99, 43, 1),
                               ),
                             ),
                           ),

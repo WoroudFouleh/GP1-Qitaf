@@ -110,12 +110,12 @@ class _PostComposerState extends State<PostComposer> {
         borderRadius: BorderRadius.circular(15),
       ),
       elevation: 5,
-      shadowColor: const Color.fromARGB(255, 113, 149, 48),
+      shadowColor: const Color.fromRGBO(15, 99, 43, 1),
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15),
           border: Border.all(
-            color: const Color.fromARGB(255, 120, 181, 42).withOpacity(0.7),
+            color: const Color.fromRGBO(15, 99, 43, 1).withOpacity(0.7),
             width: 2,
           ),
           boxShadow: [
@@ -151,7 +151,8 @@ class _PostComposerState extends State<PostComposer> {
                     ),
                   ),
                   IconButton(
-                    icon: Icon(Icons.image, color: Colors.green[800]),
+                    icon: Icon(Icons.image,
+                        color: const Color.fromRGBO(15, 99, 43, 1)),
                     onPressed: _pickImage,
                   ),
                 ],
@@ -167,7 +168,7 @@ class _PostComposerState extends State<PostComposer> {
               ElevatedButton(
                 onPressed: registerPost,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.green[800],
+                  backgroundColor: const Color.fromRGBO(15, 99, 43, 1),
                   minimumSize: const Size(double.infinity, 45),
                 ),
                 child: const Text(

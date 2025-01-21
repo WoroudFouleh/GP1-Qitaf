@@ -9,7 +9,8 @@ import 'package:jwt_decoder/jwt_decoder.dart';
 class MyBookingPage extends StatefulWidget {
   final userId;
   final String token;
-  const MyBookingPage({required this.token, Key? key, this.userId}) : super(key: key);
+  const MyBookingPage({required this.token, Key? key, this.userId})
+      : super(key: key);
 
   @override
   _MyBookingPageState createState() => _MyBookingPageState();
@@ -202,7 +203,7 @@ class _MyBookingPageState extends State<MyBookingPage> {
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
-                  color: Color(0xFF556B2F), // لون زيتي
+                  color: const Color.fromRGBO(15, 99, 43, 1), // لون زيتي
                 ),
               ),
             ],
@@ -218,7 +219,8 @@ class _MyBookingPageState extends State<MyBookingPage> {
                     Navigator.pop(context);
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xFF556B2F), // لون زيتي
+                    backgroundColor:
+                        const Color.fromRGBO(15, 99, 43, 1), // لون زيتي
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10), // زوايا مدورة
                     ),
@@ -320,7 +322,7 @@ class _MyBookingPageState extends State<MyBookingPage> {
                       Icon(
                         Icons.event, // أيقونة تدل على الحجز
                         size: 30,
-                        color: Color(0xFF556B2F), // لون زيتي
+                        color: const Color.fromRGBO(15, 99, 43, 1), // لون زيتي
                       ),
                       SizedBox(width: 8),
                       Text(
@@ -328,7 +330,8 @@ class _MyBookingPageState extends State<MyBookingPage> {
                         style: TextStyle(
                           fontSize: 23,
                           fontWeight: FontWeight.bold,
-                          color: Color(0xFF556B2F), // لون زيتي
+                          color:
+                              const Color.fromRGBO(15, 99, 43, 1), // لون زيتي
                         ),
                       ),
                     ],
@@ -340,7 +343,7 @@ class _MyBookingPageState extends State<MyBookingPage> {
                     child: const Icon(
                       Icons.arrow_forward, // سهم يتجه لليسار ليكون ع الشمال
                       size: 30,
-                      color: Color(0xFF556B2F), // لون زيتي
+                      color: const Color.fromRGBO(15, 99, 43, 1), // لون زيتي
                     ),
                   ),
                 ],
@@ -365,7 +368,7 @@ class _MyBookingPageState extends State<MyBookingPage> {
                             borderRadius: BorderRadius.circular(10),
                             boxShadow: [
                               BoxShadow(
-                                color: const Color.fromARGB(255, 113, 134, 25)
+                                color: const Color.fromRGBO(15, 99, 43, 1)
                                     .withOpacity(0.6), // تأثير إضاءة زيتي
                                 spreadRadius: 2,
                                 blurRadius: 6,
@@ -384,7 +387,8 @@ class _MyBookingPageState extends State<MyBookingPage> {
                                     decoration: BoxDecoration(
                                       shape: BoxShape.circle,
                                       border: Border.all(
-                                          color: Color(0xFF556B2F),
+                                          color: const Color.fromRGBO(
+                                              15, 99, 43, 1),
                                           width: 2), // إطار زيتي
                                       image: const DecorationImage(
                                         image: AssetImage(
@@ -405,8 +409,8 @@ class _MyBookingPageState extends State<MyBookingPage> {
                                             style: TextStyle(
                                               fontSize: 20,
                                               fontWeight: FontWeight.bold,
-                                              color:
-                                                  Color(0xFF556B2F), // لون زيتي
+                                              color: const Color.fromRGBO(
+                                                  15, 99, 43, 1), // لون زيتي
                                             ),
                                           ),
                                           SizedBox(height: 5),
@@ -445,7 +449,8 @@ class _MyBookingPageState extends State<MyBookingPage> {
                                       Icon(
                                         Icons
                                             .local_florist, // أيقونة تدل على المحصول
-                                        color: Color(0xFF556B2F),
+                                        color:
+                                            const Color.fromRGBO(15, 99, 43, 1),
                                         size: 20,
                                       ),
                                       SizedBox(width: 5),
@@ -465,7 +470,8 @@ class _MyBookingPageState extends State<MyBookingPage> {
                                     children: [
                                       Icon(
                                         Icons.date_range,
-                                        color: Color(0xFF556B2F),
+                                        color:
+                                            const Color.fromRGBO(15, 99, 43, 1),
                                         size: 20,
                                       ),
                                       SizedBox(width: 5),
@@ -485,7 +491,8 @@ class _MyBookingPageState extends State<MyBookingPage> {
                                     children: [
                                       Icon(
                                         Icons.time_to_leave,
-                                        color: Color(0xFF556B2F),
+                                        color:
+                                            const Color.fromRGBO(15, 99, 43, 1),
                                         size: 20,
                                       ),
                                       SizedBox(width: 5),
@@ -504,7 +511,8 @@ class _MyBookingPageState extends State<MyBookingPage> {
                                     children: [
                                       const Icon(
                                         Icons.scale,
-                                        color: Color(0xFF556B2F),
+                                        color:
+                                            const Color.fromRGBO(15, 99, 43, 1),
                                         size: 20,
                                       ),
                                       SizedBox(width: 5),
@@ -524,7 +532,8 @@ class _MyBookingPageState extends State<MyBookingPage> {
                                     children: [
                                       Icon(
                                         Icons.attach_money,
-                                        color: Color(0xFF556B2F),
+                                        color:
+                                            const Color.fromRGBO(15, 99, 43, 1),
                                         size: 20,
                                       ),
                                       SizedBox(width: 5),
@@ -544,7 +553,8 @@ class _MyBookingPageState extends State<MyBookingPage> {
                                     children: [
                                       Icon(
                                         Icons.account_circle,
-                                        color: Color(0xFF556B2F),
+                                        color:
+                                            const Color.fromRGBO(15, 99, 43, 1),
                                         size: 20,
                                       ),
                                       SizedBox(width: 5),
@@ -554,12 +564,12 @@ class _MyBookingPageState extends State<MyBookingPage> {
                                           Navigator.push(
                                             context,
                                             MaterialPageRoute(
-                                              builder: (context) =>
-                                                  Ownerprofile2(
-                                                username: booking[
-                                                    'ownerUsername'],
-                                                    userId: widget.userId // Pass the owner's username
-                                              ),
+                                              builder: (context) => Ownerprofile2(
+                                                  username:
+                                                      booking['ownerUsername'],
+                                                  userId: widget
+                                                      .userId // Pass the owner's username
+                                                  ),
                                             ),
                                           );
                                         },

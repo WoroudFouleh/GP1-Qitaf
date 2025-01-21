@@ -102,7 +102,7 @@ class ItemBottonBar extends StatelessWidget {
             onPressed: addItemToCart,
             style: ButtonStyle(
               backgroundColor: MaterialStateProperty.all(
-                const Color.fromARGB(255, 21, 80, 13), // لون كبسة زيتي
+                const Color.fromRGBO(15, 99, 43, 1), // لون كبسة زيتي
               ),
               padding: MaterialStateProperty.all(
                 EdgeInsets.symmetric(
@@ -155,8 +155,7 @@ class ItemBottonBar extends StatelessWidget {
                 style: TextStyle(
                   fontSize: screenWidth * 0.02, // حجم الخط ديناميكي
                   fontWeight: FontWeight.bold,
-                  color:
-                      const Color.fromARGB(255, 21, 80, 13), // لون الرقم زيتي
+                  color: const Color.fromRGBO(15, 99, 43, 1), // لون الرقم زيتي
                 ),
               ),
               const SizedBox(width: 5), // إضافة مسافة بين الرقم والعملة
@@ -166,7 +165,7 @@ class ItemBottonBar extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 20, // حجم الخط للعملة
                   fontWeight: FontWeight.bold,
-                  color: Color.fromARGB(255, 21, 80, 13), // لون العملة زيتي
+                  color: const Color.fromRGBO(15, 99, 43, 1), // لون العملة زيتي
                 ),
               ),
             ],

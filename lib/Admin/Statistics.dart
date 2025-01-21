@@ -250,7 +250,7 @@ class _StatisticsPageState extends State<StatisticsPage> {
           _buildStatRow([
             {
               'title': 'رجال التوصيل',
-              'count': '25',
+              'count': overallStats['deliveryMen']?.toString() ?? '0',
               'icon': Icons.delivery_dining
             },
             {
@@ -262,7 +262,7 @@ class _StatisticsPageState extends State<StatisticsPage> {
           _buildStatRow([
             {
               'title': 'المنتجات',
-              'count': overallStats['lands']?.toString() ?? '0',
+              'count': overallStats['products']?.toString() ?? '0',
               'icon': Icons.shopping_bag
             },
             {

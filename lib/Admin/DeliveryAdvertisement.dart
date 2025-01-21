@@ -78,7 +78,7 @@ class _DeliveryAdvertisementsState extends State<DeliveryAdvertisements> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color(0xFF556B2F),
+        backgroundColor: const Color.fromRGBO(15, 99, 43, 1),
         title: const Text(
           'إنشاء إعلان جديد',
           style: TextStyle(
@@ -114,7 +114,8 @@ class _DeliveryAdvertisementsState extends State<DeliveryAdvertisements> {
                     hintStyle: TextStyle(color: Colors.grey[600]),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
-                      borderSide: const BorderSide(color: Color(0xFF556B2F)),
+                      borderSide: const BorderSide(
+                          color: const Color.fromRGBO(15, 99, 43, 1)),
                     ),
                   ),
                   textAlign: TextAlign.right,
@@ -135,7 +136,8 @@ class _DeliveryAdvertisementsState extends State<DeliveryAdvertisements> {
                     hintStyle: TextStyle(color: Colors.grey[600]),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
-                      borderSide: const BorderSide(color: Color(0xFF556B2F)),
+                      borderSide: const BorderSide(
+                          color: const Color.fromRGBO(15, 99, 43, 1)),
                     ),
                   ),
                   textAlign: TextAlign.right,
@@ -155,7 +157,9 @@ class _DeliveryAdvertisementsState extends State<DeliveryAdvertisements> {
                     hintStyle: TextStyle(color: Colors.grey[600]),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
-                      borderSide: const BorderSide(color: Colors.green),
+                      borderSide: const BorderSide(
+                        color: const Color.fromRGBO(15, 99, 43, 1),
+                      ),
                     ),
                   ),
                   textAlign: TextAlign.right,
@@ -176,7 +180,7 @@ class _DeliveryAdvertisementsState extends State<DeliveryAdvertisements> {
                     style: TextStyle(color: Colors.white),
                   ),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF556B2F),
+                    backgroundColor: const Color.fromRGBO(15, 99, 43, 1),
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -190,7 +194,8 @@ class _DeliveryAdvertisementsState extends State<DeliveryAdvertisements> {
                           width: 300, // عرض محدد للصورة
                           height: 200, // ارتفاع محدد للصورة
                           decoration: BoxDecoration(
-                            border: Border.all(color: const Color(0xFF556B2F)),
+                            border: Border.all(
+                                color: const Color.fromRGBO(15, 99, 43, 1)),
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: Image.file(
@@ -215,7 +220,7 @@ class _DeliveryAdvertisementsState extends State<DeliveryAdvertisements> {
                       ),
                     ),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF556B2F),
+                      backgroundColor: const Color.fromRGBO(15, 99, 43, 1),
                       minimumSize: const Size(200, 50), // تحديد حجم الزر
                     ),
                   ),

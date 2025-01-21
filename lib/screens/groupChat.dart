@@ -85,7 +85,7 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
             ),
           ],
         ),
-        backgroundColor: const Color.fromARGB(255, 65, 139, 67),
+        backgroundColor: const Color.fromRGBO(15, 99, 43, 1),
         actions: [
           IconButton(
             icon: const Icon(Icons.group, color: Colors.white),
@@ -179,7 +179,7 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
                                 padding: const EdgeInsets.all(10),
                                 decoration: BoxDecoration(
                                   color: isSender
-                                      ? const Color.fromARGB(255, 65, 139, 67)
+                                      ? const Color.fromRGBO(15, 99, 43, 1)
                                       : const Color.fromARGB(
                                           255, 246, 255, 226),
                                   borderRadius: BorderRadius.only(
@@ -227,7 +227,8 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
                         ),
                       ),
                       IconButton(
-                        icon: const Icon(Icons.send, color: Colors.green),
+                        icon: const Icon(Icons.send,
+                            color: const Color.fromRGBO(15, 99, 43, 1)),
                         onPressed: () =>
                             _sendMessage(_messageController.text.trim()),
                       ),
@@ -310,7 +311,7 @@ class GroupInfoScreen extends StatelessWidget {
           ),
         ),
         iconTheme: const IconThemeData(color: Colors.white),
-        backgroundColor: const Color.fromARGB(255, 65, 139, 67),
+        backgroundColor: const Color.fromRGBO(15, 99, 43, 1),
       ),
       body: FutureBuilder<QuerySnapshot>(
         future: FirebaseFirestore.instance
@@ -359,7 +360,7 @@ class GroupInfoScreen extends StatelessWidget {
                           name.isNotEmpty ? name[0] : '?',
                           style: const TextStyle(color: Colors.white),
                         ),
-                        backgroundColor: Colors.green,
+                        backgroundColor: const Color.fromRGBO(15, 99, 43, 1),
                       ),
                       title: Align(
                         alignment: Alignment.centerRight,

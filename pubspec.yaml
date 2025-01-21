@@ -41,6 +41,7 @@ dependencies:
   timeago: ^3.3.0
   firebase_messaging: ^15.1.6
   async: ^2.10.0
+  flutter_local_notifications: ^17.2.3
 
     
   # flutter_bcrypt: ^1.0.8  # Use the latest version 

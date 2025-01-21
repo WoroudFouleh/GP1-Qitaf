@@ -163,7 +163,10 @@ class _ManageDeliveryScreenState extends State<ManageDeliveryScreen> {
                 Navigator.of(context).pop();
                 _showSuccessDialog();
               },
-              icon: const Icon(Icons.check, color: Colors.green),
+              icon: const Icon(
+                Icons.check,
+                color: const Color.fromRGBO(15, 99, 43, 1),
+              ),
               label: const Text(
                 'نعم',
                 style: TextStyle(fontWeight: FontWeight.bold),
@@ -188,13 +191,15 @@ class _ManageDeliveryScreenState extends State<ManageDeliveryScreen> {
                 style: TextStyle(fontWeight: FontWeight.bold),
                 textAlign: TextAlign.right,
               ),
-              Icon(Icons.check_circle, color: Colors.green, size: 40),
+              Icon(Icons.check_circle,
+                  color: const Color.fromRGBO(15, 99, 43, 1), size: 40),
             ],
           ),
           actions: [
             TextButton.icon(
               onPressed: () => Navigator.of(context).pop(),
-              icon: const Icon(Icons.done, color: Colors.green),
+              icon: const Icon(Icons.done,
+                  color: const Color.fromRGBO(15, 99, 43, 1)),
               label: const Text(
                 'تم',
                 style: TextStyle(fontWeight: FontWeight.bold),
@@ -266,7 +271,7 @@ class _ManageDeliveryScreenState extends State<ManageDeliveryScreen> {
                   margin: const EdgeInsets.symmetric(vertical: 8),
                   child: ListTile(
                     leading: CircleAvatar(
-                      backgroundColor: Colors.green,
+                      backgroundColor: const Color.fromRGBO(15, 99, 43, 1),
                       backgroundImage: deliveryMan['profileImage'] != null
                           ? NetworkImage(deliveryMan['profileImage']!)
                           : null,

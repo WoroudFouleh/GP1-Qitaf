@@ -135,10 +135,12 @@ class _ProductionLinesPageState extends State<ProductionLinesPage> {
         appBar: AppBar(
           backgroundColor: Colors.white,
           iconTheme: const IconThemeData(
-            color: Color(0xFF556B2F), // Olive green text color
+            color:
+                const Color.fromRGBO(15, 99, 43, 1), // Olive green text color
           ),
           titleTextStyle: const TextStyle(
-              color: Color(0xFF556B2F), // Olive green text color
+              color:
+                  const Color.fromRGBO(15, 99, 43, 1), // Olive green text color
               fontWeight: FontWeight.bold, // جعل النص بولد
               fontSize: 24, // زيادة حجم النص
               fontFamily: 'CustomArabicFont'),
@@ -171,10 +173,10 @@ class _ProductionLinesPageState extends State<ProductionLinesPage> {
                           iconSize: 24,
                           elevation: 16,
                           style: const TextStyle(
-                              color: Color.fromARGB(255, 12, 123, 17)),
+                              color: const Color.fromRGBO(15, 99, 43, 1)),
                           underline: Container(
                             height: 2,
-                            color: Color.fromARGB(255, 12, 123, 17),
+                            color: const Color.fromRGBO(15, 99, 43, 1),
                           ),
                           onChanged: (String? newValue) {
                             setState(() {
@@ -230,7 +232,7 @@ class _ProductionLinesPageState extends State<ProductionLinesPage> {
                                         : 'ابحث عن الموقع',
                                 prefixIcon: const Icon(
                                   Icons.search,
-                                  color: Color.fromARGB(255, 12, 123, 17),
+                                  color: const Color.fromRGBO(15, 99, 43, 1),
                                 ),
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(9.0),
@@ -254,7 +256,8 @@ class _ProductionLinesPageState extends State<ProductionLinesPage> {
                   style: TextStyle(
                     fontSize: 20, // حجم النص كما هو
                     fontWeight: FontWeight.bold, // جعل النص بولد
-                    color: Color(0xFF556B2F), // Olive green text color
+                    color: const Color.fromRGBO(
+                        15, 99, 43, 1), // Olive green text color
                   ),
                 ),
               ),

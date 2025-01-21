@@ -143,7 +143,7 @@ class _RequestDeliveryState extends State<RequestDelivery> {
             color: Colors.white,
           ),
         ),
-        backgroundColor: const Color(0xFF556B2F),
+        backgroundColor: const Color.fromRGBO(15, 99, 43, 1),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -481,7 +481,8 @@ class _RequestDeliveryState extends State<RequestDelivery> {
                         ),
                       ),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF556B2F), // لون الزر
+                        backgroundColor:
+                            const Color.fromRGBO(15, 99, 43, 1), // لون الزر
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(
                               0), // زوايا مستقيمة (مربع الشكل)
@@ -523,7 +524,8 @@ class _RequestDeliveryState extends State<RequestDelivery> {
                             // handle form submission
                           },
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF556B2F),
+                            backgroundColor:
+                                const Color.fromRGBO(15, 99, 43, 1),
                             padding: const EdgeInsets.symmetric(
                                 vertical: 12.0), // تقليل المسافة داخل الزر
                             shape: RoundedRectangleBorder(

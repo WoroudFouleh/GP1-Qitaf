@@ -198,13 +198,14 @@ class _LandPageState extends State<LandPage> {
                                 style: const TextStyle(
                                   fontSize: 22, // Larger font size
                                   fontWeight: FontWeight.bold,
-                                  color: Color(0xFF556B2F), // Olive green
+                                  color: const Color.fromRGBO(
+                                      15, 99, 43, 1), // Olive green
                                   shadows: [
                                     Shadow(
                                       offset: Offset(0, 2),
                                       blurRadius: 3,
-                                      color: Color.fromARGB(
-                                          255, 120, 183, 72), // Light glow
+                                      color: const Color.fromRGBO(
+                                          15, 99, 43, 1), // Light glow
                                     ),
                                   ],
                                 ),
@@ -269,13 +270,14 @@ class _LandPageState extends State<LandPage> {
                                 style: const TextStyle(
                                   fontSize: 22, // Larger font size
                                   fontWeight: FontWeight.bold,
-                                  color: Color(0xFF556B2F), // Olive green
+                                  color: const Color.fromRGBO(
+                                      15, 99, 43, 1), // Olive green
                                   shadows: [
                                     Shadow(
                                       offset: Offset(0, 2),
                                       blurRadius: 3,
-                                      color: Color.fromARGB(
-                                          255, 129, 179, 79), // Light glow
+                                      color: const Color.fromRGBO(
+                                          15, 99, 43, 1), // Light glow
                                     ),
                                   ],
                                 ),
@@ -329,7 +331,7 @@ class _LandPageState extends State<LandPage> {
                             ),
                             const SizedBox(width: 10),
                             const Icon(Icons.location_on,
-                                color: Color(0xFF556B2F)),
+                                color: const Color.fromRGBO(15, 99, 43, 1)),
                           ],
                         ),
                         Row(
@@ -343,7 +345,10 @@ class _LandPageState extends State<LandPage> {
                               ),
                             ),
                             const SizedBox(width: 10),
-                            const Icon(Icons.apple, color: Color(0xFF556B2F)),
+                            const Icon(
+                              Icons.apple,
+                              color: const Color.fromRGBO(15, 99, 43, 1),
+                            ),
                           ],
                         ),
                       ],
@@ -374,7 +379,10 @@ class _LandPageState extends State<LandPage> {
                               ),
                             ),
                             const SizedBox(width: 10),
-                            const Icon(Icons.group, color: Color(0xFF556B2F)),
+                            const Icon(
+                              Icons.group,
+                              color: const Color.fromRGBO(15, 99, 43, 1),
+                            ),
                           ],
                         ),
                         Row(
@@ -404,8 +412,10 @@ class _LandPageState extends State<LandPage> {
                               ),
                             ),
                             const SizedBox(width: 10),
-                            const Icon(Icons.landscape,
-                                color: Color(0xFF556B2F)),
+                            const Icon(
+                              Icons.landscape,
+                              color: const Color.fromRGBO(15, 99, 43, 1),
+                            ),
                           ],
                         ),
                       ],
@@ -429,7 +439,7 @@ class _LandPageState extends State<LandPage> {
                             ),
                             const SizedBox(width: 10),
                             const Icon(Icons.calendar_today,
-                                color: Color(0xFF556B2F)),
+                                color: const Color.fromRGBO(15, 99, 43, 1)),
                           ],
                         ),
                       ],
@@ -452,8 +462,10 @@ class _LandPageState extends State<LandPage> {
                               ),
                             ),
                             const SizedBox(width: 10),
-                            const Icon(Icons.access_time,
-                                color: Color(0xFF556B2F)),
+                            const Icon(
+                              Icons.access_time,
+                              color: const Color.fromRGBO(15, 99, 43, 1),
+                            ),
                           ],
                         ),
                       ],

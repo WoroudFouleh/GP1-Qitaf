@@ -72,7 +72,7 @@ class _SignupScreenState extends State<SignupScreen> {
                         style: TextStyle(
                           fontSize: 25.0,
                           fontWeight: FontWeight.w900,
-                          color: Color.fromARGB(255, 17, 80, 31),
+                          color: const Color.fromRGBO(15, 99, 43, 1),
                         ),
                         textAlign: TextAlign.right,
                       ),
@@ -287,7 +287,7 @@ class _SignupScreenState extends State<SignupScreen> {
                           border: OutlineInputBorder(
                             borderSide: BorderSide(
                               color: _passwordsMatch
-                                  ? Colors.green
+                                  ? const Color.fromRGBO(15, 99, 43, 1)
                                   : Colors.black12,
                             ),
                             borderRadius: BorderRadius.circular(10),
@@ -295,7 +295,7 @@ class _SignupScreenState extends State<SignupScreen> {
                           enabledBorder: OutlineInputBorder(
                             borderSide: BorderSide(
                               color: _passwordsMatch
-                                  ? const Color.fromARGB(255, 26, 110, 29)
+                                  ? const Color.fromRGBO(15, 99, 43, 1)
                                   : Colors.black12,
                             ),
                             borderRadius: BorderRadius.circular(10),
@@ -354,7 +354,7 @@ class _SignupScreenState extends State<SignupScreen> {
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor:
-                                const Color.fromARGB(255, 17, 118, 21),
+                                const Color.fromRGBO(15, 99, 43, 1),
                             foregroundColor: Colors.white,
                             padding: const EdgeInsets.symmetric(vertical: 18.0),
                             textStyle: const TextStyle(
@@ -381,7 +381,7 @@ class _SignupScreenState extends State<SignupScreen> {
                               'تسجيل دخول',
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
-                                color: Color.fromARGB(255, 18, 87, 38),
+                                color: const Color.fromRGBO(15, 99, 43, 1),
                               ),
                             ),
                           ),

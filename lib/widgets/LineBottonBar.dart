@@ -92,7 +92,7 @@ class LineBottonBar extends StatelessWidget {
             },
             style: ButtonStyle(
               backgroundColor: MaterialStateProperty.all(
-                const Color(0xFF556B2F), // لون كبسة زيتي
+                const Color.fromRGBO(15, 99, 43, 1), // لون كبسة زيتي
               ),
               padding: MaterialStateProperty.all(
                 const EdgeInsets.symmetric(
@@ -145,7 +145,7 @@ class LineBottonBar extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 30, // زيادة حجم النص للويب
                   fontWeight: FontWeight.bold,
-                  color: Color(0xFF556B2F), // لون الرقم زيتي
+                  color: const Color.fromRGBO(15, 99, 43, 1), // لون الرقم زيتي
                 ),
               ),
               SizedBox(width: 10), // إضافة مسافة بين الرقم والعملة
@@ -155,7 +155,7 @@ class LineBottonBar extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 24, // حجم الخط للعملة أكبر
                   fontWeight: FontWeight.bold,
-                  color: Color(0xFF556B2F), // لون العملة زيتي
+                  color: const Color.fromRGBO(15, 99, 43, 1), // لون العملة زيتي
                 ),
               ),
             ],

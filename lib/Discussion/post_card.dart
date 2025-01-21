@@ -230,7 +230,7 @@ class _PostCardState extends State<PostCard> {
                     children: [
                       Icon(
                         Icons.image,
-                        color: Colors.green,
+                        color: const Color.fromRGBO(15, 99, 43, 1),
                         size: 35,
                       ),
                       SizedBox(height: 5),
@@ -255,7 +255,7 @@ class _PostCardState extends State<PostCard> {
                     children: [
                       Icon(
                         Icons.camera,
-                        color: Colors.green,
+                        color: const Color.fromRGBO(15, 99, 43, 1),
                         size: 35,
                       ),
                       SizedBox(height: 5),
@@ -390,9 +390,12 @@ class _PostCardState extends State<PostCard> {
                   },
                   child: Row(
                     children: [
-                      Icon(Icons.save, color: Colors.green),
+                      Icon(Icons.save,
+                          color: const Color.fromRGBO(15, 99, 43, 1)),
                       SizedBox(width: 5),
-                      Text('حفظ', style: TextStyle(color: Colors.green)),
+                      Text('حفظ',
+                          style: TextStyle(
+                              color: const Color.fromRGBO(15, 99, 43, 1))),
                     ],
                   ),
                 ),
@@ -467,7 +470,7 @@ class _PostCardState extends State<PostCard> {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(15),
               border: Border.all(
-                color: const Color.fromARGB(255, 120, 181, 42).withOpacity(0.7),
+                color: const Color.fromRGBO(15, 99, 43, 1).withOpacity(0.7),
                 width: 2,
               ),
               boxShadow: [
@@ -556,7 +559,8 @@ class _PostCardState extends State<PostCard> {
                         Text('${widget.comments.length}',
                             style: TextStyle(fontWeight: FontWeight.bold)),
                         const SizedBox(width: 10),
-                        Icon(Icons.thumb_up, color: Colors.green),
+                        Icon(Icons.thumb_up,
+                            color: const Color.fromRGBO(15, 99, 43, 1)),
                         const SizedBox(width: 5),
                         Text('$likes',
                             style: TextStyle(fontWeight: FontWeight.bold)),
@@ -574,8 +578,8 @@ class _PostCardState extends State<PostCard> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    _reactionButton(
-                        'like', Icons.thumb_up, Colors.green, likes),
+                    _reactionButton('like', Icons.thumb_up,
+                        const Color.fromRGBO(15, 99, 43, 1), likes),
                     _reactionButton(
                         'interested', Icons.star, Colors.amber, interested),
                   ],

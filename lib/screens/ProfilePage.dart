@@ -159,7 +159,7 @@ class _ProfilePageState extends State<ProfilePage>
           title: const Text(
             'الملف الشخصي',
             style: TextStyle(
-                color: Color.fromARGB(255, 11, 108, 45),
+                color: const Color.fromRGBO(15, 99, 43, 1),
                 fontWeight: FontWeight.bold),
           ),
           actions: [
@@ -272,7 +272,7 @@ class _ProfilePageState extends State<ProfilePage>
                   ),
                 ),
                 const Icon(Icons.score,
-                    color: Color.fromARGB(255, 91, 179, 14)),
+                    color: const Color.fromRGBO(15, 99, 43, 1)),
                 const SizedBox(width: 5),
                 const Text(
                   '  عدد المنشورات:',
@@ -294,9 +294,9 @@ class _ProfilePageState extends State<ProfilePage>
             const SizedBox(height: 20),
             TabBar(
               controller: _tabController,
-              labelColor: Color.fromARGB(255, 11, 108, 45),
+              labelColor: const Color.fromRGBO(15, 99, 43, 1),
               unselectedLabelColor: const Color.fromARGB(255, 35, 35, 35),
-              indicatorColor: Color.fromARGB(255, 11, 108, 45),
+              indicatorColor: const Color.fromRGBO(15, 99, 43, 1),
               labelStyle: const TextStyle(
                 fontWeight: FontWeight.bold,
                 fontFamily: 'CustomArabicFont',
@@ -325,9 +325,9 @@ class _ProfilePageState extends State<ProfilePage>
       child: Column(
         children: [
           const TabBar(
-            labelColor: Color.fromARGB(255, 11, 108, 45),
+            labelColor: const Color.fromRGBO(15, 99, 43, 1),
             unselectedLabelColor: Color.fromARGB(255, 30, 29, 29),
-            indicatorColor: Colors.green,
+            indicatorColor: const Color.fromRGBO(15, 99, 43, 1),
             labelStyle: TextStyle(
               fontWeight: FontWeight.bold,
               fontFamily: 'CustomArabicFont',

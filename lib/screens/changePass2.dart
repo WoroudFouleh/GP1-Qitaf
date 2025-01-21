@@ -10,7 +10,8 @@ import 'package:jwt_decoder/jwt_decoder.dart';
 class Changepass2 extends StatefulWidget {
   final String token;
   final String userId;
-  const Changepass2({required this.token, Key? key, required this.userId}) : super(key: key);
+  const Changepass2({required this.token, Key? key, required this.userId})
+      : super(key: key);
 
   @override
   State<Changepass2> createState() => _Changepass2State();
@@ -57,8 +58,8 @@ class _Changepass2State extends State<Changepass2> {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) =>
-                OwnerHome(token: newToken,
+            builder: (context) => OwnerHome(
+                token: newToken,
                 userId: widget.userId), // Replace with your main screen
           ),
         );
@@ -87,10 +88,10 @@ class _Changepass2State extends State<Changepass2> {
           appBar: AppBar(
             backgroundColor: Colors.white,
             iconTheme: const IconThemeData(
-              color: Color.fromARGB(255, 12, 123, 17),
+              color: const Color.fromRGBO(15, 99, 43, 1),
             ),
             titleTextStyle: const TextStyle(
-              color: Color.fromARGB(255, 11, 130, 27),
+              color: const Color.fromRGBO(15, 99, 43, 1),
               fontWeight: FontWeight.bold,
               fontSize: 20,
             ),
@@ -134,7 +135,7 @@ class _Changepass2State extends State<Changepass2> {
                               style: TextStyle(
                                 fontSize: 25.0,
                                 fontWeight: FontWeight.w900,
-                                color: Color.fromARGB(255, 17, 80, 31),
+                                color: const Color.fromRGBO(15, 99, 43, 1),
                               ),
                             ),
                           ),
@@ -226,7 +227,7 @@ class _Changepass2State extends State<Changepass2> {
                               },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor:
-                                    const Color.fromARGB(255, 17, 118, 21),
+                                    const Color.fromRGBO(15, 99, 43, 1),
                                 foregroundColor: Colors.white,
                                 padding:
                                     const EdgeInsets.symmetric(vertical: 18.0),

@@ -191,7 +191,7 @@ class _ProductAdvertisementsState extends State<Productadvertisments> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xFF556B2F),
+        backgroundColor: const Color.fromRGBO(15, 99, 43, 1),
         title: const Text(
           'إعلانات المنتجات ',
           style: TextStyle(color: Colors.white),
@@ -233,7 +233,8 @@ class _ProductAdvertisementsState extends State<Productadvertisments> {
                             label: const Text('إضافة صورة',
                                 style: TextStyle(color: Colors.white)),
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Color(0xFF556B2F),
+                              backgroundColor:
+                                  const Color.fromRGBO(15, 99, 43, 1),
                               padding: const EdgeInsets.symmetric(
                                   vertical: 16.0,
                                   horizontal: 32.0), // تكبير الأزرار
@@ -251,7 +252,8 @@ class _ProductAdvertisementsState extends State<Productadvertisments> {
                             label: const Text('حفظ التعديلات',
                                 style: TextStyle(color: Colors.white)),
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Color(0xFF556B2F),
+                              backgroundColor:
+                                  const Color.fromRGBO(15, 99, 43, 1),
                               padding: const EdgeInsets.symmetric(
                                   vertical: 16.0,
                                   horizontal: 32.0), // تكبير الأزرار
@@ -293,7 +295,9 @@ class _ProductAdvertisementsState extends State<Productadvertisments> {
                                       child: Container(
                                         decoration: BoxDecoration(
                                           border: Border.all(
-                                              color: Colors.green, width: 2),
+                                              color: const Color.fromRGBO(
+                                                  15, 99, 43, 1),
+                                              width: 2),
                                           borderRadius:
                                               BorderRadius.circular(10),
                                         ),
@@ -348,7 +352,8 @@ class _ProductAdvertisementsState extends State<Productadvertisments> {
                               label: const Text('إضافة صورة',
                                   style: TextStyle(color: Colors.white)),
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: Color(0xFF556B2F),
+                                backgroundColor:
+                                    const Color.fromRGBO(15, 99, 43, 1),
                                 padding: const EdgeInsets.symmetric(
                                     vertical: 16.0,
                                     horizontal: 32.0), // تكبير الأزرار
@@ -367,7 +372,8 @@ class _ProductAdvertisementsState extends State<Productadvertisments> {
                               label: const Text('حفظ التعديلات',
                                   style: TextStyle(color: Colors.white)),
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: Color(0xFF556B2F),
+                                backgroundColor:
+                                    const Color.fromRGBO(15, 99, 43, 1),
                                 padding: const EdgeInsets.symmetric(
                                     vertical: 16.0,
                                     horizontal: 32.0), // تكبير الأزرار

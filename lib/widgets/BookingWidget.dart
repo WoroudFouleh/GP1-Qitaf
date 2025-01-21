@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
@@ -5,6 +6,7 @@ import 'dart:convert'; // To handle JSON decoding
 
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:login_page/screens/config.dart';
+import 'package:login_page/services/notification_service.dart';
 
 class BookingWidget extends StatefulWidget {
   final int price;
@@ -72,11 +74,14 @@ class _BookingWidgetState extends State<BookingWidget> {
   late String customerImage;
   late String customerFirstName;
   late String customerLastName;
-
+  late String ownerEmail;
+  late String ownerFCM;
+  late String ownerID;
 // Function to calculate total price and revenue
   @override
   void initState() {
     super.initState();
+    fetchUser();
     quantityController.text = "0";
     Map<String, dynamic> jwtDecoderToken = JwtDecoder.decode(widget.token);
     print(jwtDecoderToken);
@@ -120,6 +125,7 @@ class _BookingWidgetState extends State<BookingWidget> {
         var jsonResponse = jsonDecode(response.body);
         if (jsonResponse['status']) {
           print('Request sent successfully');
+          fetchCustomerFcmToken(ownerEmail);
         } else {
           print('Error sending request: ${jsonResponse['message']}');
         }
@@ -184,11 +190,21 @@ class _BookingWidgetState extends State<BookingWidget> {
 
     selectedDayInArabic = englishToArabicDayMap[selectedDay] ?? selectedDay;
     print("selectedDay in Arabic: $selectedDayInArabic");
+    List<String> cleanedDays = widget.days.map((day) {
+      return day.replaceAll('[', '').replaceAll(']', '').trim();
+    }).toList();
 
-    if (!widget.days.contains(selectedDayInArabic)) {
+    print("Cleaned Days: $cleanedDays");
+
+// Step 2: Check if the selected day in Arabic is in the cleaned days
+    if (!cleanedDays.contains(selectedDayInArabic)) {
       print("Invalid day: $selectedDayInArabic");
       return false; // Invalid day
     }
+    // if (!widget.days.contains(selectedDayInArabic)) {
+    //   print("Invalid day: $selectedDayInArabic");
+    //   return false; // Invalid day
+    // }
 
     // Step 2: Validate the time
     DateTime startWorkTime = DateFormat("HH:mm").parse(widget.startTime);
@@ -217,12 +233,12 @@ class _BookingWidgetState extends State<BookingWidget> {
       endWorkTime.hour,
       endWorkTime.minute,
     );
-
+    print(selectedDateTime);
     if (selectedDateTime.isBefore(startWorkDateTime) ||
         selectedDateTime.isAfter(endWorkDateTime)) {
       return false; // Invalid time
     }
-
+    print(selectedDateTime);
     // Step 3: Calculate the end time based on preparation time and quantity
     // Assuming preparationTime is in minutes as a string, e.g., "20" minutes
     int preparationMinutes = 0;
@@ -327,7 +343,7 @@ class _BookingWidgetState extends State<BookingWidget> {
                     "قم بتعبئة تفاصيل الحجز",
                     style: TextStyle(
                       fontSize: 25,
-                      color: Color(0xFF556B2F),
+                      color: const Color.fromRGBO(15, 99, 43, 1),
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -358,7 +374,7 @@ class _BookingWidgetState extends State<BookingWidget> {
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
-                      color: Color(0xFF556B2F),
+                      color: const Color.fromRGBO(15, 99, 43, 1),
                     ),
                   ),
                   const SizedBox(height: 15),
@@ -407,7 +423,7 @@ class _BookingWidgetState extends State<BookingWidget> {
                             ),
                             const SizedBox(height: 8),
                             Text(
-                              "${widget.startTime.toString().substring(10, 15)} - ${widget.endTime.substring(10, 15)}",
+                              "${widget.startTime.toString()} - ${widget.endTime}",
                               textAlign: TextAlign.center,
                               style: const TextStyle(fontSize: 16),
                             ),
@@ -419,6 +435,7 @@ class _BookingWidgetState extends State<BookingWidget> {
                 ],
               ),
             ),
+
             Center(
               // لتوسيط الحقول في الصفحة
               child: Container(
@@ -439,7 +456,7 @@ class _BookingWidgetState extends State<BookingWidget> {
                     hintText: "رقم الهاتف",
                     hintStyle: TextStyle(
                       fontSize: 18,
-                      color: Color(0xFF556B2F),
+                      color: const Color.fromRGBO(15, 99, 43, 1),
                       inherit: true,
                     ),
                   ),
@@ -466,7 +483,7 @@ class _BookingWidgetState extends State<BookingWidget> {
                       "كيلو",
                       style: TextStyle(
                         fontSize: 16,
-                        color: Color(0xFF355E3B),
+                        color: const Color.fromRGBO(15, 99, 43, 1),
                       ),
                     ),
                     Expanded(
@@ -478,7 +495,7 @@ class _BookingWidgetState extends State<BookingWidget> {
                           hintText: " الكميّة ",
                           hintStyle: TextStyle(
                             fontSize: 18,
-                            color: Color(0xFF556B2F),
+                            color: const Color.fromRGBO(15, 99, 43, 1),
                             inherit: true,
                           ),
                         ),
@@ -509,13 +526,14 @@ class _BookingWidgetState extends State<BookingWidget> {
                     hintText: "الثمار",
                     hintStyle: TextStyle(
                       fontSize: 18,
-                      color: Color(0xFF556B2F),
+                      color: const Color.fromRGBO(15, 99, 43, 1),
                       inherit: true,
                     ),
                   ),
                 ),
               ),
             ),
+
             SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -523,7 +541,7 @@ class _BookingWidgetState extends State<BookingWidget> {
                   Center(
                     child: SizedBox(
                       width: MediaQuery.of(context).size.width *
-                          0.8, // العرض 80% من الشاشة
+                          0.9, // عرض الزر بالكامل
                       child: ElevatedButton(
                         onPressed: () async {
                           DateTime? pickedDate = await showDatePicker(
@@ -544,14 +562,15 @@ class _BookingWidgetState extends State<BookingWidget> {
                               ? 'حدد تاريخ الحجز'
                               : DateFormat('yyyy-MM-dd').format(_startDate!),
                           style: const TextStyle(
-                              fontSize: 20,
-                              color: Color.fromARGB(255, 26, 115, 12)),
+                              fontSize: 18,
+                              color: const Color.fromRGBO(15, 99, 43, 1)),
                         ),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.white,
-                          foregroundColor: Color(0xFF556B2F),
-                          side: BorderSide(color: Color(0xFF556B2F), width: 2),
-                          padding: const EdgeInsets.symmetric(vertical: 15),
+                          foregroundColor: const Color.fromRGBO(15, 99, 43, 1),
+                          side: BorderSide(
+                              color: const Color.fromRGBO(15, 99, 43, 1),
+                              width: 2),
                         ),
                       ),
                     ),
@@ -559,8 +578,7 @@ class _BookingWidgetState extends State<BookingWidget> {
                   const SizedBox(height: 10),
                   Center(
                     child: SizedBox(
-                      width: MediaQuery.of(context).size.width *
-                          0.8, // العرض 80% من الشاشة
+                      width: MediaQuery.of(context).size.width * 0.9,
                       child: ElevatedButton(
                         onPressed: () {
                           getBooked();
@@ -568,17 +586,19 @@ class _BookingWidgetState extends State<BookingWidget> {
                             _showAvailableTimes();
                           }
                         },
+
+                        //_showAvailableTimes,
                         child: const Text(
                           "إضافة موعد",
                           style: TextStyle(
-                            fontSize: 20,
+                            fontSize: 18,
                             color: Colors.white,
                           ),
                         ),
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Color(0xFF556B2F),
+                          backgroundColor: const Color.fromRGBO(15, 99, 43, 1),
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 40, vertical: 14),
+                              horizontal: 28, vertical: 12),
                         ),
                       ),
                     ),
@@ -736,7 +756,7 @@ class _BookingWidgetState extends State<BookingWidget> {
                   confirmBooking();
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xFF556B2F),
+                  backgroundColor: const Color.fromRGBO(15, 99, 43, 1),
                   padding:
                       const EdgeInsets.symmetric(horizontal: 28, vertical: 12),
                   textStyle: const TextStyle(
@@ -755,6 +775,70 @@ class _BookingWidgetState extends State<BookingWidget> {
         ),
       ),
     );
+  }
+
+  void fetchUser() async {
+    try {
+      final response = await http.get(
+        Uri.parse('$getUser/${widget.ownerUsername}'),
+        headers: {'Content-Type': 'application/json'},
+      );
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        if (data['status'] == true) {
+          final userInfo = data['data'];
+          setState(() {
+            // customerFirstname = userInfo['firstName'] ?? "";
+            // customerLasttname = userInfo['lastName'] ?? "";
+            ownerEmail = userInfo['email'] ?? "";
+          });
+
+          // Fetch owner FCM token after updating owneremail
+        } else {
+          print("Error fetching user: ${data['message']}");
+        }
+      } else {
+        print("Failed to load user: ${response.statusCode}");
+      }
+    } catch (e) {
+      print("An error occurred: $e");
+    }
+  }
+
+  Future<void> fetchCustomerFcmToken(String customerEmail) async {
+    try {
+      print("on fetch");
+      // Query Firestore for a user with the same email as the owner
+      final querySnapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .where('email', isEqualTo: customerEmail)
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        final userDoc = querySnapshot.docs.first;
+        setState(() {
+          ownerFCM = userDoc['fcmToken'] ?? "";
+          ownerID = userDoc.id; // Get the FCM token
+        });
+        print("Customer's FCM token: $ownerFCM");
+        print("Customer's document ID: $ownerID");
+        // Send the notification
+
+        // Save the notification
+        await NotificationService.instance.saveNotificationToFirebase(
+          ownerFCM,
+          'حجز موعد جديد',
+          'قام ${customerFirstName} ${customerLastName} بحجز موعد جديد في ${widget.lineName}. انقر للمزيد من التفاصيل',
+          ownerID,
+          'lineBooking',
+        );
+      } else {
+        print("No user found with the email: $customerEmail");
+      }
+    } catch (e) {
+      print("Error fetching FCM token: $e");
+    }
   }
 
 // Confirm booking button logic
@@ -804,7 +888,8 @@ class _BookingWidgetState extends State<BookingWidget> {
             SizedBox(width: 10),
             Icon(
               Icons.check_circle,
-              color: Color(0xFF556B2F), // أيقونة صح باللون الزيتي
+              color: const Color.fromRGBO(
+                  15, 99, 43, 1), // أيقونة صح باللون الزيتي
             ),
           ],
         ),
@@ -868,10 +953,12 @@ class _BookingWidgetState extends State<BookingWidget> {
                 ),
               ),
               style: TextButton.styleFrom(
-                backgroundColor: Color(0xFF556B2F), // الخلفية باللون الزيتي
+                backgroundColor: const Color.fromRGBO(
+                    15, 99, 43, 1), // الخلفية باللون الزيتي
                 shape: RoundedRectangleBorder(
                   side: BorderSide(
-                      color: Color(0xFF556B2F), width: 2), // الإطار زيتي
+                      color: const Color.fromRGBO(15, 99, 43, 1),
+                      width: 2), // الإطار زيتي
                   borderRadius: BorderRadius.circular(5),
                 ),
                 padding:
@@ -912,7 +999,7 @@ class _BookingWidgetState extends State<BookingWidget> {
               style: TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
-                color: Color(0xFF556B2F),
+                color: const Color.fromRGBO(15, 99, 43, 1),
               ),
             ),
             if (_startDate != null)
@@ -943,7 +1030,7 @@ class _BookingWidgetState extends State<BookingWidget> {
                       decoration: BoxDecoration(
                         color: Colors.white,
                         border: Border.all(
-                          color: const Color(0xFF556B2F),
+                          color: const Color.fromRGBO(15, 99, 43, 1),
                           width: 1.5,
                         ),
                         borderRadius: BorderRadius.circular(10),
@@ -983,7 +1070,7 @@ class _BookingWidgetState extends State<BookingWidget> {
                   style: TextStyle(fontSize: 18, color: Colors.white),
                 ),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF556B2F),
+                  backgroundColor: const Color.fromRGBO(15, 99, 43, 1),
                   padding:
                       const EdgeInsets.symmetric(horizontal: 30, vertical: 12),
                   shape: RoundedRectangleBorder(
@@ -1006,7 +1093,7 @@ class _BookingWidgetState extends State<BookingWidget> {
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
-                  color: Color(0xFF556B2F),
+                  color: const Color.fromRGBO(15, 99, 43, 1),
                 ),
               ),
             ),

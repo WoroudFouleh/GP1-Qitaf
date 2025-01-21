@@ -19,10 +19,10 @@ class _OwnerAddState extends State<OwnerAdd> {
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 255, 255, 255),
         iconTheme: const IconThemeData(
-          color: Color.fromARGB(255, 25, 128, 29), // لون الأيقونات
+          color: const Color.fromRGBO(15, 99, 43, 1), // لون الأيقونات
         ),
         titleTextStyle: const TextStyle(
-          color: Color.fromARGB(255, 14, 121, 23), // لون العنوان
+          color: const Color.fromRGBO(15, 99, 43, 1), // لون العنوان
           fontWeight: FontWeight.bold, // جعل العنوان غامق
           fontSize: 24,
           fontFamily: 'CustomArabicFont', // تكبير حجم الخط
@@ -85,13 +85,15 @@ class _OwnerAddState extends State<OwnerAdd> {
                           style: TextStyle(
                             fontSize: 20, // حجم النص في الأزرار
                             fontWeight: FontWeight.bold, // جعل النص غامق
-                            color: Colors.green, // لون النص أخضر
+                            color: const Color.fromRGBO(
+                                15, 99, 43, 1), // لون النص أخضر
                           ),
                         ),
                         SizedBox(width: 10), // مسافة بين النص والأيقونة
                         Icon(
                           Icons.landscape, // أيقونة تدل على أرض زراعية
-                          color: Colors.green, // لون الأيقونة أخضر
+                          color: const Color.fromRGBO(
+                              15, 99, 43, 1), // لون الأيقونة أخضر
                         ),
                       ],
                     ),
@@ -133,7 +135,8 @@ class _OwnerAddState extends State<OwnerAdd> {
                         SizedBox(width: 10), // مسافة بين النص والأيقونة
                         Icon(
                           Icons.grass, // أيقونة تدل على منتج زراعي
-                          color: Colors.green, // لون الأيقونة أخضر
+                          color: const Color.fromRGBO(
+                              15, 99, 43, 1), // لون الأيقونة أخضر
                         ),
                       ],
                     ),
@@ -167,13 +170,13 @@ class _OwnerAddState extends State<OwnerAdd> {
                           style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
-                            color: Colors.green,
+                            color: const Color.fromRGBO(15, 99, 43, 1),
                           ),
                         ),
                         SizedBox(width: 10),
                         Icon(
                           Icons.factory,
-                          color: Colors.green,
+                          color: const Color.fromRGBO(15, 99, 43, 1),
                         ),
                       ],
                     ),

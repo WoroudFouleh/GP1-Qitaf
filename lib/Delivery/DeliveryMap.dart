@@ -65,7 +65,7 @@ class _DeliveryMapState extends State<Deliverymap> {
                         child: const Icon(
                           Icons.person,
                           size: 40,
-                          color: Colors.green,
+                          color: const Color.fromRGBO(15, 99, 43, 1),
                         ),
                       ),
                     ),
@@ -94,7 +94,7 @@ class _DeliveryMapState extends State<Deliverymap> {
                             children: [
                               Icon(
                                 Icons.check_circle_outline,
-                                color: Colors.green,
+                                color: const Color.fromRGBO(15, 99, 43, 1),
                                 size: 30,
                               ),
                               const SizedBox(width: 8.0),
@@ -103,7 +103,7 @@ class _DeliveryMapState extends State<Deliverymap> {
                                 style: TextStyle(
                                   fontSize: 16.0,
                                   fontWeight: FontWeight.bold,
-                                  color: Colors.green,
+                                  color: const Color.fromRGBO(15, 99, 43, 1),
                                 ),
                               ),
                             ],

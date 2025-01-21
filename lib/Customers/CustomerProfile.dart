@@ -137,10 +137,10 @@ class _CustomerProfileState extends State<CustomerProfile> {
           appBar: AppBar(
             backgroundColor: Colors.white,
             iconTheme: const IconThemeData(
-              color: Color.fromARGB(255, 12, 123, 17),
+              color: const Color.fromRGBO(15, 99, 43, 1),
             ),
             titleTextStyle: const TextStyle(
-              color: Color.fromARGB(255, 11, 130, 27),
+              color: const Color.fromRGBO(15, 99, 43, 1),
               fontWeight: FontWeight.bold,
               fontSize: 20,
               fontFamily: 'CustomArabicFont',
@@ -259,13 +259,13 @@ class _CustomerProfileState extends State<CustomerProfile> {
                       textStyle: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 18,
-                        color: Colors.green,
+                        color: const Color.fromRGBO(15, 99, 43, 1),
                       ),
                     ),
                     child: const Text(
                       'حفظ التغييرات',
                       style: TextStyle(
-                        color: Colors.green,
+                        color: const Color.fromRGBO(15, 99, 43, 1),
                         fontWeight: FontWeight.bold,
                         fontSize: 18,
                       ),
@@ -288,7 +288,7 @@ class _CustomerProfileState extends State<CustomerProfile> {
                     },
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 10),
-                      backgroundColor: Colors.green,
+                      backgroundColor: const Color.fromRGBO(15, 99, 43, 1),
                       textStyle: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 18,
@@ -360,7 +360,7 @@ class _CustomerProfileState extends State<CustomerProfile> {
                     children: [
                       Icon(
                         Icons.image,
-                        color: Colors.green,
+                        color: const Color.fromRGBO(15, 99, 43, 1),
                         size: 35,
                       ),
                       SizedBox(height: 5),
@@ -385,7 +385,7 @@ class _CustomerProfileState extends State<CustomerProfile> {
                     children: [
                       Icon(
                         Icons.camera,
-                        color: Colors.green,
+                        color: const Color.fromRGBO(15, 99, 43, 1),
                         size: 35,
                       ),
                       SizedBox(height: 5),

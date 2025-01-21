@@ -215,7 +215,7 @@ class _CompleteSignUpScreenState extends State<CompleteSignUpScreen> {
                         style: TextStyle(
                           fontSize: 30.0,
                           fontWeight: FontWeight.w300,
-                          color: Color.fromARGB(255, 21, 80, 13),
+                          color: const Color.fromRGBO(15, 99, 43, 1),
                         ),
                       ),
                       const SizedBox(height: 25.0),
@@ -316,7 +316,7 @@ class _CompleteSignUpScreenState extends State<CompleteSignUpScreen> {
                                 value: '2',
                                 groupValue: _userType,
                                 activeColor:
-                                    const Color.fromARGB(255, 18, 92, 27),
+                                    const Color.fromRGBO(15, 99, 43, 1),
                                 onChanged: (value) {
                                   setState(() {
                                     _userType = value!;
@@ -359,7 +359,7 @@ class _CompleteSignUpScreenState extends State<CompleteSignUpScreen> {
                 }
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color.fromARGB(255, 17, 118, 21),
+                backgroundColor: const Color.fromRGBO(15, 99, 43, 1),
                 foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(vertical: 18.0),
                 textStyle: const TextStyle(

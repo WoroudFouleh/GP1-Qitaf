@@ -51,8 +51,8 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       bottomNavigationBar: CurvedNavigationBar(
         backgroundColor: Colors.transparent,
-        buttonBackgroundColor: const Color.fromARGB(255, 33, 121, 31),
-        color: const Color.fromARGB(255, 33, 121, 31),
+        buttonBackgroundColor: const Color.fromRGBO(15, 99, 43, 1),
+        color: const Color.fromRGBO(15, 99, 43, 1),
         animationDuration: const Duration(milliseconds: 300),
         height: 70, // زيادة الارتفاع ليناسب صفحة ويب
         items: const <Widget>[

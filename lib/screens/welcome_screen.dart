@@ -66,7 +66,7 @@ class WelcomeScreen extends StatelessWidget {
                               buttonText: 'إنشاء حساب',
                               onTap: SignupScreen(),
                               color: Colors.white,
-                              textColor: const Color.fromARGB(255, 12, 84, 15),
+                              textColor: const Color.fromRGBO(15, 99, 43, 1),
                             ),
                           ),
                         ],

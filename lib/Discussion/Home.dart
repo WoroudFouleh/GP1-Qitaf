@@ -77,7 +77,7 @@ class _HomeDiscussionState extends State<HomeDiscussion> {
               fontWeight: FontWeight.bold,
             ),
           ),
-          backgroundColor: Colors.green[800],
+          backgroundColor: const Color.fromRGBO(15, 99, 43, 1),
           automaticallyImplyLeading: false, // To remove the default back button
           leading: IconButton(
             icon: Icon(Icons.arrow_back, color: Colors.white),

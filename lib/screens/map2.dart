@@ -130,7 +130,7 @@ class _MapScreen2State extends State<MapScreen2> {
               points: decodedPoints
                   .map((point) => LatLng(point.latitude, point.longitude))
                   .toList(),
-              color: Color(0xFF556B2F),
+              color: const Color.fromRGBO(15, 99, 43, 1),
               width: 5,
             ),
           );
@@ -190,7 +190,7 @@ class _MapScreen2State extends State<MapScreen2> {
             ),
           ),
         ),
-        backgroundColor: Color(0xFF556B2F),
+        backgroundColor: const Color.fromRGBO(15, 99, 43, 1),
       ),
       body: Stack(
         children: [

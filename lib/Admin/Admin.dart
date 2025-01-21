@@ -36,7 +36,7 @@ class _AdminPageState extends State<AdminPage> {
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
-                color: Color(0xFF556B2F),
+                color: const Color.fromRGBO(15, 99, 43, 1),
               ),
             ),
             content: const Text(
@@ -68,13 +68,14 @@ class _AdminPageState extends State<AdminPage> {
                   Navigator.of(context).pop();
                   print('تم تسجيل الخروج');
                 },
-                icon: const Icon(Icons.check, color: Color(0xFF556B2F)),
+                icon: const Icon(Icons.check,
+                    color: const Color.fromRGBO(15, 99, 43, 1)),
                 label: const Text(
                   'نعم',
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
-                    color: Color(0xFF556B2F),
+                    color: const Color.fromRGBO(15, 99, 43, 1),
                   ),
                 ),
               ),
@@ -99,7 +100,7 @@ class _AdminPageState extends State<AdminPage> {
               color: Colors.white,
             ),
           ),
-          backgroundColor: const Color.fromARGB(255, 69, 104, 21),
+          backgroundColor: const Color.fromRGBO(15, 99, 43, 1),
           iconTheme: const IconThemeData(
               color: Colors.white), // تغيير لون الثلاثة شحطات
           actions: [
@@ -141,7 +142,7 @@ class _AdminPageState extends State<AdminPage> {
               label: 'المنشورات',
             ),
           ],
-          selectedItemColor: const Color.fromARGB(255, 74, 110, 13),
+          selectedItemColor: const Color.fromRGBO(15, 99, 43, 1),
           unselectedItemColor: Colors.grey,
           backgroundColor: Colors.white,
         ),

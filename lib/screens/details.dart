@@ -32,7 +32,7 @@ class ChangePasswordPage extends StatelessWidget {
             children: [
               Container(
                 decoration: const BoxDecoration(
-                  color: Colors.green,
+                  color: const Color.fromRGBO(15, 99, 43, 1),
                   shape: BoxShape.circle,
                 ),
                 padding: const EdgeInsets.all(16.0),
@@ -65,7 +65,7 @@ class ChangePasswordPage extends StatelessWidget {
                   Navigator.of(context).pop(); // Close the dialog
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.green,
+                  backgroundColor: const Color.fromRGBO(15, 99, 43, 1),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8.0),
                   ),

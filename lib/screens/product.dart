@@ -188,10 +188,10 @@ class _ProductsPageState extends State<ProductsPage> {
           appBar: AppBar(
             backgroundColor: Colors.white,
             iconTheme: const IconThemeData(
-              color: Color(0xFF556B2F),
+              color: const Color.fromRGBO(15, 99, 43, 1),
             ),
             titleTextStyle: const TextStyle(
-              color: Color(0xFF556B2F),
+              color: const Color.fromRGBO(15, 99, 43, 1),
               fontWeight: FontWeight.bold,
               fontSize: 20,
               fontFamily: 'CustomArabicFont',
@@ -211,8 +211,8 @@ class _ProductsPageState extends State<ProductsPage> {
                 Tab(text: 'منتج غذائي'),
                 Tab(text: 'منتج غير غذائي'),
               ],
-              indicatorColor: Color(0xFF556B2F),
-              labelColor: Color(0xFF556B2F),
+              indicatorColor: const Color.fromRGBO(15, 99, 43, 1),
+              labelColor: const Color.fromRGBO(15, 99, 43, 1),
               unselectedLabelColor: Colors.grey,
               labelStyle: TextStyle(
                 fontWeight: FontWeight.bold,
@@ -264,12 +264,14 @@ class _ProductsPageState extends State<ProductsPage> {
                                     ),
                                     prefixIcon: const Icon(
                                       Icons.search,
-                                      color: Color(0xFF556B2F),
+                                      color:
+                                          const Color.fromRGBO(15, 99, 43, 1),
                                     ),
                                     suffixIcon: IconButton(
                                       icon: const Icon(
                                         Icons.filter_list,
-                                        color: Color(0xFF556B2F),
+                                        color:
+                                            const Color.fromRGBO(15, 99, 43, 1),
                                       ),
                                       onPressed: () {
                                         // Add your filter functionality here
@@ -288,7 +290,7 @@ class _ProductsPageState extends State<ProductsPage> {
                                   ),
                                   style: const TextStyle(
                                     fontWeight: FontWeight.bold,
-                                    color: Color(0xFF556B2F),
+                                    color: const Color.fromRGBO(15, 99, 43, 1),
                                   ),
                                 ),
                               ),
@@ -302,7 +304,7 @@ class _ProductsPageState extends State<ProductsPage> {
                               style: TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,
-                                color: Color(0xFF556B2F),
+                                color: const Color.fromRGBO(15, 99, 43, 1),
                                 shadows: [
                                   Shadow(
                                     color: Color(0xFFD1E7D6),
@@ -349,7 +351,7 @@ class _ProductsPageState extends State<ProductsPage> {
                               style: TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,
-                                color: Color(0xFF556B2F),
+                                color: const Color.fromRGBO(15, 99, 43, 1),
                                 shadows: [
                                   Shadow(
                                     color: Color(0xFFD1E7D6),
@@ -471,12 +473,14 @@ class _ProductsPageState extends State<ProductsPage> {
                                     ),
                                     prefixIcon: const Icon(
                                       Icons.search,
-                                      color: Color(0xFF556B2F),
+                                      color:
+                                          const Color.fromRGBO(15, 99, 43, 1),
                                     ),
                                     suffixIcon: IconButton(
                                       icon: const Icon(
                                         Icons.filter_list,
-                                        color: Color(0xFF556B2F),
+                                        color:
+                                            const Color.fromRGBO(15, 99, 43, 1),
                                       ),
                                       onPressed: () {
                                         // Add your filter functionality here
@@ -495,7 +499,7 @@ class _ProductsPageState extends State<ProductsPage> {
                                   ),
                                   style: const TextStyle(
                                     fontWeight: FontWeight.bold,
-                                    color: Color(0xFF556B2F),
+                                    color: const Color.fromRGBO(15, 99, 43, 1),
                                   ),
                                 ),
                               ),
@@ -509,7 +513,7 @@ class _ProductsPageState extends State<ProductsPage> {
                               style: TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,
-                                color: Color(0xFF556B2F),
+                                color: const Color.fromRGBO(15, 99, 43, 1),
                                 shadows: [
                                   Shadow(
                                     color: Color(0xFFD1E7D6),
@@ -556,7 +560,7 @@ class _ProductsPageState extends State<ProductsPage> {
                               style: TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,
-                                color: Color(0xFF556B2F),
+                                color: const Color.fromRGBO(15, 99, 43, 1),
                                 shadows: [
                                   Shadow(
                                     color: Color(0xFFD1E7D6),
@@ -673,12 +677,14 @@ class _ProductsPageState extends State<ProductsPage> {
                                     ),
                                     prefixIcon: const Icon(
                                       Icons.search,
-                                      color: Color(0xFF556B2F),
+                                      color:
+                                          const Color.fromRGBO(15, 99, 43, 1),
                                     ),
                                     suffixIcon: IconButton(
                                       icon: const Icon(
                                         Icons.filter_list,
-                                        color: Color(0xFF556B2F),
+                                        color:
+                                            const Color.fromRGBO(15, 99, 43, 1),
                                       ),
                                       onPressed: () {
                                         // Add your filter functionality here
@@ -697,7 +703,7 @@ class _ProductsPageState extends State<ProductsPage> {
                                   ),
                                   style: const TextStyle(
                                     fontWeight: FontWeight.bold,
-                                    color: Color(0xFF556B2F),
+                                    color: const Color.fromRGBO(15, 99, 43, 1),
                                   ),
                                 ),
                               ),
@@ -711,7 +717,7 @@ class _ProductsPageState extends State<ProductsPage> {
                               style: TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,
-                                color: Color(0xFF556B2F),
+                                color: const Color.fromRGBO(15, 99, 43, 1),
                                 shadows: [
                                   Shadow(
                                     color: Color(0xFFD1E7D6),
@@ -758,7 +764,7 @@ class _ProductsPageState extends State<ProductsPage> {
                               style: TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,
-                                color: Color(0xFF556B2F),
+                                color: const Color.fromRGBO(15, 99, 43, 1),
                                 shadows: [
                                   Shadow(
                                     color: Color(0xFFD1E7D6),

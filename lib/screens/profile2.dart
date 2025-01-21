@@ -31,7 +31,8 @@ class Profile2 extends StatelessWidget {
       required this.city,
       required this.street,
       required this.postsCount,
-      Key? key, this.userId})
+      Key? key,
+      this.userId})
       : super(key: key);
 
   // Decode the token using jwt_decoder and extract necessary fields
@@ -40,7 +41,7 @@ class Profile2 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     //final userData = decodeToken(token);
-Future<void> navigateToChat(BuildContext context) async {
+    Future<void> navigateToChat(BuildContext context) async {
       try {
         // استعلام Firestore للحصول على userId بناءً على البريد الإلكتروني
         final querySnapshot = await FirebaseFirestore.instance
@@ -77,6 +78,7 @@ Future<void> navigateToChat(BuildContext context) async {
         );
       }
     }
+
     // Extract name, email, and phone
     // final firstName = userData['firstName'] ?? 'Unknown Name';
     // final lastName = userData['lastName'] ?? 'Unknown Name';
@@ -167,7 +169,8 @@ Future<void> navigateToChat(BuildContext context) async {
                                     Text(
                                       '$firstName $lastName',
                                       style: const TextStyle(
-                                        color: Color.fromRGBO(52, 121, 40, 1),
+                                        color:
+                                            const Color.fromRGBO(15, 99, 43, 1),
                                         fontSize: 30,
                                       ),
                                     ),
@@ -190,8 +193,8 @@ Future<void> navigateToChat(BuildContext context) async {
                                             Text(
                                               postsCount.toString(),
                                               style: const TextStyle(
-                                                color: Color.fromRGBO(
-                                                    52, 121, 40, 1),
+                                                color: const Color.fromRGBO(
+                                                    15, 99, 43, 1),
                                                 fontSize: 20,
                                               ),
                                             ),
@@ -225,8 +228,8 @@ Future<void> navigateToChat(BuildContext context) async {
                                               ),
                                               const Icon(
                                                 AntDesign.message1,
-                                                color: Color.fromRGBO(
-                                                    52, 121, 40, 1),
+                                                color: const Color.fromRGBO(
+                                                    15, 99, 43, 1),
                                                 size: 25,
                                               ),
                                             ],
@@ -290,7 +293,7 @@ Future<void> navigateToChat(BuildContext context) async {
                           const Text(
                             'معلومات المالك',
                             style: TextStyle(
-                              color: Color.fromRGBO(52, 121, 40, 1),
+                              color: const Color.fromRGBO(15, 99, 43, 1),
                               fontSize: 27,
                             ),
                           ),

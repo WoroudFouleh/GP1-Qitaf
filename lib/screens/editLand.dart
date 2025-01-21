@@ -237,7 +237,8 @@ class _EditLandState extends State<EditLand> {
               },
               child: const Text('تقييم'),
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.green, // Set the button color
+                backgroundColor:
+                    const Color.fromRGBO(15, 99, 43, 1), // Set the button color
                 foregroundColor: Colors.white, // Set the text/icon color
                 // padding: const EdgeInsets.symmetric(
                 //     horizontal: 10, vertical: 7),
@@ -278,7 +279,7 @@ class _EditLandState extends State<EditLand> {
           showCustomDialog(
             context: context,
             icon: Icons.check,
-            iconColor: Colors.green,
+            iconColor: const Color.fromRGBO(15, 99, 43, 1),
             title: "تمّ بنجاح",
             message: "!تمّ تقييم العامل بنجاح",
             buttonText: "حسناً",
@@ -405,10 +406,10 @@ class _EditLandState extends State<EditLand> {
           appBar: AppBar(
             backgroundColor: Colors.white,
             iconTheme: const IconThemeData(
-              color: Color.fromARGB(255, 11, 108, 45),
+              color: const Color.fromRGBO(15, 99, 43, 1),
             ),
             titleTextStyle: const TextStyle(
-              color: Color.fromARGB(255, 11, 108, 45),
+              color: const Color.fromRGBO(15, 99, 43, 1),
               fontWeight: FontWeight.bold,
               fontSize: 20,
               fontFamily: 'CustomArabicFont',
@@ -478,7 +479,7 @@ class _EditLandState extends State<EditLand> {
                     },
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 10),
-                      backgroundColor: Color.fromARGB(255, 11, 108, 45),
+                      backgroundColor: const Color.fromRGBO(15, 99, 43, 1),
                       textStyle: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 18,
@@ -547,13 +548,14 @@ class _EditLandState extends State<EditLand> {
                       textStyle: const TextStyle(
                         fontWeight: FontWeight.bold, // خط عريض
                         fontSize: 18, // حجم أكبر للنص
-                        color: Colors.green, // اللون الأخضر للنص
+                        color: const Color.fromRGBO(
+                            15, 99, 43, 1), // اللون الأخضر للنص
                       ),
                     ),
                     child: const Text(
                       'حفظ التغييرات',
                       style: TextStyle(
-                        color: Colors.green, // النص أخضر
+                        color: const Color.fromRGBO(15, 99, 43, 1), // النص أخضر
                         fontWeight: FontWeight.bold, // خط عريض
                         fontSize: 18, // تكبير الخط
                       ),
@@ -605,7 +607,7 @@ class _EditLandState extends State<EditLand> {
         boxShadow: [
           BoxShadow(
             offset: const Offset(0, 5),
-            color: const Color.fromARGB(255, 14, 101, 23).withOpacity(.2),
+            color: const Color.fromRGBO(15, 99, 43, 1).withOpacity(.2),
             spreadRadius: 2,
             blurRadius: 10,
           )
@@ -632,7 +634,7 @@ class _EditLandState extends State<EditLand> {
         boxShadow: [
           BoxShadow(
             offset: const Offset(0, 5),
-            color: const Color.fromARGB(255, 14, 101, 23).withOpacity(.2),
+            color: const Color.fromRGBO(15, 99, 43, 1).withOpacity(.2),
             spreadRadius: 2,
             blurRadius: 10,
           )
@@ -670,7 +672,7 @@ class _EditLandState extends State<EditLand> {
                     children: [
                       Icon(
                         Icons.image,
-                        color: Colors.green,
+                        color: const Color.fromRGBO(15, 99, 43, 1),
                         size: 35,
                       ),
                       SizedBox(height: 5),
@@ -695,7 +697,7 @@ class _EditLandState extends State<EditLand> {
                     children: [
                       Icon(
                         Icons.camera,
-                        color: Colors.green,
+                        color: const Color.fromRGBO(15, 99, 43, 1),
                         size: 35,
                       ),
                       SizedBox(height: 5),
@@ -794,7 +796,8 @@ class _EditLandState extends State<EditLand> {
                     child: const Row(
                       children: [
                         Icon(Icons.cancel,
-                            color: Colors.green), // أيقونة الإلغاء
+                            color: const Color.fromRGBO(
+                                15, 99, 43, 1)), // أيقونة الإلغاء
                         SizedBox(width: 8),
                         Text(
                           'إلغاء',
@@ -850,7 +853,7 @@ class _EditLandState extends State<EditLand> {
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 18,
-                color: Colors.green,
+                color: const Color.fromRGBO(15, 99, 43, 1),
               ),
             ),
             content: SizedBox(
@@ -862,7 +865,8 @@ class _EditLandState extends State<EditLand> {
                   Container(
                     padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
-                      border: Border.all(color: Colors.green),
+                      border: Border.all(
+                          color: const Color.fromRGBO(15, 99, 43, 1)),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: const Text(
@@ -870,7 +874,7 @@ class _EditLandState extends State<EditLand> {
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
-                        color: Colors.green,
+                        color: const Color.fromRGBO(15, 99, 43, 1),
                       ),
                     ),
                   ),
@@ -909,8 +913,8 @@ class _EditLandState extends State<EditLand> {
                               showRatingDialog(context, worker);
                             },
                             style: ElevatedButton.styleFrom(
-                              backgroundColor:
-                                  Colors.green, // Set the button color
+                              backgroundColor: const Color.fromRGBO(
+                                  15, 99, 43, 1), // Set the button color
                               foregroundColor:
                                   Colors.white, // Set the text/icon color
                               // padding: const EdgeInsets.symmetric(
@@ -936,7 +940,8 @@ class _EditLandState extends State<EditLand> {
                 },
                 style: ElevatedButton.styleFrom(
                   foregroundColor: Colors.white,
-                  backgroundColor: Colors.green, // Text color (white)
+                  backgroundColor:
+                      const Color.fromRGBO(15, 99, 43, 1), // Text color (white)
                   textStyle: const TextStyle(
                     fontWeight: FontWeight.bold, // Bold text
                   ),

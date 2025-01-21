@@ -129,8 +129,8 @@ class _AddProductionLineState extends State<AddProductionLine> {
         "unitTimeOfPreparation": _selectedTimeUnit,
         "price": int.tryParse(_priceController.text),
         "quantityUnit": _selectedUnit,
-        "startWorkTime": _startTime.toString(),
-        "endWorkTime": _endTime.toString(),
+        "startWorkTime": _startTime.toString().substring(10, 15),
+        "endWorkTime": _endTime.toString().substring(10, 15),
         "datesOfWork": _selectedDays,
       };
 
@@ -150,7 +150,7 @@ class _AddProductionLineState extends State<AddProductionLine> {
           showCustomDialog(
             context: context,
             icon: Icons.check,
-            iconColor: Colors.green,
+            iconColor: const Color.fromRGBO(15, 99, 43, 1),
             title: "تمّ بنجاح",
             message: "تمّ إضافة المنتج بنجاح!",
             buttonText: "حسناً",
@@ -248,9 +248,10 @@ class _AddProductionLineState extends State<AddProductionLine> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
-        iconTheme: const IconThemeData(color: Color.fromARGB(255, 11, 108, 45)),
+        iconTheme:
+            const IconThemeData(color: const Color.fromRGBO(15, 99, 43, 1)),
         titleTextStyle: const TextStyle(
-          color: Color.fromARGB(255, 11, 110, 29),
+          color: const Color.fromRGBO(15, 99, 43, 1),
           fontWeight: FontWeight.bold,
           fontSize: 20,
           fontFamily: 'CustomArabicFont',
@@ -293,7 +294,7 @@ class _AddProductionLineState extends State<AddProductionLine> {
                 style: ElevatedButton.styleFrom(
                   padding:
                       const EdgeInsets.symmetric(vertical: 10, horizontal: 50),
-                  backgroundColor: const Color.fromARGB(255, 18, 116, 22),
+                  backgroundColor: const Color.fromRGBO(15, 99, 43, 1),
                 ),
                 child: const Text(
                   'إضافة صورة',
@@ -369,7 +370,7 @@ class _AddProductionLineState extends State<AddProductionLine> {
                   IconButton(
                     icon: const Icon(
                       Icons.add_location_alt, // أيقونة لإضافة الموقع
-                      color: Color.fromARGB(255, 11, 108, 45),
+                      color: const Color.fromRGBO(15, 99, 43, 1),
                       size: 30,
                     ),
                     onPressed: () {
@@ -598,7 +599,7 @@ class _AddProductionLineState extends State<AddProductionLine> {
                 style: ElevatedButton.styleFrom(
                   padding:
                       const EdgeInsets.symmetric(vertical: 10, horizontal: 50),
-                  backgroundColor: const Color.fromARGB(255, 18, 116, 22),
+                  backgroundColor: const Color.fromRGBO(15, 99, 43, 1),
                 ),
                 child: const Text('إضافة',
                     style: TextStyle(

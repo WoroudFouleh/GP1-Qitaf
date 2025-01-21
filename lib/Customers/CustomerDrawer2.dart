@@ -10,6 +10,7 @@ import 'package:login_page/screens/ProfilePage.dart';
 import 'package:login_page/screens/owner_profile.dart';
 import 'package:login_page/screens/CartPage.dart';
 import 'package:login_page/screens/previousOrders.dart';
+import 'package:login_page/screens/welcome_screen.dart';
 
 class CustomDrawer2 extends StatefulWidget {
   final token;
@@ -69,7 +70,7 @@ class _CustomDrawer2State extends State<CustomDrawer2> {
               ),
             ),
             decoration: const BoxDecoration(
-              color: Color.fromARGB(255, 18, 92, 21),
+              color: const Color.fromRGBO(15, 99, 43, 1),
               image: DecorationImage(
                 image: AssetImage('assets/images/cover.jpg'),
                 fit: BoxFit.cover,
@@ -154,13 +155,87 @@ class _CustomDrawer2State extends State<CustomDrawer2> {
             },
           ),
           const SizedBox(height: 28.0),
-          const SizedBox(height: 28.0),
-          const ListTile(
-            trailing: Icon(Icons.logout),
-            title: Align(
+          const SizedBox(height: 10.0),
+          ListTile(
+            trailing: const Icon(Icons.logout,
+                color: Color.fromARGB(255, 65, 63, 63)), // أيقونة تسجيل الخروج
+            title: const Align(
               alignment: Alignment.centerRight,
-              child: Text("تسجيل الخروج"),
+              child: Text(
+                "تسجيل الخروج",
+                style: TextStyle(
+                    color: Colors.black), // الإبقاء على لون النص الأصلي
+              ),
             ),
+            onTap: () {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return Dialog(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15),
+                    ), // جعل الحواف دائرية
+                    child: Container(
+                      padding: const EdgeInsets.all(16),
+                      width: 320, // عرض النافذة
+                      height: 180, // ارتفاع النافذة
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          const Text(
+                            "تأكيد تسجيل الخروج",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                          const Text(
+                            "هل أنت متأكد أنك تريد تسجيل الخروج؟",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(fontSize: 16),
+                          ),
+                          const SizedBox(height: 16),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              TextButton.icon(
+                                onPressed: () {
+                                  Navigator.of(context).pop(); // إغلاق النافذة
+                                },
+                                icon: const Icon(Icons.cancel,
+                                    color: Colors.grey),
+                                label: const Text(
+                                  "إلغاء",
+                                  style: TextStyle(color: Colors.grey),
+                                ),
+                              ),
+                              TextButton.icon(
+                                onPressed: () {
+                                  Navigator.of(context).pushReplacement(
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const WelcomeScreen()),
+                                  ); // الانتقال إلى WelcomeScreen
+                                },
+                                icon:
+                                    const Icon(Icons.check, color: Colors.red),
+                                label: const Text(
+                                  "موافق",
+                                  style: TextStyle(color: Colors.red),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              );
+            },
           ),
           const ListTile(
             trailing: Icon(Icons.settings),

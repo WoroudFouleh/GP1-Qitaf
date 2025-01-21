@@ -239,7 +239,7 @@ class _MainMapScreenState extends State<MainMapScreen> {
               points: decodedPoints
                   .map((point) => LatLng(point.latitude, point.longitude))
                   .toList(),
-              color: const Color.fromARGB(255, 101, 147, 16),
+              color: const Color.fromRGBO(15, 99, 43, 1),
               width: 5,
             ),
           );
@@ -257,7 +257,7 @@ class _MainMapScreenState extends State<MainMapScreen> {
                   'معلومات المسار',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    color: const Color.fromARGB(255, 94, 143, 25), // اللون زيتي
+                    color: const Color.fromRGBO(15, 99, 43, 1), // اللون زيتي
                   ),
                 ),
                 content: Column(
@@ -267,8 +267,8 @@ class _MainMapScreenState extends State<MainMapScreen> {
                     Row(
                       children: [
                         Icon(Icons.access_time,
-                            color: const Color.fromARGB(
-                                255, 83, 128, 27)), // أيقونة الوقت
+                            color: const Color.fromRGBO(
+                                15, 99, 43, 1)), // أيقونة الوقت
                         SizedBox(width: 8),
                         Text(
                           'الوقت المقدر للوصول: $duration',
@@ -283,8 +283,8 @@ class _MainMapScreenState extends State<MainMapScreen> {
                     Row(
                       children: [
                         Icon(Icons.map_outlined,
-                            color: const Color.fromARGB(
-                                255, 75, 113, 24)), // أيقونة المسافة
+                            color: const Color.fromRGBO(
+                                15, 99, 43, 1)), // أيقونة المسافة
                         SizedBox(width: 8),
                         Text(
                           'المسافة: $distance',
@@ -305,8 +305,8 @@ class _MainMapScreenState extends State<MainMapScreen> {
                         Navigator.of(context).pop();
                       },
                       style: TextButton.styleFrom(
-                        backgroundColor: const Color.fromARGB(
-                            255, 85, 133, 14), // خلفية زيتي
+                        backgroundColor:
+                            const Color.fromRGBO(15, 99, 43, 1), // خلفية زيتي
                         padding:
                             EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                         shape: RoundedRectangleBorder(
@@ -354,7 +354,8 @@ class _MainMapScreenState extends State<MainMapScreen> {
           child: AlertDialog(
             title: Row(
               children: [
-                Icon(Icons.location_on, color: Colors.green),
+                Icon(Icons.location_on,
+                    color: const Color.fromRGBO(15, 99, 43, 1)),
                 SizedBox(width: 8),
                 Text('إضافة موقع جديد'),
               ],
@@ -373,7 +374,7 @@ class _MainMapScreenState extends State<MainMapScreen> {
                       'إلغاء',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        color: Colors.green.shade700,
+                        color: const Color.fromRGBO(15, 99, 43, 1),
                       ),
                     ),
                   ),
@@ -385,7 +386,7 @@ class _MainMapScreenState extends State<MainMapScreen> {
                       'حفظ',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        color: Colors.green.shade700,
+                        color: const Color.fromRGBO(15, 99, 43, 1),
                       ),
                     ),
                   ),
@@ -429,7 +430,7 @@ class _MainMapScreenState extends State<MainMapScreen> {
             },
           ),
         ],
-        backgroundColor: Color(0xFF556B2F),
+        backgroundColor: const Color.fromRGBO(15, 99, 43, 1),
       ),
       body: Stack(
         children: [

@@ -125,7 +125,7 @@ class _LandBottonBarState extends State<LandBottonBar> {
             },
             style: ButtonStyle(
               backgroundColor: WidgetStateProperty.all(
-                const Color(0xFF556B2F),
+                const Color.fromRGBO(15, 99, 43, 1),
               ),
               padding: WidgetStateProperty.all(
                 const EdgeInsets.symmetric(
@@ -175,7 +175,7 @@ class _LandBottonBarState extends State<LandBottonBar> {
                 style: const TextStyle(
                   fontSize: 30, // Increased font size for better readability
                   fontWeight: FontWeight.bold,
-                  color: Color(0xFF556B2F),
+                  color: const Color.fromRGBO(15, 99, 43, 1),
                 ),
               ),
               const SizedBox(width: 10),
@@ -184,7 +184,7 @@ class _LandBottonBarState extends State<LandBottonBar> {
                 style: TextStyle(
                   fontSize: 25, // Larger font for currency symbol
                   fontWeight: FontWeight.bold,
-                  color: Color(0xFF556B2F),
+                  color: const Color.fromRGBO(15, 99, 43, 1),
                 ),
               ),
             ],

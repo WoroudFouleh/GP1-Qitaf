@@ -11,7 +11,8 @@ class Ownerprofile2 extends StatefulWidget {
   final String username;
   final userId;
 
-  const Ownerprofile2({required this.username, Key? key, this.userId}) : super(key: key);
+  const Ownerprofile2({required this.username, Key? key, this.userId})
+      : super(key: key);
 
   @override
   _ownerprofile2State createState() => _ownerprofile2State();
@@ -144,7 +145,8 @@ class _ownerprofile2State extends State<Ownerprofile2> {
                                     Text(
                                       '$firstName $lastName',
                                       style: const TextStyle(
-                                        color: Color.fromRGBO(52, 121, 40, 1),
+                                        color:
+                                            const Color.fromRGBO(15, 99, 43, 1),
                                         fontSize: 30,
                                       ),
                                     ),
@@ -216,8 +218,8 @@ class _ownerprofile2State extends State<Ownerprofile2> {
                                                   ),
                                                   const Icon(
                                                     AntDesign.message1,
-                                                    color: Color.fromRGBO(
-                                                        52, 121, 40, 1),
+                                                    color: const Color.fromRGBO(
+                                                        15, 99, 43, 1),
                                                     size: 25,
                                                   ),
                                                 ],
@@ -273,7 +275,7 @@ class _ownerprofile2State extends State<Ownerprofile2> {
                           const Text(
                             'معلومات المالك',
                             style: TextStyle(
-                              color: Color.fromRGBO(52, 121, 40, 1),
+                              color: const Color.fromRGBO(15, 99, 43, 1),
                               fontSize: 27,
                             ),
                           ),

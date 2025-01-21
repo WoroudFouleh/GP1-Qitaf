@@ -1,4 +1,4 @@
-const url = 'http://192.168.1.2:3000/';
+const url = 'http://192.168.1.6:3000/';
 final registration = "${url}api/users/register";
 final login = "${url}api/users/login";
 final forgotPass = "${url}api/users/forgotPass";
@@ -67,6 +67,9 @@ final getLineStatistic = "${url}api/productionLines/getLineStatistics";
 final getProducStatistic = "${url}api/products/getProductsStatistics";
 final getUserStatistic = "${url}api/users/getUserStatistics";
 final getAllStatistic = "${url}api/statistics/getAllStatistics";
+final getAllLands = "${url}api/statistics/getAllLands";
+final getAllLines = "${url}api/statistics/getAllLines";
+final getAllProducts = "${url}api/statistics/getAllProducts";
 //////////////Advertisements
 final addMainAd = "${url}api/mainAds/addMainAd";
 final deleteMainAd = "${url}api/mainAds/deleteMainAd";
@@ -92,3 +95,22 @@ final getAllDeliveryMens = "${url}api/deliveryMens/getAllDekiveryMens";
 final getDeliveryById = "${url}api/deliveryMens/getDeliveryById";
 final editDeliveryMan = "${url}api/deliveryMens/editDeliveryMan";
 final deleteDeliveryMan = "${url}api/deliveryMens/deleteDeliveryMan";
+final updateDeliveryManStatus = "${url}api/deliveryMens/updateManStatus";
+final updateDeliveryManCoordinates =
+    "${url}api/deliveryMens/updateManCoordinates";
+
+//////////////////delivery paths
+final getFastDeliveryOrders = "${url}api/orders/getFastDeliveries";
+final getNormalDeliveryOrders = "${url}api/orders/getNormalDeliveries";
+final getOwnerOrders = "${url}api/orders/getOwnerOrders";
+final updatePreparationStatus = "${url}api/orders/updateItemPreparation";
+final updateNormalItemsStatus = "${url}api/orders/updateNormalOrderStatus";
+final updateFastStatus = "${url}api/orders/updateFastOrderStatus";
+final getAcceptedOrders = "${url}api/orders/getAcceptedOrders";
+final getFastAcceptedOrders = "${url}api/orders/getAcceptedFastDeliveries";
+final getNormalAcceptedOrders = "${url}api/orders/getAcceptedNormalDeliveries";
+final updateItemsRecievedStatus = "${url}api/orders/updateNormalRecievedStatus";
+final updateFastRecievedStatus = "${url}api/orders/updateFastRecievedStatus";
+final getDiscount = "${url}api/users/getDiscountPercentage";
+//////////////reports
+final reportUser = "${url}api/users/reportCustomer";

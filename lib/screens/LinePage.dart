@@ -207,13 +207,14 @@ class _LinePageState extends State<LinePage> {
                                 style: const TextStyle(
                                   fontSize: 24, // تكبير الخط
                                   fontWeight: FontWeight.bold, // خط عريض
-                                  color: Color(0xFF556B2F), // لون زيتي
+                                  color: const Color.fromRGBO(
+                                      15, 99, 43, 1), // لون زيتي
                                   shadows: [
                                     Shadow(
                                       offset: Offset(0, 2),
                                       blurRadius: 3,
-                                      color: Color.fromARGB(
-                                          255, 120, 183, 72), // لون اللمعان
+                                      color: const Color.fromRGBO(
+                                          15, 99, 43, 1), // لون اللمعان
                                     ),
                                   ],
                                 ),
@@ -273,13 +274,14 @@ class _LinePageState extends State<LinePage> {
                                 style: const TextStyle(
                                   fontSize: 22, // تكبير الخط
                                   fontWeight: FontWeight.bold, // خط عريض
-                                  color: Color(0xFF556B2F), // لون زيتي
+                                  color: const Color.fromRGBO(
+                                      15, 99, 43, 1), // لون زيتي
                                   shadows: [
                                     Shadow(
                                       offset: Offset(0, 2),
                                       blurRadius: 3,
-                                      color: Color.fromARGB(
-                                          255, 129, 179, 79), // لون اللمعان
+                                      color: const Color.fromRGBO(
+                                          15, 99, 43, 1), // لون اللمعان
                                     ),
                                   ],
                                 ),
@@ -355,7 +357,8 @@ class _LinePageState extends State<LinePage> {
                           ),
                         ),
                         const SizedBox(width: 10),
-                        const Icon(Icons.access_time, color: Color(0xFF556B2F)),
+                        const Icon(Icons.access_time,
+                            color: const Color.fromRGBO(15, 99, 43, 1)),
                       ],
                     ),
                   ),
@@ -400,7 +403,7 @@ class _LinePageState extends State<LinePage> {
                             ),
                             const SizedBox(width: 10),
                             const Icon(Icons.location_on,
-                                color: Color(0xFF556B2F)),
+                                color: const Color.fromRGBO(15, 99, 43, 1)),
                           ],
                         ),
                         Row(
@@ -413,7 +416,8 @@ class _LinePageState extends State<LinePage> {
                                   color: Colors.black),
                             ),
                             const SizedBox(width: 10),
-                            const Icon(Icons.apple, color: Color(0xFF556B2F)),
+                            const Icon(Icons.apple,
+                                color: const Color.fromRGBO(15, 99, 43, 1)),
                           ],
                         ),
                       ],
@@ -440,7 +444,7 @@ class _LinePageState extends State<LinePage> {
                         ),
                         const SizedBox(width: 10),
                         const Icon(Icons.calendar_today,
-                            color: Color(0xFF556B2F)),
+                            color: const Color.fromRGBO(15, 99, 43, 1)),
                       ],
                     ),
                   ),
@@ -453,7 +457,7 @@ class _LinePageState extends State<LinePage> {
                           MainAxisAlignment.end, // محاذاة العناصر إلى اليمين
                       children: [
                         Text(
-                          "وقت الدوام: ${widget.startTime.toString().substring(10, 15)} - ${widget.endTime.toString().substring(10, 15)} ", // وقت الدوام
+                          "وقت الدوام: ${widget.startTime.toString()} - ${widget.endTime.toString()} ", // وقت الدوام
                           style: const TextStyle(
                             fontSize: 18, // تكبير حجم الخط
                             fontWeight: FontWeight.bold,
@@ -461,7 +465,8 @@ class _LinePageState extends State<LinePage> {
                           ),
                         ),
                         const SizedBox(width: 10),
-                        const Icon(Icons.access_time, color: Color(0xFF556B2F)),
+                        const Icon(Icons.access_time,
+                            color: const Color.fromRGBO(15, 99, 43, 1)),
                       ],
                     ),
                   ),
