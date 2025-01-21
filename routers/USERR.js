@@ -14,6 +14,6 @@ router.get('/getUserStatistics', UserController.getUserStatistics);
 router.post('/getDiscountPercentage', UserController.calculateDiscount);
 router.post('/reportCustomer', UserController.incrementUserReports);
 router.post('/isSuspended', UserController.checkUserSuspension);
-
+router.post('/addPoints', UserController.incrementUserPoints);
 module.exports = router;
 

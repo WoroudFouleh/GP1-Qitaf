@@ -665,5 +665,41 @@ exports.incrementUserReports = async (req, res) => {
     }
 };
 
+exports.incrementUserPoints = async (req, res) => {
+    try {
+        const { username, points } = req.body;
+console.log(points);
+        // Validate input
+        if (!username || points === undefined) {
+            return res.status(400).json({ error: "Username and points are required." });
+        }
 
+        if (typeof points !== "number" || points < 0) {
+            return res.status(400).json({ error: "Points must be a non-negative number." });
+        }
+
+        // Find the user by username and increment points
+        const user = await User.findOneAndUpdate(
+            { username },
+            { $inc: { points } },
+            { new: true } // Return the updated document
+        );
+
+        if (!user) {
+            return res.status(404).json({ error: "User not found." });
+        }
+
+        return res.status(200).json({
+            status: true,
+            message: "Points updated successfully.",
+            updatedUser: {
+                username: user.username,
+                points: user.points,
+            },
+        });
+    } catch (error) {
+        console.error("Error updating points:", error);
+        return res.status(500).json({status:false, error: "An error occurred while updating points." });
+    }
+};
   
