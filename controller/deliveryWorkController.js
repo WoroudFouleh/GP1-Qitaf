@@ -25,24 +25,37 @@ const processLicense = async (filePath) => {
 
     console.log('Detected Dates:', dates);
 
-    // Step 3: Identify the expiration date
-    let expirationDate;
+    // Step 3: Parse all valid dates and find the latest (highest) date
+    let latestDate = null;
+
     for (let date of dates) {
-      const parsedDate = moment(date, ['DD/MM/YYYY', 'MM-DD-YYYY', 'YYYY-MM-DD'], true);
-      if (parsedDate.isValid() && parsedDate.isAfter(moment())) {
-        // Assume the latest valid future date is the expiration date
-        expirationDate = parsedDate;
-        break;
+      const parsedDate = moment(date, ['DD/MM/YYYY', 'MM-DD-YYYY'], true); // Use strict parsing
+      if (parsedDate.isValid()) {
+        console.log(`Parsed Date: ${date} -> ${parsedDate.format('YYYY-MM-DD')}`);
+        if (!latestDate || parsedDate.isAfter(latestDate)) {
+          latestDate = parsedDate;
+        }
       }
     }
 
-    if (!expirationDate) {
-      throw new Error('No valid expiration date found.');
+    if (!latestDate) {
+      throw new Error('No valid date found after parsing.');
     }
 
-    console.log('Extracted Expiration Date:', expirationDate.format('YYYY-MM-DD'));
+    console.log('Latest Date:', latestDate.format('YYYY-MM-DD'));
 
-    return { isValid: true, expirationDate: expirationDate.format('YYYY-MM-DD') };
+    // Step 4: Check if the license is expired
+    const isExpired = latestDate.isBefore(moment(), 'day'); // Compare ignoring time of day
+    if (isExpired) {
+      console.log("expired");
+      return { isValid: false, message: 'License has expired.',expirationDate: latestDate.format('YYYY-MM-DD') };
+    }
+
+    return {
+      isValid: true,
+      expirationDate: latestDate.format('YYYY-MM-DD'),
+      message: 'License is valid.',
+    };
   } catch (error) {
     console.error('Error processing license:', error.message);
     return { isValid: false, message: error.message };
@@ -65,7 +78,7 @@ exports.createDeliveryRequest = async (req, res) => {
     if (!licenseValidation.isValid) {
       // Delete the uploaded file if the license is invalid
       fs.unlinkSync(licenseFilePath);
-      return res.status(400).json({ message: licenseValidation.message });
+      return res.status(400).json({ message: licenseValidation.message , expirationDate: licenseValidation.expirationDate,});
     }
 
     // Step 2: Save the delivery request if the license is valid
@@ -82,7 +95,7 @@ exports.createDeliveryRequest = async (req, res) => {
     });
 
     await deliveryRequest.save();
-    res.status(201).json({ message: 'Delivery request created successfully!' });
+    res.status(201).json({ message: 'Delivery request created successfully!', expirationDate: licenseValidation.expirationDate, });
   } catch (error) {
     console.error('Error creating delivery request:', error.message);
     res.status(500).json({ message: 'An error occurred while processing the request.' });
