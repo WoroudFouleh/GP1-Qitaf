@@ -114,7 +114,7 @@ class Item3Widget extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
-                          color: Color(0xFF556B2F),
+                          color: Color.fromRGBO(15, 99, 43, 1),
                         ),
                       ),
                       const SizedBox(width: 5),
@@ -123,7 +123,7 @@ class Item3Widget extends StatelessWidget {
                         style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
-                          color: Color(0xFF556B2F),
+                          color: Color.fromRGBO(15, 99, 43, 1),
                         ),
                       ),
                       const SizedBox(width: 5),

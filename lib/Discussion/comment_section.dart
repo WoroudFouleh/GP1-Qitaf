@@ -217,9 +217,9 @@ class _CommentSectionState extends State<CommentSection> {
         final Map<String, dynamic> responseData = jsonDecode(response.body);
 
         // Success - show success message
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('تم تحديث البيانات بنجاح!')),
-        );
+        // ScaffoldMessenger.of(context).showSnackBar(
+        //   const SnackBar(content: Text('تم تحديث البيانات بنجاح!')),
+        // );
       } else {
         // Server error - handle accordingly
         ScaffoldMessenger.of(context).showSnackBar(
@@ -554,7 +554,7 @@ class _CommentSectionState extends State<CommentSection> {
               ),
             ),
             IconButton(
-              icon: Icon(Icons.image, color: Colors.green),
+              icon: Icon(Icons.image, color: Color.fromRGBO(15, 99, 43, 1)),
               onPressed: _pickImage,
             ),
           ],

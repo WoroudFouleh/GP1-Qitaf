@@ -92,7 +92,7 @@ class _NextsignState extends State<Nextsign> {
                         style: TextStyle(
                           fontSize: 25.0,
                           fontWeight: FontWeight.w900,
-                          color: Color.fromARGB(255, 17, 80, 31),
+                          color: Color.fromRGBO(15, 99, 43, 1),
                         ),
                         textAlign: TextAlign.right,
                       ),
@@ -315,7 +315,7 @@ class _NextsignState extends State<Nextsign> {
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor:
-                                const Color.fromARGB(255, 17, 118, 21),
+                                const Color.fromRGBO(15, 99, 43, 1),
                             foregroundColor: Colors.white,
                             padding: const EdgeInsets.symmetric(vertical: 18.0),
                             textStyle: const TextStyle(

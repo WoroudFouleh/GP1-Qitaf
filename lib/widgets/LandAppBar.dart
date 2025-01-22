@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class LandAppBar extends StatelessWidget {
@@ -6,7 +7,7 @@ class LandAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: const Color(0xFF556B2F), // لون الأرضية زيتي
+      color: const Color.fromRGBO(15, 99, 43, 1), // لون الأرضية زيتي
       padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 25),
       child: Row(
         children: [
@@ -26,7 +27,7 @@ class LandAppBar extends StatelessWidget {
           const Padding(
             padding: EdgeInsets.only(right: 20),
             child: Text(
-              "الأرض الزراعية",
+              "الأرض الزراعية ",
               style: TextStyle(
                 fontSize: 23,
                 fontWeight: FontWeight.bold,

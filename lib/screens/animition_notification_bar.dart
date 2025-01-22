@@ -7,7 +7,7 @@ class AnimatedNotificationBar extends StatefulWidget {
   const AnimatedNotificationBar({
     Key? key,
     required this.message,
-    this.backgroundColor = Colors.green,
+    this.backgroundColor = const Color.fromRGBO(15, 99, 43, 1),
   }) : super(key: key);
 
   @override

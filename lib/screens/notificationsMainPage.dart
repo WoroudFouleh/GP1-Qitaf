@@ -128,6 +128,9 @@ class _NotificationsPageState extends State<NotificationsPage> {
       case 'lineBooking':
         return Icon(Icons.table_chart,
             color: const Color.fromARGB(255, 5, 97, 88), size: 24);
+      case 'delivery':
+        return Icon(Icons.delivery_dining_outlined,
+            color: const Color.fromARGB(255, 61, 28, 2), size: 24);
 
       default:
         return Icon(Icons.notifications, color: Colors.grey, size: 24);
@@ -151,7 +154,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
             const Icon(Icons.notifications, color: Colors.white),
           ],
         ),
-        backgroundColor: const Color.fromARGB(255, 65, 139, 67),
+        backgroundColor: Color.fromRGBO(15, 99, 43, 1),
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: _fetchNotifications(),

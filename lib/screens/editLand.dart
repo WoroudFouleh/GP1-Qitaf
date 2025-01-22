@@ -242,7 +242,8 @@ class _EditLandState extends State<EditLand> {
               },
               child: const Text('تقييم'),
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.green, // Set the button color
+                backgroundColor:
+                    Color.fromRGBO(15, 99, 43, 1), // Set the button color
                 foregroundColor: Colors.white, // Set the text/icon color
                 // padding: const EdgeInsets.symmetric(
                 //     horizontal: 10, vertical: 7),
@@ -456,10 +457,10 @@ class _EditLandState extends State<EditLand> {
           appBar: AppBar(
             backgroundColor: Colors.white,
             iconTheme: const IconThemeData(
-              color: Color.fromARGB(255, 11, 108, 45),
+              color: Color.fromRGBO(15, 99, 43, 1),
             ),
             titleTextStyle: const TextStyle(
-              color: Color.fromARGB(255, 11, 108, 45),
+              color: Color.fromRGBO(15, 99, 43, 1),
               fontWeight: FontWeight.bold,
               fontSize: 20,
               fontFamily: 'CustomArabicFont',
@@ -529,7 +530,7 @@ class _EditLandState extends State<EditLand> {
                     },
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 10),
-                      backgroundColor: Color.fromARGB(255, 11, 108, 45),
+                      backgroundColor: Color.fromRGBO(15, 99, 43, 1),
                       textStyle: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 18,
@@ -598,13 +599,14 @@ class _EditLandState extends State<EditLand> {
                       textStyle: const TextStyle(
                         fontWeight: FontWeight.bold, // خط عريض
                         fontSize: 18, // حجم أكبر للنص
-                        color: Colors.green, // اللون الأخضر للنص
+                        color:
+                            Color.fromRGBO(15, 99, 43, 1), // اللون الأخضر للنص
                       ),
                     ),
                     child: const Text(
                       'حفظ التغييرات',
                       style: TextStyle(
-                        color: Colors.green, // النص أخضر
+                        color: Color.fromRGBO(15, 99, 43, 1), // النص أخضر
                         fontWeight: FontWeight.bold, // خط عريض
                         fontSize: 18, // تكبير الخط
                       ),
@@ -656,7 +658,7 @@ class _EditLandState extends State<EditLand> {
         boxShadow: [
           BoxShadow(
             offset: const Offset(0, 5),
-            color: const Color.fromARGB(255, 14, 101, 23).withOpacity(.2),
+            color: const Color.fromRGBO(15, 99, 43, 1).withOpacity(.2),
             spreadRadius: 2,
             blurRadius: 10,
           )
@@ -683,7 +685,7 @@ class _EditLandState extends State<EditLand> {
         boxShadow: [
           BoxShadow(
             offset: const Offset(0, 5),
-            color: const Color.fromARGB(255, 14, 101, 23).withOpacity(.2),
+            color: const Color.fromRGBO(15, 99, 43, 1).withOpacity(.2),
             spreadRadius: 2,
             blurRadius: 10,
           )
@@ -721,7 +723,7 @@ class _EditLandState extends State<EditLand> {
                     children: [
                       Icon(
                         Icons.image,
-                        color: Colors.green,
+                        color: Color.fromRGBO(15, 99, 43, 1),
                         size: 35,
                       ),
                       SizedBox(height: 5),
@@ -746,7 +748,7 @@ class _EditLandState extends State<EditLand> {
                     children: [
                       Icon(
                         Icons.camera,
-                        color: Colors.green,
+                        color: Color.fromRGBO(15, 99, 43, 1),
                         size: 35,
                       ),
                       SizedBox(height: 5),
@@ -845,7 +847,8 @@ class _EditLandState extends State<EditLand> {
                     child: const Row(
                       children: [
                         Icon(Icons.cancel,
-                            color: Colors.green), // أيقونة الإلغاء
+                            color: Color.fromRGBO(
+                                15, 99, 43, 1)), // أيقونة الإلغاء
                         SizedBox(width: 8),
                         Text(
                           'إلغاء',
@@ -905,7 +908,7 @@ class _EditLandState extends State<EditLand> {
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 20,
-                  color: Colors.green[700],
+                  color: Color.fromRGBO(15, 99, 43, 1),
                 ),
               ),
             ),
@@ -919,7 +922,8 @@ class _EditLandState extends State<EditLand> {
                     padding: const EdgeInsets.all(10),
                     margin: const EdgeInsets.only(bottom: 10),
                     decoration: BoxDecoration(
-                      border: Border.all(color: Colors.green, width: 1.5),
+                      border: Border.all(
+                          color: Color.fromRGBO(15, 99, 43, 1), width: 1.5),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: const Text(
@@ -927,7 +931,7 @@ class _EditLandState extends State<EditLand> {
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
-                        color: Colors.green,
+                        color: Color.fromRGBO(15, 99, 43, 1),
                       ),
                       textAlign: TextAlign.center,
                     ),
@@ -946,105 +950,103 @@ class _EditLandState extends State<EditLand> {
                           ),
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
-                            child: Row(
+                            child: Column(
                               children: [
-                                // Profile Image
-                                Flexible(
-                                  flex: 1, // 25% of the row
-                                  child: CircleAvatar(
-                                    backgroundImage: MemoryImage(
-                                      base64Decode(
-                                          worker['workerProfileImage']),
+                                // First row: Image, Name, and Delete Icon
+                                Row(
+                                  children: [
+                                    // Profile Image
+                                    Flexible(
+                                      flex: 1,
+                                      child: CircleAvatar(
+                                        backgroundImage: MemoryImage(
+                                          base64Decode(
+                                              worker['workerProfileImage']),
+                                        ),
+                                        radius: 30,
+                                      ),
                                     ),
-                                    radius: 30,
-                                  ),
-                                ),
-                                const SizedBox(width: 10),
-                                // Worker Info and Buttons
-                                Flexible(
-                                  flex: 4, // 50% of the row
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
+                                    const SizedBox(width: 10),
+                                    // Worker Info
+                                    Flexible(
+                                      flex: 3,
+                                      child: Text(
                                         "${worker['workerFirstname']} ${worker['workerLastname']}",
                                         style: const TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 16,
                                         ),
                                       ),
-                                      const SizedBox(height: 5),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        children: [
-                                          // Rating Button
-                                          Expanded(
-                                            child: ElevatedButton.icon(
-                                              icon: const Icon(
-                                                Icons.star,
-                                                color: Colors.amber,
-                                                size: 18,
-                                              ),
-                                              label: const Text('قيّم'),
-                                              onPressed: () {
-                                                showRatingDialog(
-                                                    context, worker);
-                                              },
-                                              style: ElevatedButton.styleFrom(
-                                                backgroundColor: Colors.green,
-                                                foregroundColor: Colors.white,
-                                                shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(20),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          const SizedBox(width: 5),
-                                          // Report Button
-                                          Expanded(
-                                            child: ElevatedButton.icon(
-                                              icon: const Icon(
-                                                Icons.report,
-                                                color: Colors.white,
-                                                size: 18,
-                                              ),
-                                              label: const Text('أبلغ عن'),
-                                              onPressed: () {
-                                                showReportConfirmationDialog(
-                                                    context, worker);
-                                              },
-                                              style: ElevatedButton.styleFrom(
-                                                backgroundColor: Colors.red,
-                                                foregroundColor: Colors.white,
-                                                shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(20),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                // Delete Icon
-                                Flexible(
-                                  flex: 1, // 25% of the row
-                                  child: IconButton(
-                                    icon: const Icon(
-                                      Icons.delete,
-                                      color: Colors.red,
-                                      size: 24,
                                     ),
-                                    onPressed: () {
-                                      showDeleteConfirmationDialog2(
-                                          context, worker);
-                                    },
-                                  ),
+                                    // Delete Icon
+                                    Flexible(
+                                      flex: 1,
+                                      child: IconButton(
+                                        icon: const Icon(
+                                          Icons.delete,
+                                          color: Colors.red,
+                                          size: 24,
+                                        ),
+                                        onPressed: () {
+                                          showDeleteConfirmationDialog2(
+                                              context, worker);
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 10),
+                                // Second row: Buttons (قيّم and أبلغ عن)
+                                Row(
+                                  children: [
+                                    // Rating Button
+                                    Expanded(
+                                      child: ElevatedButton.icon(
+                                        icon: const Icon(
+                                          Icons.star,
+                                          color: Colors.amber,
+                                          size: 18,
+                                        ),
+                                        label: const Text('قيّم'),
+                                        onPressed: () {
+                                          showRatingDialog(context, worker);
+                                        },
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor:
+                                              Color.fromRGBO(15, 99, 43, 1),
+                                          foregroundColor: Colors.white,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(20),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 5),
+                                    // Report Button
+                                    Expanded(
+                                      child: ElevatedButton.icon(
+                                        icon: const Icon(
+                                          Icons.report,
+                                          color: Colors.white,
+                                          size: 18,
+                                        ),
+                                        label: const Text('أبلغ عن'),
+                                        onPressed: () {
+                                          showReportConfirmationDialog(
+                                              context, worker);
+                                        },
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: Colors.red,
+                                          foregroundColor: Colors.white,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(20),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ],
                             ),
@@ -1063,7 +1065,7 @@ class _EditLandState extends State<EditLand> {
                     Navigator.pop(context);
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green,
+                    backgroundColor: Color.fromRGBO(15, 99, 43, 1),
                     foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(
                         horizontal: 30, vertical: 10),

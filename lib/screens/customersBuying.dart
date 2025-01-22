@@ -411,7 +411,7 @@ class _CustomersBuyingState extends State<CustomersBuying> {
                       Icon(
                         Icons.event, // Booking icon
                         size: 30,
-                        color: Color(0xFF556B2F), // Olive color
+                        color: Color.fromRGBO(15, 99, 43, 1), // Olive color
                       ),
                       SizedBox(width: 8),
                       Text(
@@ -431,7 +431,7 @@ class _CustomersBuyingState extends State<CustomersBuying> {
                     child: const Icon(
                       Icons.arrow_forward, // Back arrow
                       size: 30,
-                      color: Color(0xFF556B2F), // Olive color
+                      color: Color.fromRGBO(15, 99, 43, 1), // Olive color
                     ),
                   ),
                 ],
@@ -483,7 +483,8 @@ class _CustomersBuyingState extends State<CustomersBuying> {
                                             decoration: BoxDecoration(
                                               shape: BoxShape.circle,
                                               border: Border.all(
-                                                color: Color(0xFF556B2F),
+                                                color: Color.fromRGBO(
+                                                    15, 99, 43, 1),
                                                 width: 2, // Olive border
                                               ),
                                               image: DecorationImage(
@@ -505,7 +506,8 @@ class _CustomersBuyingState extends State<CustomersBuying> {
                                                 style: TextStyle(
                                                   fontSize: 20,
                                                   fontWeight: FontWeight.bold,
-                                                  color: Color(0xFF556B2F),
+                                                  color: Color.fromRGBO(
+                                                      15, 99, 43, 1),
                                                 ),
                                               ),
                                               //SizedBox(height: 5),
@@ -564,7 +566,7 @@ class _CustomersBuyingState extends State<CustomersBuying> {
                                     children: [
                                       Icon(
                                         Icons.calendar_month,
-                                        color: Color(0xFF556B2F),
+                                        color: Color.fromRGBO(15, 99, 43, 1),
                                         size: 20,
                                       ),
                                       SizedBox(width: 5),
@@ -584,7 +586,7 @@ class _CustomersBuyingState extends State<CustomersBuying> {
                                     children: [
                                       const Icon(
                                         Icons.scale,
-                                        color: Color(0xFF556B2F),
+                                        color: Color.fromRGBO(15, 99, 43, 1),
                                         size: 20,
                                       ),
                                       SizedBox(width: 5),
@@ -603,7 +605,7 @@ class _CustomersBuyingState extends State<CustomersBuying> {
                                     children: [
                                       const Icon(
                                         Icons.attach_money,
-                                        color: Color(0xFF556B2F),
+                                        color: Color.fromRGBO(15, 99, 43, 1),
                                         size: 20,
                                       ),
                                       SizedBox(width: 5),

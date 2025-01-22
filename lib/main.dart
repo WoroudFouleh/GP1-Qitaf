@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:login_page/Auth/test.dart';
 import 'package:login_page/screens/LandPage.dart';
-import 'package:login_page/screens/details.dart';
+
 import 'package:login_page/screens/navigate.dart';
 import 'package:login_page/screens/notificationScreem.dart';
 import 'package:intl/intl.dart';

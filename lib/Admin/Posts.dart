@@ -114,9 +114,9 @@ class _PostsPageState extends State<PostsPage>
               Tab(text: 'خطوط إنتاج'),
             ],
             indicatorColor:
-                const Color.fromARGB(255, 17, 118, 21), // لون المؤشر زيتي
+                const Color.fromRGBO(15, 99, 43, 1), // لون المؤشر زيتي
             labelColor:
-                const Color.fromARGB(255, 17, 118, 21), // لون النص المحدد زيتي
+                const Color.fromRGBO(15, 99, 43, 1), // لون النص المحدد زيتي
             unselectedLabelColor: Colors.black, // لون النص غير المحدد أسود
           ),
         ),
@@ -235,8 +235,7 @@ class _LandsScreenState extends State<LandsScreen> {
                       borderRadius: BorderRadius.circular(10),
                       boxShadow: [
                         BoxShadow(
-                          color: const Color.fromARGB(255, 113, 134, 25)
-                              .withOpacity(0.6),
+                          color: Color.fromRGBO(15, 99, 43, 1).withOpacity(0.6),
                           spreadRadius: 2,
                           blurRadius: 6,
                         ),
@@ -254,7 +253,7 @@ class _LandsScreenState extends State<LandsScreen> {
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
                                 border: Border.all(
-                                  color: const Color(0xFF556B2F),
+                                  color: const Color.fromRGBO(15, 99, 43, 1),
                                   width: 2,
                                 ),
                                 image: DecorationImage(
@@ -275,7 +274,7 @@ class _LandsScreenState extends State<LandsScreen> {
                                     style: const TextStyle(
                                       fontSize: 18,
                                       fontWeight: FontWeight.bold,
-                                      color: Color(0xFF556B2F),
+                                      color: Color.fromRGBO(15, 99, 43, 1),
                                     ),
                                   ),
                                   const SizedBox(height: 8),
@@ -387,7 +386,7 @@ class _LandsScreenState extends State<LandsScreen> {
                                       ),
                                       SizedBox(width: 5),
                                       Text(
-                                        "ساعات العمل: ${land['startTime']} ص - ${land['endTime']} م",
+                                        " ${land['startTime']} ص - ${land['endTime']} م",
                                         style: TextStyle(
                                           fontSize: 16,
                                           color: Colors.black,
@@ -501,7 +500,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                       borderRadius: BorderRadius.circular(10),
                       boxShadow: [
                         BoxShadow(
-                          color: const Color.fromARGB(255, 113, 134, 25)
+                          color: const Color.fromRGBO(15, 99, 43, 1)
                               .withOpacity(0.6),
                           spreadRadius: 2,
                           blurRadius: 6,
@@ -517,7 +516,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             border: Border.all(
-                              color: const Color(0xFF556B2F),
+                              color: const Color.fromRGBO(15, 99, 43, 1),
                               width: 2,
                             ),
                             image: DecorationImage(
@@ -537,7 +536,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                                 style: const TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold,
-                                  color: Color(0xFF556B2F),
+                                  color: Color.fromRGBO(15, 99, 43, 1),
                                 ),
                               ),
                               const SizedBox(height: 8),
@@ -700,7 +699,7 @@ class _ProductionLinesScreenState extends State<ProductionLinesScreen> {
                       borderRadius: BorderRadius.circular(10),
                       boxShadow: [
                         BoxShadow(
-                          color: const Color.fromARGB(255, 113, 134, 25)
+                          color: const Color.fromRGBO(15, 99, 43, 1)
                               .withOpacity(0.6),
                           spreadRadius: 2,
                           blurRadius: 6,

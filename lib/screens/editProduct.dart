@@ -183,10 +183,10 @@ class _EditProductState extends State<EditProduct> {
           appBar: AppBar(
             backgroundColor: Colors.white,
             iconTheme: const IconThemeData(
-              color: Color.fromARGB(255, 12, 123, 17),
+              color: Color.fromRGBO(15, 99, 43, 1),
             ),
             titleTextStyle: const TextStyle(
-              color: Color.fromARGB(255, 11, 130, 27),
+              color: Color.fromRGBO(15, 99, 43, 1),
               fontWeight: FontWeight.bold,
               fontSize: 20,
               fontFamily: 'CustomArabicFont',
@@ -287,13 +287,14 @@ class _EditProductState extends State<EditProduct> {
                       textStyle: const TextStyle(
                         fontWeight: FontWeight.bold, // خط عريض
                         fontSize: 18, // حجم أكبر للنص
-                        color: Colors.green, // اللون الأخضر للنص
+                        color:
+                            Color.fromRGBO(15, 99, 43, 1), // اللون الأخضر للنص
                       ),
                     ),
                     child: const Text(
                       'حفظ التغييرات',
                       style: TextStyle(
-                        color: Colors.green, // النص أخضر
+                        color: Color.fromRGBO(15, 99, 43, 1), // النص أخضر
                         fontWeight: FontWeight.bold, // خط عريض
                         fontSize: 18, // تكبير الخط
                       ),
@@ -345,7 +346,7 @@ class _EditProductState extends State<EditProduct> {
         boxShadow: [
           BoxShadow(
             offset: const Offset(0, 5),
-            color: const Color.fromARGB(255, 14, 101, 23).withOpacity(.2),
+            color: const Color.fromRGBO(15, 99, 43, 1).withOpacity(.2),
             spreadRadius: 2,
             blurRadius: 10,
           )
@@ -383,7 +384,7 @@ class _EditProductState extends State<EditProduct> {
                     children: [
                       Icon(
                         Icons.image,
-                        color: Colors.green,
+                        color: Color.fromRGBO(15, 99, 43, 1),
                         size: 35,
                       ),
                       SizedBox(height: 5),
@@ -408,7 +409,7 @@ class _EditProductState extends State<EditProduct> {
                     children: [
                       Icon(
                         Icons.camera_alt,
-                        color: Colors.green,
+                        color: Color.fromRGBO(15, 99, 43, 1),
                         size: 35,
                       ),
                       SizedBox(height: 5),
@@ -508,7 +509,8 @@ class _EditProductState extends State<EditProduct> {
                     child: Row(
                       children: const [
                         Icon(Icons.cancel,
-                            color: Colors.green), // أيقونة الإلغاء
+                            color: Color.fromRGBO(
+                                15, 99, 43, 1)), // أيقونة الإلغاء
                         SizedBox(width: 8),
                         Text(
                           'إلغاء',

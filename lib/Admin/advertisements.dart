@@ -192,7 +192,7 @@ class _AdvertisementsState extends State<Advertisements> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xFF556B2F),
+        backgroundColor: Color.fromRGBO(15, 99, 43, 1),
         title: const Text(
           'إعلانات الصفحة الرئيسية',
           style: TextStyle(color: Colors.white),
@@ -232,7 +232,7 @@ class _AdvertisementsState extends State<Advertisements> {
                           label: const Text('إضافة صورة',
                               style: TextStyle(color: Colors.white)),
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Color(0xFF556B2F),
+                            backgroundColor: Color.fromRGBO(15, 99, 43, 1),
                           ),
                         ),
                         ElevatedButton.icon(
@@ -246,7 +246,7 @@ class _AdvertisementsState extends State<Advertisements> {
                           label: const Text('حفظ التعديلات',
                               style: TextStyle(color: Colors.white)),
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Color(0xFF556B2F),
+                            backgroundColor: Color.fromRGBO(15, 99, 43, 1),
                           ),
                         ),
                       ],
@@ -282,7 +282,9 @@ class _AdvertisementsState extends State<Advertisements> {
                                       child: Container(
                                         decoration: BoxDecoration(
                                           border: Border.all(
-                                              color: Colors.green, width: 2),
+                                              color: const Color.fromRGBO(
+                                                  15, 99, 43, 1),
+                                              width: 2),
                                           borderRadius:
                                               BorderRadius.circular(10),
                                         ),
@@ -337,7 +339,8 @@ class _AdvertisementsState extends State<Advertisements> {
                             label: const Text('إضافة صورة',
                                 style: TextStyle(color: Colors.white)),
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Color(0xFF556B2F),
+                              backgroundColor:
+                                  const Color.fromRGBO(15, 99, 43, 1),
                             ),
                           ),
                           ElevatedButton.icon(
@@ -351,7 +354,8 @@ class _AdvertisementsState extends State<Advertisements> {
                             label: const Text('حفظ التعديلات',
                                 style: TextStyle(color: Colors.white)),
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Color(0xFF556B2F),
+                              backgroundColor:
+                                  const Color.fromRGBO(15, 99, 43, 1),
                             ),
                           ),
                         ],

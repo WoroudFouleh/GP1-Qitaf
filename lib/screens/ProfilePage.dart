@@ -160,12 +160,11 @@ class _ProfilePageState extends State<ProfilePage>
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.white,
-          iconTheme:
-              const IconThemeData(color: Color.fromARGB(255, 11, 108, 45)),
+          iconTheme: const IconThemeData(color: Color.fromRGBO(15, 99, 43, 1)),
           title: const Text(
             'الملف الشخصي',
             style: TextStyle(
-                color: Color.fromARGB(255, 11, 108, 45),
+                color: Color.fromRGBO(15, 99, 43, 1),
                 fontWeight: FontWeight.bold),
           ),
           actions: [
@@ -263,7 +262,7 @@ class _ProfilePageState extends State<ProfilePage>
                 const Icon(Icons.score, color: Colors.blue),
                 const SizedBox(width: 1),
                 const Text(
-                  'عدد النقاط:',
+                  'النقاط:',
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -281,7 +280,7 @@ class _ProfilePageState extends State<ProfilePage>
                     color: Color.fromARGB(255, 91, 179, 14)),
                 const SizedBox(width: 1),
                 const Text(
-                  'عدد المنشورات:',
+                  ' المنشورات:',
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -300,9 +299,9 @@ class _ProfilePageState extends State<ProfilePage>
             const SizedBox(height: 20),
             TabBar(
               controller: _tabController,
-              labelColor: Color.fromARGB(255, 11, 108, 45),
+              labelColor: Color.fromRGBO(15, 99, 43, 1),
               unselectedLabelColor: const Color.fromARGB(255, 35, 35, 35),
-              indicatorColor: Color.fromARGB(255, 11, 108, 45),
+              indicatorColor: Color.fromRGBO(15, 99, 43, 1),
               labelStyle: const TextStyle(
                 fontWeight: FontWeight.bold,
                 fontFamily: 'CustomArabicFont',
@@ -331,9 +330,9 @@ class _ProfilePageState extends State<ProfilePage>
       child: Column(
         children: [
           const TabBar(
-            labelColor: Color.fromARGB(255, 11, 108, 45),
+            labelColor: Color.fromRGBO(15, 99, 43, 1),
             unselectedLabelColor: Color.fromARGB(255, 30, 29, 29),
-            indicatorColor: Colors.green,
+            indicatorColor: Color.fromRGBO(15, 99, 43, 1),
             labelStyle: TextStyle(
               fontWeight: FontWeight.bold,
               fontFamily: 'CustomArabicFont',
@@ -576,42 +575,47 @@ class RecipeCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 4,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ClipRRect(
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(15)),
-            child: Image.memory(
-              base64Decode(thumbnailUrl),
-              height: 160,
-              width: double.infinity,
-              fit: BoxFit.cover,
+    return SizedBox(
+      height: 300, // Set your desired height here
+      child: Card(
+        elevation: 4,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ClipRRect(
+              borderRadius:
+                  const BorderRadius.vertical(top: Radius.circular(15)),
+              child: Image.memory(
+                base64Decode(thumbnailUrl),
+                height:
+                    150, // Adjust height of the image to fit your new card height
+                width: double.infinity,
+                fit: BoxFit.cover,
+              ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: const TextStyle(
-                      fontWeight: FontWeight.bold, fontSize: 16),
-                ),
-                const SizedBox(height: 5),
-                Text(
-                  "تاريخ النشر: ${publishDate.toString().substring(0, 10)}",
-                  style: const TextStyle(fontSize: 12, color: Colors.grey),
-                ),
-              ],
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: const TextStyle(
+                        fontWeight: FontWeight.bold, fontSize: 16),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    "تاريخ النشر: ${publishDate.toString().substring(0, 10)}",
+                    style: const TextStyle(fontSize: 12, color: Colors.grey),
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

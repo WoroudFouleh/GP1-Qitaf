@@ -191,7 +191,7 @@ class _ProductAdvertisementsState extends State<Productadvertisments> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xFF556B2F),
+        backgroundColor: Color.fromRGBO(15, 99, 43, 1),
         title: const Text(
           'إعلانات المنتجات ',
           style: TextStyle(color: Colors.white),
@@ -231,21 +231,7 @@ class _ProductAdvertisementsState extends State<Productadvertisments> {
                           label: const Text('إضافة صورة',
                               style: TextStyle(color: Colors.white)),
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Color(0xFF556B2F),
-                          ),
-                        ),
-                        ElevatedButton.icon(
-                          onPressed: () {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                  content: Text('تم حفظ التعديلات!')),
-                            );
-                          },
-                          icon: const Icon(Icons.check, color: Colors.white),
-                          label: const Text('حفظ التعديلات',
-                              style: TextStyle(color: Colors.white)),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Color(0xFF556B2F),
+                            backgroundColor: Color.fromRGBO(15, 99, 43, 1),
                           ),
                         ),
                       ],
@@ -336,21 +322,7 @@ class _ProductAdvertisementsState extends State<Productadvertisments> {
                             label: const Text('إضافة صورة',
                                 style: TextStyle(color: Colors.white)),
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Color(0xFF556B2F),
-                            ),
-                          ),
-                          ElevatedButton.icon(
-                            onPressed: () {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                    content: Text('تم حفظ التعديلات!')),
-                              );
-                            },
-                            icon: const Icon(Icons.check, color: Colors.white),
-                            label: const Text('حفظ التعديلات',
-                                style: TextStyle(color: Colors.white)),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Color(0xFF556B2F),
+                              backgroundColor: Color.fromRGBO(15, 99, 43, 1),
                             ),
                           ),
                         ],

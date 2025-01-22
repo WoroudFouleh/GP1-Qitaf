@@ -1,5 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:login_page/Admin/Admin.dart';
+import 'package:login_page/services/notification_service.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'dart:io';
 import 'package:http/http.dart' as http;
@@ -16,6 +18,8 @@ class DeliveryRequestsPage extends StatefulWidget {
 class _DeliveryRequestsPageState extends State<DeliveryRequestsPage> {
   List<dynamic> requests = [];
   bool isLoading = true;
+  late String customerFCM;
+  late String customerID;
   final Uri pdfUri = Uri.parse(
       'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf'); // رابط لملف PDF
 
@@ -23,6 +27,57 @@ class _DeliveryRequestsPageState extends State<DeliveryRequestsPage> {
   void initState() {
     super.initState();
     fetchRequests(); // Fetch ads when the widget initializes
+  }
+
+  Future<void> fetchCustomerFcmToken(
+      String CustomerEmail, String status) async {
+    try {
+      print("on fetch");
+      // Query Firestore for a user with the same email as the owner
+      final querySnapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .where('email', isEqualTo: CustomerEmail)
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        final userDoc = querySnapshot.docs.first;
+        setState(() {
+          customerFCM = userDoc['fcmToken'] ?? "";
+          customerID = userDoc.id; // Get the FCM token
+        });
+        print("Owner's FCM token: $customerFCM");
+        print("Owner's document ID: $customerID");
+        if (status == 'yes') {
+          await NotificationService.instance.sendNotificationToSpecific(
+            customerFCM,
+            'قبول طلب العمل كعامل توصيل ',
+            'مبارك! لقد تم قبول طلب عملك كعامل توصيل في قِطاف',
+          );
+          await NotificationService.instance.saveNotificationToFirebase(
+              customerFCM,
+              'قبول طلب العمل كعامل توصيل ',
+              'مبارك! لقد تم قبول طلب عملك كعامل توصيل في قِطاف',
+              customerID,
+              'delivery');
+        } else {
+          await NotificationService.instance.sendNotificationToSpecific(
+            customerFCM,
+            'رفض طلب العمل كعامل توصيل ',
+            'للأسف. لم يتم قبولك للعمل كعامل توصيل في قطاف',
+          );
+          await NotificationService.instance.saveNotificationToFirebase(
+              customerFCM,
+              'رفض طلب العمل كعامل توصيل ',
+              'للأسف. لم يتم قبولك للعمل كعامل توصيل في قطاف',
+              customerID,
+              'delivery');
+        }
+      } else {
+        print("No user found with the email: $CustomerEmail");
+      }
+    } catch (e) {
+      print("Error fetching FCM token: $e");
+    }
   }
 
   String transliterateArabicToEnglish(String arabicText) {
@@ -161,20 +216,20 @@ class _DeliveryRequestsPageState extends State<DeliveryRequestsPage> {
       );
 
       if (response.statusCode == 200) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('تم إرسال البريد الإلكتروني بنجاح!'),
-            backgroundColor: Colors.green,
-          ),
-        );
+        // ScaffoldMessenger.of(context).showSnackBar(
+        //   const SnackBar(
+        //     content: Text('تم إرسال البريد الإلكتروني بنجاح!'),
+        //     backgroundColor: Color.fromRGBO(15, 99, 43, 1),
+        //   ),
+        // );
       } else {
         final responseData = jsonDecode(response.body);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('خطأ: ${responseData['message']}'),
-            backgroundColor: Colors.red,
-          ),
-        );
+        // ScaffoldMessenger.of(context).showSnackBar(
+        //   SnackBar(
+        //     content: Text('خطأ: ${responseData['message']}'),
+        //     backgroundColor: Colors.red,
+        //   ),
+        // );
       }
     } catch (error) {
       // ScaffoldMessenger.of(context).showSnackBar(
@@ -216,15 +271,15 @@ class _DeliveryRequestsPageState extends State<DeliveryRequestsPage> {
       } else {
         final responseData = jsonDecode(response.body);
         // Handle error response from the API
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: ${responseData['message']}')),
-        );
+        // ScaffoldMessenger.of(context).showSnackBar(
+        //   SnackBar(content: Text('Error: ${responseData['message']}')),
+        // );
       }
     } catch (error) {
       // Handle any error (e.g., network issues)
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('An error occurred: $error')),
-      );
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   SnackBar(content: Text('An error occurred: $error')),
+      // );
     }
   }
 
@@ -417,7 +472,7 @@ class _DeliveryRequestsPageState extends State<DeliveryRequestsPage> {
               Icons.attach_file,
               ' رخصة القيادة',
               'عرض الملف',
-              Colors.green,
+              const Color.fromRGBO(15, 99, 43, 1),
               isFile: true,
               filePath: 'http://192.168.88.5:3000/${request['licenseFile']}',
             ),
@@ -427,13 +482,14 @@ class _DeliveryRequestsPageState extends State<DeliveryRequestsPage> {
                 Expanded(
                   child: ElevatedButton(
                     onPressed: () {
+                      fetchCustomerFcmToken(request['email'], 'yes');
                       updateRequestStatus(request['_id'], "approved", context);
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('تم قبول الطلب.'),
-                          backgroundColor: Color.fromARGB(255, 32, 131, 53),
-                        ),
-                      );
+                      // ScaffoldMessenger.of(context).showSnackBar(
+                      //   const SnackBar(
+                      //     content: Text('تم قبول الطلب.'),
+                      //     backgroundColor: Color.fromARGB(255, 32, 131, 53),
+                      //   ),
+                      // );
                       // _showAcceptDialog(); // عرض نافذة تأكيد القبول
                       generateUserPass(
                           request['_id'],
@@ -451,14 +507,15 @@ class _DeliveryRequestsPageState extends State<DeliveryRequestsPage> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8.0),
                         side: BorderSide(
-                            color: Colors.green.shade800, width: 1.5),
+                            color: const Color.fromRGBO(15, 99, 43, 1),
+                            width: 1.5),
                       ),
                     ),
                     child: const Text(
                       'قبول',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        color: Colors.green,
+                        color: Color.fromRGBO(15, 99, 43, 1),
                         fontSize: 16.0,
                       ),
                     ),
@@ -468,13 +525,14 @@ class _DeliveryRequestsPageState extends State<DeliveryRequestsPage> {
                 Expanded(
                   child: ElevatedButton(
                     onPressed: () {
+                      fetchCustomerFcmToken(request['email'], 'no');
                       updateRequestStatus(request['_id'], "rejected", context);
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('تم رفض الطلب.'),
-                          backgroundColor: Colors.red,
-                        ),
-                      );
+                      // ScaffoldMessenger.of(context).showSnackBar(
+                      //   const SnackBar(
+                      //     content: Text('تم رفض الطلب.'),
+                      //     backgroundColor: Colors.red,
+                      //   ),
+                      // );
                     },
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.all(12),
@@ -666,20 +724,20 @@ class _DeliveryRequestsPageState extends State<DeliveryRequestsPage> {
                       registerDeliveryMan(finalUsername, email, finalPassword,
                           firstName, lastName, location, phone, license);
                       // Logic to send the SMS using finalUsername and finalPassword
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(
-                            'تم إرسال رسالة القبول عبر Email!\n'
-                            'اسم المستخدم: $finalUsername\n'
-                            'كلمة المرور: $finalPassword',
-                          ),
-                          backgroundColor: Colors.green,
-                        ),
-                      );
+                      // ScaffoldMessenger.of(context).showSnackBar(
+                      //   SnackBar(
+                      //     content: Text(
+                      //       'تم إرسال رسالة القبول عبر Email!\n'
+                      //       'اسم المستخدم: $finalUsername\n'
+                      //       'كلمة المرور: $finalPassword',
+                      //     ),
+                      //     backgroundColor: Colors.green,
+                      //   ),
+                      // );
                       Navigator.of(context).pop(); // Close the dialog
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green,
+                      backgroundColor: const Color.fromRGBO(15, 99, 43, 1),
                       padding: const EdgeInsets.symmetric(vertical: 12),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8.0),
@@ -711,7 +769,7 @@ class _DeliveryRequestsPageState extends State<DeliveryRequestsPage> {
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
           textAlign: TextAlign.center,
         ),
-        backgroundColor: const Color(0xFF556B2F),
+        backgroundColor: const Color.fromRGBO(15, 99, 43, 1),
         leading: IconButton(
           icon:
               const Icon(Icons.arrow_back, color: Colors.white), // السهم الأبيض

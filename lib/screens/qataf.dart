@@ -26,7 +26,7 @@ class _QatafPageState extends State<QatafPage> {
   void initState() {
     super.initState();
     Map<String, dynamic> jwtDecoderToken = JwtDecoder.decode(widget.token);
-    print(jwtDecoderToken);
+    //print(jwtDecoderToken);
     username = jwtDecoderToken['username'] ?? 'No username';
 
     fetchLands(); // Call the fetch function when the page is loaded
@@ -85,10 +85,10 @@ class _QatafPageState extends State<QatafPage> {
         appBar: AppBar(
           backgroundColor: Colors.white,
           iconTheme: const IconThemeData(
-            color: Color.fromARGB(255, 12, 123, 17),
+            color: Color.fromRGBO(15, 99, 43, 1),
           ),
           titleTextStyle: const TextStyle(
-              color: Color.fromARGB(255, 11, 130, 27),
+              color: Color.fromRGBO(15, 99, 43, 1),
               fontWeight: FontWeight.bold,
               fontSize: 20,
               fontFamily: 'CustomArabicFont'),
@@ -178,7 +178,7 @@ class _QatafPageState extends State<QatafPage> {
                                         : 'ابحث عن الموقع',
                                 prefixIcon: const Icon(
                                   Icons.search,
-                                  color: Color.fromARGB(255, 12, 123, 17),
+                                  color: Color.fromRGBO(15, 99, 43, 1),
                                 ),
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(9.0),
@@ -201,7 +201,7 @@ class _QatafPageState extends State<QatafPage> {
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
-                    color: Color(0xFF556B2F),
+                    color: Color.fromRGBO(15, 99, 43, 1),
                     shadows: [
                       Shadow(
                         color: Color(0xFFD1E7D6),

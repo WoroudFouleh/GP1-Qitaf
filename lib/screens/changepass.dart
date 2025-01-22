@@ -10,7 +10,8 @@ import 'config.dart';
 class Changepass extends StatefulWidget {
   final String token;
   final userId;
-  const Changepass({required this.token, Key? key, this.userId}) : super(key: key);
+  const Changepass({required this.token, Key? key, this.userId})
+      : super(key: key);
 
   @override
   State<Changepass> createState() => _ChangepassState();
@@ -58,8 +59,10 @@ class _ChangepassState extends State<Changepass> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => Changepass2(token: widget.token,
-          userId: widget.userId,),
+          builder: (context) => Changepass2(
+            token: widget.token,
+            userId: widget.userId,
+          ),
         ),
       );
     } else {
@@ -84,10 +87,10 @@ class _ChangepassState extends State<Changepass> {
           appBar: AppBar(
             backgroundColor: Colors.white,
             iconTheme: const IconThemeData(
-              color: Color.fromARGB(255, 12, 123, 17),
+              color: Color.fromRGBO(15, 99, 43, 1),
             ),
             titleTextStyle: const TextStyle(
-              color: Color.fromARGB(255, 11, 130, 27),
+              color: Color.fromRGBO(15, 99, 43, 1),
               fontWeight: FontWeight.bold,
               fontSize: 20,
             ),
@@ -129,7 +132,7 @@ class _ChangepassState extends State<Changepass> {
                               style: TextStyle(
                                 fontSize: 25.0,
                                 fontWeight: FontWeight.w900,
-                                color: Color.fromARGB(255, 17, 80, 31),
+                                color: Color.fromRGBO(15, 99, 43, 1),
                               ),
                             ),
                           ),
@@ -180,7 +183,7 @@ class _ChangepassState extends State<Changepass> {
                               },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor:
-                                    const Color.fromARGB(255, 17, 118, 21),
+                                    const Color.fromRGBO(15, 99, 43, 1),
                                 foregroundColor: Colors.white,
                                 padding:
                                     const EdgeInsets.symmetric(vertical: 18.0),

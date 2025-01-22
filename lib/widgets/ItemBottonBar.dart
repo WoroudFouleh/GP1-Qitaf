@@ -26,8 +26,8 @@ class ItemBottonBar extends StatelessWidget {
     required this.quantity,
     required this.profilePhotoBase64,
     required this.productId,
-    required this.ownerusername, 
-    required this.productCity, 
+    required this.ownerusername,
+    required this.productCity,
     required this.productCoordinates,
   })  : username = JwtDecoder.decode(token)['username'] ?? 'Unknown User',
         super(key: key);
@@ -46,9 +46,9 @@ class ItemBottonBar extends StatelessWidget {
         "quantityType": quantityType,
         "productCity": productCity,
         "productCoordinates": {
-        "lat": productCoordinates['lat'], // Add latitude
-        "lng": productCoordinates['lng'], // Add longitude
-      },
+          "lat": productCoordinates['lat'], // Add latitude
+          "lng": productCoordinates['lng'], // Add longitude
+        },
       };
 
       // Make the POST request
@@ -101,10 +101,10 @@ class ItemBottonBar extends StatelessWidget {
             onPressed: addItemToCart,
             style: ButtonStyle(
               backgroundColor: WidgetStateProperty.all(
-                const Color.fromARGB(255, 21, 80, 13), // لون كبسة زيتي
+                const Color.fromRGBO(15, 99, 43, 1), // لون كبسة زيتي
               ),
               padding: WidgetStateProperty.all(
-                const EdgeInsets.symmetric(vertical: 13, horizontal: 15),
+                const EdgeInsets.symmetric(vertical: 13, horizontal: 13),
               ),
               shape: WidgetStateProperty.all<RoundedRectangleBorder>(
                 RoundedRectangleBorder(
@@ -144,24 +144,24 @@ class ItemBottonBar extends StatelessWidget {
                   color: Color(0xFF7C7C7C), // لون أقل شدة
                 ),
               ),
-              const SizedBox(width: 5), // إضافة مسافة بين السلاش والرقم
+              // إضافة مسافة بين السلاش والرقم
               // Price
               Text(
                 productPrice.toString(), // الرقم فقط
                 style: const TextStyle(
                   fontSize: 25,
                   fontWeight: FontWeight.bold,
-                  color: Color.fromARGB(255, 21, 80, 13), // لون الرقم زيتي
+                  color: Color.fromRGBO(15, 99, 43, 1), // لون الرقم زيتي
                 ),
               ),
-              const SizedBox(width: 5), // إضافة مسافة بين الرقم والعملة
+              // إضافة مسافة بين الرقم والعملة
               // Currency
               const Text(
                 "₪", // العملة
                 style: TextStyle(
                   fontSize: 20, // حجم الخط للعملة
                   fontWeight: FontWeight.bold,
-                  color: Color.fromARGB(255, 21, 80, 13), // لون العملة زيتي
+                  color: Color.fromRGBO(15, 99, 43, 1), // لون العملة زيتي
                 ),
               ),
             ],

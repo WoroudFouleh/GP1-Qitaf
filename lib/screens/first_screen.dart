@@ -53,8 +53,8 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       bottomNavigationBar: CurvedNavigationBar(
         backgroundColor: Colors.transparent,
-        buttonBackgroundColor: const Color.fromARGB(255, 33, 121, 31),
-        color: const Color.fromARGB(255, 33, 121, 31),
+        buttonBackgroundColor: Color.fromRGBO(15, 99, 43, 1),
+        color: const Color.fromRGBO(15, 99, 43, 1),
         animationDuration: const Duration(milliseconds: 300),
         items: const <Widget>[
           Icon(Icons.home, size: 26, color: Colors.white),

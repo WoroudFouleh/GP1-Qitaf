@@ -130,7 +130,7 @@ class _MapScreen2State extends State<MapScreen2> {
               points: decodedPoints
                   .map((point) => LatLng(point.latitude, point.longitude))
                   .toList(),
-              color: Color(0xFF556B2F),
+              color: Color.fromRGBO(15, 99, 43, 1),
               width: 5,
             ),
           );
@@ -158,7 +158,7 @@ class _MapScreen2State extends State<MapScreen2> {
                   ),
                   SizedBox(width: 8),
                   Icon(Icons.directions,
-                      color: Color(0xFF556B2F)), // أيقونة العنوان
+                      color: Color.fromRGBO(15, 99, 43, 1)), // أيقونة العنوان
                 ],
               ),
               content: Column(
@@ -179,7 +179,7 @@ class _MapScreen2State extends State<MapScreen2> {
                       ),
                       SizedBox(width: 8),
                       Icon(Icons.timer,
-                          color: Color(0xFF556B2F)), // أيقونة الوقت
+                          color: Color.fromRGBO(15, 99, 43, 1)), // أيقونة الوقت
                     ],
                   ),
                   SizedBox(height: 4),
@@ -210,7 +210,8 @@ class _MapScreen2State extends State<MapScreen2> {
                       ),
                       SizedBox(width: 8),
                       Icon(Icons.map,
-                          color: Color(0xFF556B2F)), // أيقونة المسافة
+                          color:
+                              Color.fromRGBO(15, 99, 43, 1)), // أيقونة المسافة
                     ],
                   ),
                   SizedBox(height: 4),
@@ -237,7 +238,7 @@ class _MapScreen2State extends State<MapScreen2> {
                   },
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all(
-                        Color(0xFF556B2F)), // لون الزر أخضر
+                        Color.fromRGBO(15, 99, 43, 1)), // لون الزر أخضر
                     foregroundColor: MaterialStateProperty.all(
                         Colors.white), // لون النص أبيض
                     shape: MaterialStateProperty.all(
@@ -288,7 +289,7 @@ class _MapScreen2State extends State<MapScreen2> {
             ),
           ),
         ),
-        backgroundColor: Color(0xFF556B2F),
+        backgroundColor: Color.fromRGBO(15, 99, 43, 1),
       ),
       body: Stack(
         children: [

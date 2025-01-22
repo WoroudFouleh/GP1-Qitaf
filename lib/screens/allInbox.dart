@@ -26,7 +26,7 @@ class _TabbedInboxScreenState extends State<TabbedInboxScreen> {
             children: [
               const Text(
                 'صندوق الرسائل',
-                style: TextStyle(color: Color.fromARGB(255, 65, 139, 67)),
+                style: TextStyle(color: Color.fromRGBO(15, 99, 43, 1)),
               ),
             ],
           ),
@@ -37,7 +37,7 @@ class _TabbedInboxScreenState extends State<TabbedInboxScreen> {
             padding: const EdgeInsets.only(left: 10.0),
             child: IconButton(
               icon: const Icon(Icons.arrow_back,
-                  color: Color.fromARGB(255, 65, 139, 67)),
+                  color: Color.fromRGBO(15, 99, 43, 1)),
               onPressed: () => Navigator.pop(context),
             ),
           ),
@@ -47,7 +47,7 @@ class _TabbedInboxScreenState extends State<TabbedInboxScreen> {
               child: IconButton(
                 icon: const Icon(
                   Icons.group_add,
-                  color: Color.fromARGB(255, 65, 139, 67), // تحديد اللون الأخضر
+                  color: Color.fromRGBO(15, 99, 43, 1), // تحديد اللون الأخضر
                 ),
                 onPressed: () {
                   Navigator.push(
@@ -64,7 +64,7 @@ class _TabbedInboxScreenState extends State<TabbedInboxScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 10.0),
               child: IconButton(
                 icon: const Icon(Icons.search,
-                    color: Color.fromARGB(255, 65, 139, 67)),
+                    color: Color.fromRGBO(15, 99, 43, 1)),
                 onPressed: () async {
                   var result = await showSearch<String>(
                     context: context,
@@ -86,7 +86,7 @@ class _TabbedInboxScreenState extends State<TabbedInboxScreen> {
             ),
           ],
           bottom: const TabBar(
-            labelColor: Color.fromARGB(255, 65, 139, 67),
+            labelColor: Color.fromRGBO(15, 99, 43, 1),
             unselectedLabelColor: Colors.grey,
             indicatorColor: Color.fromARGB(255, 65, 139, 67),
             tabs: [

@@ -139,7 +139,7 @@ class _ChatScreenState extends State<ChatScreen> {
             );
           },
         ),
-        backgroundColor: Color.fromARGB(255, 65, 139, 67),
+        backgroundColor: Color.fromRGBO(15, 99, 43, 1),
         actions: [
           IconButton(
             icon: const Icon(Icons.more_vert, color: Colors.white),
@@ -254,11 +254,11 @@ class _ChatScreenState extends State<ChatScreen> {
                                           child: Text(
                                             'إلغاء',
                                             style: TextStyle(
-                                                color: Color.fromARGB(
-                                                    255,
-                                                    65,
-                                                    139,
-                                                    67)), // Green color for cancel button
+                                                color: Color.fromRGBO(
+                                                    15,
+                                                    99,
+                                                    43,
+                                                    1)), // Green color for cancel button
                                           ),
                                         ),
                                         TextButton(
@@ -270,11 +270,11 @@ class _ChatScreenState extends State<ChatScreen> {
                                           child: Text(
                                             'موافق',
                                             style: TextStyle(
-                                                color: Color.fromARGB(
-                                                    255,
-                                                    65,
-                                                    139,
-                                                    67)), // Green color for confirm button
+                                                color: Color.fromRGBO(
+                                                    15,
+                                                    99,
+                                                    43,
+                                                    1)), // Green color for confirm button
                                           ),
                                         ),
                                       ],
@@ -296,7 +296,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                   padding: const EdgeInsets.all(10),
                                   decoration: BoxDecoration(
                                     color: isSender
-                                        ? Color.fromARGB(255, 65, 139, 67)
+                                        ? Color.fromRGBO(15, 99, 43, 1)
                                         : const Color.fromARGB(
                                             255, 246, 255, 226),
                                     borderRadius: BorderRadius.only(
@@ -345,7 +345,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                       messageStatus,
                                       style: const TextStyle(
                                         fontSize: 12,
-                                        color: Color.fromARGB(255, 65, 139, 67),
+                                        color: Color.fromRGBO(15, 99, 43, 1),
                                       ),
                                     ),
                                   ),
@@ -387,7 +387,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       ),
                       IconButton(
                         icon: const Icon(Icons.send,
-                            color: Color.fromARGB(255, 56, 138, 59)),
+                            color: Color.fromRGBO(15, 99, 43, 1)),
                         onPressed: () async {
                           String message = _messageController.text.trim();
                           if (message.isEmpty) return;

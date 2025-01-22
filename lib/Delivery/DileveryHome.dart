@@ -241,7 +241,7 @@ class _DeliveryOrdersPageState extends State<DeliveryOrdersPage> {
                 _fetchFastOrders(); // Call fetch orders for fast delivery
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.green[800],
+                backgroundColor: Color.fromRGBO(15, 99, 43, 1),
                 padding:
                     const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
                 shape: RoundedRectangleBorder(
@@ -354,7 +354,8 @@ class _DeliveryOrdersPageState extends State<DeliveryOrdersPage> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              _buildStatusButton('متاح', _status == 'متاح', Colors.green[800]!),
+              _buildStatusButton(
+                  'متاح', _status == 'متاح', Color.fromRGBO(15, 99, 43, 1)!),
               const SizedBox(width: 8.0),
               _buildStatusButton('مشغول', _status == 'مشغول', Colors.orange),
               const SizedBox(width: 8.0),
@@ -372,7 +373,7 @@ class _DeliveryOrdersPageState extends State<DeliveryOrdersPage> {
               ElevatedButton.icon(
                 onPressed: _navigateToMap,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.green,
+                  backgroundColor: Color.fromRGBO(15, 99, 43, 1),
                   padding:
                       const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
                   shape: RoundedRectangleBorder(
@@ -653,15 +654,15 @@ class _DeliveryOrdersPageState extends State<DeliveryOrdersPage> {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
                           content: Text('تم قبول الطلب!'),
-                          backgroundColor: Colors.green,
+                          backgroundColor: Color.fromRGBO(15, 99, 43, 1),
                         ),
                       );
                     },
                     //icon: const Icon(Icons.check, color: Colors.green),
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.all(12),
-                      backgroundColor:
-                          Colors.green, // Change background to solid green
+                      backgroundColor: Color.fromRGBO(
+                          15, 99, 43, 1), // Change background to solid green
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8.0),
                       ),
@@ -735,7 +736,7 @@ class _DeliveryOrdersPageState extends State<DeliveryOrdersPage> {
                 child: const Icon(
                   Icons.person,
                   size: 40,
-                  color: Colors.green,
+                  color: Color.fromRGBO(15, 99, 43, 1),
                 ),
               ),
             ),
@@ -765,7 +766,7 @@ class _DeliveryOrdersPageState extends State<DeliveryOrdersPage> {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
                           content: Text('تم قبول الطلب!'),
-                          backgroundColor: Colors.green,
+                          backgroundColor: Color.fromRGBO(15, 99, 43, 1),
                         ),
                       );
                     },
@@ -847,7 +848,8 @@ class _DeliveryOrdersPageState extends State<DeliveryOrdersPage> {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10.0),
                   color: Colors.green[50],
-                  border: Border.all(color: Colors.green, width: 1.0),
+                  border: Border.all(
+                      color: Color.fromRGBO(15, 99, 43, 1), width: 1.0),
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -857,7 +859,7 @@ class _DeliveryOrdersPageState extends State<DeliveryOrdersPage> {
                       style: const TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.bold,
-                        color: Colors.green,
+                        color: Color.fromRGBO(15, 99, 43, 1),
                       ),
                       textAlign: TextAlign.center,
                     ),
@@ -927,7 +929,7 @@ class _DeliveryOrdersPageState extends State<DeliveryOrdersPage> {
         appBar: _currentIndex == 2
             ? null // لا يظهر التوب بار عند الضغط على الخريطة
             : AppBar(
-                backgroundColor: Colors.green[800],
+                backgroundColor: Color.fromRGBO(15, 99, 43, 1),
                 title: Text(
                   _currentIndex == 0
                       ? 'الصفحة الرئيسية'
@@ -1004,7 +1006,7 @@ class _DeliveryOrdersPageState extends State<DeliveryOrdersPage> {
               label: 'الملف الشخصي',
             ),
           ],
-          selectedItemColor: Colors.green[800],
+          selectedItemColor: Color.fromRGBO(15, 99, 43, 1),
           unselectedItemColor: Colors.grey,
         ),
       ),

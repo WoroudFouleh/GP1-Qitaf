@@ -62,10 +62,10 @@ class _OwnerHomeState extends State<OwnerHome> {
         appBar: AppBar(
           backgroundColor: Colors.white,
           iconTheme: const IconThemeData(
-            color: Color.fromARGB(255, 12, 123, 17),
+            color: Color.fromRGBO(15, 99, 43, 1),
           ),
           titleTextStyle: const TextStyle(
-            color: Color.fromARGB(255, 11, 130, 27),
+            color: Color.fromRGBO(15, 99, 43, 1),
             fontWeight: FontWeight.bold,
             fontSize: 20,
             fontFamily: 'CustomArabicFont',
@@ -95,7 +95,7 @@ class _OwnerHomeState extends State<OwnerHome> {
                   style: TextStyle(
                     fontSize: 20, // حجم الخط
                     fontWeight: FontWeight.bold, // سماكة الخط
-                    color: Color.fromARGB(255, 12, 123, 17), // اللون الأخضر
+                    color: Color.fromRGBO(15, 99, 43, 1), // اللون الأخضر
                   ),
                   textAlign: TextAlign.center, // محاذاة النص إلى المنتصف
                 ),
@@ -251,7 +251,8 @@ class _OwnerHomeState extends State<OwnerHome> {
                 padding: EdgeInsets.only(left: 16.0),
                 child: Icon(
                   Icons.arrow_forward_ios, // السهم باتجاه اليمين
-                  color: Colors.green, // تغيير اللون إلى الأخضر
+                  color:
+                      Color.fromRGBO(15, 99, 43, 1), // تغيير اللون إلى الأخضر
                 ),
               ),
             ],

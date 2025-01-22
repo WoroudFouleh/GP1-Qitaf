@@ -417,7 +417,7 @@ class _OrderWidgetState extends State<OrderWidget> {
         style: const TextStyle(
           fontSize: 22,
           fontWeight: FontWeight.bold,
-          color: Color(0xFF355E3B),
+          color: Color.fromRGBO(15, 99, 43, 1),
         ),
         textAlign: TextAlign.right, // Align text to the right for Arabic
         textDirection:
@@ -500,7 +500,7 @@ class _OrderWidgetState extends State<OrderWidget> {
           ),
           if (icon != null)
             IconButton(
-              icon: Icon(icon, color: Colors.green),
+              icon: Icon(icon, color: Color.fromRGBO(15, 99, 43, 1)),
               onPressed: onIconPressed,
             ),
         ],
@@ -651,7 +651,7 @@ class _OrderWidgetState extends State<OrderWidget> {
         margin: const EdgeInsets.symmetric(horizontal: 20),
         decoration: BoxDecoration(
           gradient: const LinearGradient(
-            colors: [Colors.green, Colors.teal],
+            colors: [Color.fromRGBO(15, 99, 43, 1), Colors.teal],
           ),
           borderRadius: BorderRadius.circular(10),
         ),
@@ -680,7 +680,7 @@ class _OrderWidgetState extends State<OrderWidget> {
             children: [
               Icon(
                 Icons.celebration,
-                color: Colors.green,
+                color: Color.fromRGBO(15, 99, 43, 1),
                 size: 50,
               ),
               const SizedBox(height: 10),
@@ -688,7 +688,7 @@ class _OrderWidgetState extends State<OrderWidget> {
                 "مبروك!",
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  color: Colors.green,
+                  color: Color.fromRGBO(15, 99, 43, 1),
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
                 ),
@@ -732,7 +732,7 @@ class _OrderWidgetState extends State<OrderWidget> {
                 applyDiscountAndOrder(discountPercentage); // Apply the discount
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.green,
+                backgroundColor: Color.fromRGBO(15, 99, 43, 1),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
                 ),
@@ -789,7 +789,7 @@ class _OrderWidgetState extends State<OrderWidget> {
           ),
         ),
         trailing: icon != null
-            ? Icon(icon, color: const Color(0xFF355E3B))
+            ? Icon(icon, color: const Color.fromRGBO(15, 99, 43, 1))
             : Image.asset(imagePath!, width: 40),
         leading: Radio<String>(
           value: value,
@@ -802,7 +802,7 @@ class _OrderWidgetState extends State<OrderWidget> {
               }
             });
           },
-          activeColor: const Color(0xFF355E3B),
+          activeColor: const Color.fromRGBO(15, 99, 43, 1),
         ),
       ),
     );
@@ -821,7 +821,7 @@ class _OrderWidgetState extends State<OrderWidget> {
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF355E3B).withOpacity(0.2),
+            color: const Color.fromRGBO(15, 99, 43, 1).withOpacity(0.2),
             spreadRadius: 3,
             blurRadius: 5,
           ),
@@ -833,12 +833,12 @@ class _OrderWidgetState extends State<OrderWidget> {
           textAlign: TextAlign.right,
           style: const TextStyle(
             fontSize: 18,
-            color: Color(0xFF355E3B),
+            color: Color.fromRGBO(15, 99, 43, 1),
             fontWeight: FontWeight.bold,
           ),
         ),
         trailing: icon != null
-            ? Icon(icon, color: const Color(0xFF355E3B))
+            ? Icon(icon, color: const Color.fromRGBO(15, 99, 43, 1))
             : Image.asset(imagePath!, width: 40),
         leading: Radio<String>(
           value: value,
@@ -850,7 +850,7 @@ class _OrderWidgetState extends State<OrderWidget> {
                   selectedCity, selectedDeliveryMethod == 'fast');
             });
           },
-          activeColor: const Color(0xFF355E3B),
+          activeColor: const Color.fromRGBO(15, 99, 43, 1),
         ),
       ),
     );
@@ -894,7 +894,7 @@ class _OrderWidgetState extends State<OrderWidget> {
               ElevatedButton(
                 onPressed: () => Navigator.pop(context),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF355E3B),
+                  backgroundColor: const Color.fromRGBO(15, 99, 43, 1),
                   padding:
                       const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
                   shape: RoundedRectangleBorder(

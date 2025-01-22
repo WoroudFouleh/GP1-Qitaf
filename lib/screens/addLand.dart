@@ -153,7 +153,7 @@ class _AddLandState extends State<AddLand> {
             showCustomDialog(
               context: context,
               icon: Icons.check,
-              iconColor: Colors.green,
+              iconColor: Color.fromRGBO(15, 99, 43, 1),
               title: "تمّ بنجاح",
               message: "!تمّ إضافة الأرض بنجاح",
               buttonText: "حسناً",
@@ -282,10 +282,10 @@ class _AddLandState extends State<AddLand> {
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 255, 255, 255),
         iconTheme: const IconThemeData(
-          color: Color.fromARGB(255, 11, 108, 45), // لون الأيقونات
+          color: Color.fromRGBO(15, 99, 43, 1), // لون الأيقونات
         ),
         titleTextStyle: const TextStyle(
-          color: Color.fromARGB(255, 11, 110, 29), // لون العنوان
+          color: Color.fromRGBO(15, 99, 43, 1), // لون العنوان
           fontWeight: FontWeight.bold, // جعل العنوان غامق
           fontSize: 20,
           fontFamily: 'CustomArabicFont', // حجم الخط
@@ -337,7 +337,7 @@ class _AddLandState extends State<AddLand> {
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(
                         vertical: 10, horizontal: 50), // تكبير حجم الزر
-                    backgroundColor: const Color.fromARGB(255, 18, 116, 22),
+                    backgroundColor: const Color.fromRGBO(15, 99, 43, 1),
                   ),
                   child: const Text(
                     'إضافة صورة',
@@ -438,7 +438,7 @@ class _AddLandState extends State<AddLand> {
                       IconButton(
                         icon: const Icon(
                           Icons.add_location_alt, // أيقونة لإضافة الموقع
-                          color: Color.fromARGB(255, 11, 108, 45),
+                          color: Color.fromRGBO(15, 99, 43, 1),
                           size: 30,
                         ),
                         onPressed: () {
@@ -636,8 +636,8 @@ class _AddLandState extends State<AddLand> {
                             : DateFormat('yyyy-MM-dd').format(_endDate!),
                         style: const TextStyle(
                             fontSize: 18,
-                            color: Color.fromARGB(
-                                255, 22, 124, 15)), // تكبير الخط وتغيير اللون
+                            color: Color.fromRGBO(
+                                15, 99, 43, 1)), // تكبير الخط وتغيير اللون
                       ),
                     ),
                     ElevatedButton(
@@ -660,8 +660,8 @@ class _AddLandState extends State<AddLand> {
                             : DateFormat('yyyy-MM-dd').format(_startDate!),
                         style: const TextStyle(
                             fontSize: 18,
-                            color: Color.fromARGB(
-                                255, 26, 115, 12)), // تكبير الخط وتغيير اللون
+                            color: Color.fromRGBO(
+                                15, 99, 43, 1)), // تكبير الخط وتغيير اللون
                       ),
                     ),
                   ],
@@ -703,8 +703,8 @@ class _AddLandState extends State<AddLand> {
                             : _endTime!.format(context),
                         style: const TextStyle(
                             fontSize: 18,
-                            color: Color.fromARGB(
-                                255, 14, 112, 16)), // تكبير الخط وتغيير اللون
+                            color: Color.fromRGBO(
+                                15, 99, 43, 1)), // تكبير الخط وتغيير اللون
                       ),
                     ),
                     ElevatedButton(
@@ -725,8 +725,8 @@ class _AddLandState extends State<AddLand> {
                             : _startTime!.format(context),
                         style: const TextStyle(
                             fontSize: 18,
-                            color: Color.fromARGB(
-                                255, 7, 104, 23)), // تكبير الخط وتغيير اللون
+                            color: Color.fromRGBO(
+                                15, 99, 43, 1)), // تكبير الخط وتغيير اللون
                       ),
                     ),
                   ],
@@ -746,7 +746,7 @@ class _AddLandState extends State<AddLand> {
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(
                         vertical: 10, horizontal: 50), // تكبير حجم الزر
-                    backgroundColor: const Color.fromARGB(255, 18, 116, 22),
+                    backgroundColor: const Color.fromRGBO(15, 99, 43, 1),
                   ),
                   child: const Text(
                     'إضافة',
@@ -785,7 +785,7 @@ class _AddLandState extends State<AddLand> {
                     children: [
                       Icon(
                         Icons.image,
-                        color: Colors.green,
+                        color: Color.fromRGBO(15, 99, 43, 1),
                         size: 35,
                       ),
                       SizedBox(height: 5),
@@ -810,7 +810,7 @@ class _AddLandState extends State<AddLand> {
                     children: [
                       Icon(
                         Icons.camera,
-                        color: Colors.green,
+                        color: Color.fromRGBO(15, 99, 43, 1),
                         size: 35,
                       ),
                       SizedBox(height: 5),

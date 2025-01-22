@@ -81,7 +81,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
           style: TextStyle(
               fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
         ),
-        backgroundColor: const Color.fromARGB(255, 65, 139, 67),
+        backgroundColor: const Color.fromRGBO(15, 99, 43, 1),
         actions: [
           IconButton(
             icon: const Icon(Icons.check, color: Colors.white),
@@ -119,7 +119,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                 decoration: InputDecoration(
                   labelText: 'البحث عن الأعضاء',
                   prefixIcon: const Icon(Icons.search,
-                      color: Color.fromARGB(255, 65, 139, 67)),
+                      color: Color.fromRGBO(15, 99, 43, 1)),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
@@ -172,7 +172,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                               }
                             });
                           },
-                          activeColor: const Color.fromARGB(255, 65, 139, 67),
+                          activeColor: const Color.fromRGBO(15, 99, 43, 1),
                         );
                       },
                     );

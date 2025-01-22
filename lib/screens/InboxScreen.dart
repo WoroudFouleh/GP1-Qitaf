@@ -179,7 +179,7 @@ class _InboxScreenState extends State<InboxScreen> {
                                             ? Icons.check_circle
                                             : Icons.check_circle_outline,
                                         color: isSeen
-                                            ? Color.fromARGB(255, 65, 139, 67)
+                                            ? Color.fromRGBO(15, 99, 43, 1)
                                             : Colors.grey,
                                         size: 18,
                                       ),
@@ -240,7 +240,7 @@ class UserSearchDelegate extends SearchDelegate<String> {
     return [
       IconButton(
         icon: const Icon(Icons.clear,
-            color: Color.fromARGB(255, 65, 139, 67)), // أخضر
+            color: Color.fromRGBO(15, 99, 43, 1)), // أخضر
         onPressed: () {
           query = '';
         },
@@ -252,7 +252,7 @@ class UserSearchDelegate extends SearchDelegate<String> {
   Widget buildLeading(BuildContext context) {
     return IconButton(
       icon: const Icon(Icons.arrow_back,
-          color: Color.fromARGB(255, 65, 139, 67)), // أخضر
+          color: Color.fromRGBO(15, 99, 43, 1)), // أخضر
       onPressed: () {
         close(context, '');
       },

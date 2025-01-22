@@ -78,7 +78,8 @@ class _DeliveryAdvertisementsState extends State<DeliveryAdvertisements> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xFF556B2F), // تغيير خلفية الـ AppBar إلى الأخضر
+        backgroundColor:
+            Color.fromRGBO(15, 99, 43, 1), // تغيير خلفية الـ AppBar إلى الأخضر
         title: const Text(
           'إنشاء إعلان جديد',
           style: TextStyle(
@@ -109,7 +110,8 @@ class _DeliveryAdvertisementsState extends State<DeliveryAdvertisements> {
                 hintStyle: TextStyle(color: Colors.grey[600]),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
-                  borderSide: const BorderSide(color: Color(0xFF556B2F)),
+                  borderSide:
+                      const BorderSide(color: Color.fromRGBO(15, 99, 43, 1)),
                 ),
               ),
               textAlign: TextAlign.right, // محاذاة النص لليمين
@@ -168,7 +170,7 @@ class _DeliveryAdvertisementsState extends State<DeliveryAdvertisements> {
                 style: TextStyle(color: Colors.white),
               ),
               style: ElevatedButton.styleFrom(
-                backgroundColor: Color(0xFF556B2F),
+                backgroundColor: Color.fromRGBO(15, 99, 43, 1),
                 textStyle: const TextStyle(color: Colors.white),
               ),
             ),
@@ -199,7 +201,7 @@ class _DeliveryAdvertisementsState extends State<DeliveryAdvertisements> {
                       fontWeight: FontWeight.bold), // خط أبيض وبولد
                 ),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xFF556B2F),
+                  backgroundColor: Color.fromRGBO(15, 99, 43, 1),
                 ),
               ),
             ),

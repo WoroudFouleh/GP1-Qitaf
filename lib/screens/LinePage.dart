@@ -204,7 +204,8 @@ class _LinePageState extends State<LinePage> {
                                 style: const TextStyle(
                                   fontSize: 20, // تكبير الخط
                                   fontWeight: FontWeight.bold, // خط عريض
-                                  color: Color(0xFF556B2F), // لون زيتي
+                                  color:
+                                      Color.fromRGBO(15, 99, 43, 1), // لون زيتي
                                   shadows: [
                                     Shadow(
                                       offset: Offset(0, 2),
@@ -269,7 +270,8 @@ class _LinePageState extends State<LinePage> {
                                 style: const TextStyle(
                                   fontSize: 19, // تكبير الخط
                                   fontWeight: FontWeight.bold, // خط عريض
-                                  color: Color(0xFF556B2F), // لون زيتي
+                                  color:
+                                      Color.fromRGBO(15, 99, 43, 1), // لون زيتي
                                   shadows: [
                                     Shadow(
                                       offset: Offset(0, 2),
@@ -351,7 +353,8 @@ class _LinePageState extends State<LinePage> {
                           ),
                         ),
                         const SizedBox(width: 10),
-                        const Icon(Icons.access_time, color: Color(0xFF556B2F)),
+                        const Icon(Icons.access_time,
+                            color: Color.fromRGBO(15, 99, 43, 1)),
                       ],
                     ),
                   ),
@@ -396,20 +399,21 @@ class _LinePageState extends State<LinePage> {
                             ),
                             const SizedBox(width: 10),
                             const Icon(Icons.location_on,
-                                color: Color(0xFF556B2F)),
+                                color: Color.fromRGBO(15, 99, 43, 1)),
                           ],
                         ),
                         Row(
                           children: [
                             Text(
-                              '                               ${widget.cropType}',
+                              '                 ${widget.cropType}',
                               style: const TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.black),
                             ),
                             const SizedBox(width: 10),
-                            const Icon(Icons.apple, color: Color(0xFF556B2F)),
+                            const Icon(Icons.apple,
+                                color: Color.fromRGBO(15, 99, 43, 1)),
                           ],
                         ),
                       ],
@@ -437,7 +441,7 @@ class _LinePageState extends State<LinePage> {
                         ),
                         const SizedBox(width: 10),
                         const Icon(Icons.calendar_today,
-                            color: Color(0xFF556B2F)),
+                            color: Color.fromRGBO(15, 99, 43, 1)),
                       ],
                     ),
                   ),
@@ -458,7 +462,8 @@ class _LinePageState extends State<LinePage> {
                           ),
                         ),
                         const SizedBox(width: 10),
-                        const Icon(Icons.access_time, color: Color(0xFF556B2F)),
+                        const Icon(Icons.access_time,
+                            color: Color.fromRGBO(15, 99, 43, 1)),
                       ],
                     ),
                   ),

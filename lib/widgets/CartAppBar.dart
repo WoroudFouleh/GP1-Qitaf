@@ -42,7 +42,7 @@ class CartAppBar extends StatelessWidget {
             child: const Icon(
               Icons.arrow_back, // سهم يتجه لليمين ليكون ع الشمال
               size: 30,
-              color: Color.fromARGB(255, 11, 108, 45), // لون زيتي
+              color: Color.fromRGBO(15, 99, 43, 1), // لون زيتي
             ),
           ),
           const Row(
@@ -52,14 +52,14 @@ class CartAppBar extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 23,
                   fontWeight: FontWeight.bold,
-                  color: Color.fromARGB(255, 11, 108, 45), // لون زيتي
+                  color: Color.fromRGBO(15, 99, 43, 1), // لون زيتي
                 ),
               ),
               SizedBox(width: 8), // مسافة صغيرة بين النص والأيقونة
               Icon(
                 Icons.shopping_cart, // أيقونة سلة التسوق
                 size: 30,
-                color: Color.fromARGB(255, 11, 108, 45), // لون زيتي
+                color: Color.fromRGBO(15, 99, 43, 1), // لون زيتي
               ),
             ],
           ),

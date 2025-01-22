@@ -137,7 +137,7 @@ class _CustomerWorkPageState extends State<CustomerWorkPage> {
                       Icon(
                         Icons.event, // أيقونة تدل على الحجز
                         size: 30,
-                        color: Color(0xFF556B2F), // لون زيتي
+                        color: Color.fromRGBO(15, 99, 43, 1), // لون زيتي
                       ),
                       SizedBox(width: 8),
                       Text(
@@ -157,7 +157,7 @@ class _CustomerWorkPageState extends State<CustomerWorkPage> {
                     child: const Icon(
                       Icons.arrow_forward, // سهم يتجه لليسار ليكون ع الشمال
                       size: 30,
-                      color: Color(0xFF556B2F), // لون زيتي
+                      color: Color.fromRGBO(15, 99, 43, 1), // لون زيتي
                     ),
                   ),
                 ],
@@ -180,8 +180,8 @@ class _CustomerWorkPageState extends State<CustomerWorkPage> {
                         borderRadius: BorderRadius.circular(10),
                         boxShadow: [
                           BoxShadow(
-                            color: const Color.fromARGB(255, 113, 134, 25)
-                                .withOpacity(0.6),
+                            color:
+                                Color.fromRGBO(15, 99, 43, 1).withOpacity(0.6),
                             spreadRadius: 2,
                             blurRadius: 6,
                           ),
@@ -217,7 +217,8 @@ class _CustomerWorkPageState extends State<CustomerWorkPage> {
                                         decoration: BoxDecoration(
                                           shape: BoxShape.circle,
                                           border: Border.all(
-                                            color: Color(0xFF556B2F),
+                                            color:
+                                                Color.fromRGBO(15, 99, 43, 1),
                                             width: 2,
                                           ),
                                           image: DecorationImage(
@@ -240,7 +241,8 @@ class _CustomerWorkPageState extends State<CustomerWorkPage> {
                                                 style: TextStyle(
                                                   fontSize: 20,
                                                   fontWeight: FontWeight.bold,
-                                                  color: Color(0xFF556B2F),
+                                                  color: Color.fromRGBO(
+                                                      15, 99, 43, 1),
                                                 ),
                                               ),
                                               SizedBox(
@@ -280,7 +282,7 @@ class _CustomerWorkPageState extends State<CustomerWorkPage> {
                                     children: [
                                       Icon(
                                         Icons.location_on,
-                                        color: Color(0xFF556B2F),
+                                        color: Color.fromRGBO(15, 99, 43, 1),
                                         size: 20,
                                       ),
                                       SizedBox(width: 5),
@@ -299,7 +301,7 @@ class _CustomerWorkPageState extends State<CustomerWorkPage> {
                                     children: [
                                       Icon(
                                         Icons.calendar_month,
-                                        color: Color(0xFF556B2F),
+                                        color: Color.fromRGBO(15, 99, 43, 1),
                                         size: 20,
                                       ),
                                       SizedBox(width: 5),
@@ -318,7 +320,7 @@ class _CustomerWorkPageState extends State<CustomerWorkPage> {
                                     children: [
                                       Icon(
                                         Icons.access_time,
-                                        color: Color.fromRGBO(85, 107, 47, 1),
+                                        color: Color.fromRGBO(15, 99, 43, 1),
                                         size: 20,
                                       ),
                                       SizedBox(width: 5),
@@ -337,7 +339,7 @@ class _CustomerWorkPageState extends State<CustomerWorkPage> {
                                     children: [
                                       Icon(
                                         Icons.attach_money,
-                                        color: Color(0xFF556B2F),
+                                        color: Color.fromRGBO(15, 99, 43, 1),
                                         size: 20,
                                       ),
                                       SizedBox(width: 5),
@@ -356,7 +358,7 @@ class _CustomerWorkPageState extends State<CustomerWorkPage> {
                                     children: [
                                       Icon(
                                         Icons.apple_rounded,
-                                        color: Color(0xFF556B2F),
+                                        color: Color.fromRGBO(15, 99, 43, 1),
                                         size: 16,
                                       ),
                                       SizedBox(width: 5),
@@ -375,7 +377,7 @@ class _CustomerWorkPageState extends State<CustomerWorkPage> {
                                     children: [
                                       Icon(
                                         Icons.account_circle,
-                                        color: Color(0xFF556B2F),
+                                        color: Color.fromRGBO(15, 99, 43, 1),
                                         size: 20,
                                       ),
                                       SizedBox(width: 5),
@@ -411,7 +413,7 @@ class _CustomerWorkPageState extends State<CustomerWorkPage> {
                                     children: [
                                       Icon(
                                         Icons.calendar_month,
-                                        color: Color(0xFF556B2F),
+                                        color: Color.fromRGBO(15, 99, 43, 1),
                                         size: 20,
                                       ),
                                       SizedBox(width: 5),

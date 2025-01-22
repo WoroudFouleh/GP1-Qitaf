@@ -14,7 +14,8 @@ import 'config.dart';
 class OwnerProfile extends StatefulWidget {
   final token;
   final userId;
-  const OwnerProfile({@required this.token, Key? key, this.userId}) : super(key: key);
+  const OwnerProfile({@required this.token, Key? key, this.userId})
+      : super(key: key);
 
   @override
   State<OwnerProfile> createState() => _OwnerProfileState();
@@ -76,8 +77,8 @@ class _OwnerProfileState extends State<OwnerProfile> {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => OwnerHome(token: newToken,
-            userId: widget.userId),
+            builder: (context) =>
+                OwnerHome(token: newToken, userId: widget.userId),
           ),
         );
       } else {
@@ -137,10 +138,10 @@ class _OwnerProfileState extends State<OwnerProfile> {
           appBar: AppBar(
             backgroundColor: Colors.white,
             iconTheme: const IconThemeData(
-              color: Color.fromARGB(255, 12, 123, 17),
+              color: Color.fromRGBO(15, 99, 43, 1),
             ),
             titleTextStyle: const TextStyle(
-              color: Color.fromARGB(255, 11, 130, 27),
+              color: Color.fromRGBO(15, 99, 43, 1),
               fontWeight: FontWeight.bold,
               fontSize: 20,
               fontFamily: 'CustomArabicFont',
@@ -218,13 +219,13 @@ class _OwnerProfileState extends State<OwnerProfile> {
                       textStyle: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 18,
-                        color: Colors.green,
+                        color: Color.fromRGBO(15, 99, 43, 1),
                       ),
                     ),
                     child: const Text(
                       'حفظ التغييرات',
                       style: TextStyle(
-                        color: Colors.green,
+                        color: Color.fromRGBO(15, 99, 43, 1),
                         fontWeight: FontWeight.bold,
                         fontSize: 18,
                       ),
@@ -240,13 +241,14 @@ class _OwnerProfileState extends State<OwnerProfile> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => Changepass(token: widget.token, userId: widget.userId),
+                          builder: (context) => Changepass(
+                              token: widget.token, userId: widget.userId),
                         ),
                       );
                     },
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 10),
-                      backgroundColor: Colors.green,
+                      backgroundColor: Color.fromRGBO(15, 99, 43, 1),
                       textStyle: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 18,
@@ -280,7 +282,7 @@ class _OwnerProfileState extends State<OwnerProfile> {
         boxShadow: [
           BoxShadow(
             offset: const Offset(0, 5),
-            color: const Color.fromARGB(255, 14, 101, 23).withOpacity(.2),
+            color: const Color.fromRGBO(15, 99, 43, 1).withOpacity(.2),
             spreadRadius: 2,
             blurRadius: 10,
           )
@@ -318,7 +320,7 @@ class _OwnerProfileState extends State<OwnerProfile> {
                     children: [
                       Icon(
                         Icons.image,
-                        color: Colors.green,
+                        color: Color.fromRGBO(15, 99, 43, 1),
                         size: 35,
                       ),
                       SizedBox(height: 5),
@@ -343,7 +345,7 @@ class _OwnerProfileState extends State<OwnerProfile> {
                     children: [
                       Icon(
                         Icons.camera,
-                        color: Colors.green,
+                        color: Color.fromRGBO(15, 99, 43, 1),
                         size: 35,
                       ),
                       SizedBox(height: 5),

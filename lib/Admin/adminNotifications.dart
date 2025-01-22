@@ -96,7 +96,7 @@ class _AdminotificationsPageState extends State<AdminNotificationsPage> {
             const Icon(Icons.notifications, color: Colors.white),
           ],
         ),
-        backgroundColor: const Color.fromARGB(255, 65, 139, 67),
+        backgroundColor: const Color.fromRGBO(15, 99, 43, 1),
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: _fetchNotifications(),

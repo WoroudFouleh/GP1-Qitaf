@@ -348,7 +348,7 @@ class _BookingWidgetState extends State<BookingWidget> {
                     "قم بتعبئة تفاصيل الحجز",
                     style: TextStyle(
                       fontSize: 25,
-                      color: Color(0xFF556B2F),
+                      color: Color.fromRGBO(15, 99, 43, 1),
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -379,7 +379,7 @@ class _BookingWidgetState extends State<BookingWidget> {
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
-                      color: Color(0xFF556B2F),
+                      color: Color.fromRGBO(15, 99, 43, 1),
                     ),
                   ),
                   const SizedBox(height: 15),
@@ -457,7 +457,7 @@ class _BookingWidgetState extends State<BookingWidget> {
                   hintText: "رقم الهاتف",
                   hintStyle: TextStyle(
                     fontSize: 20,
-                    color: Color(0xFF556B2F),
+                    color: Color.fromRGBO(15, 99, 43, 1),
                     inherit: true, // التأكد من التناسق
                   ),
                 ),
@@ -480,7 +480,7 @@ class _BookingWidgetState extends State<BookingWidget> {
                     "كيلو",
                     style: TextStyle(
                       fontSize: 16,
-                      color: Color(0xFF355E3B),
+                      color: Color.fromRGBO(15, 99, 43, 1),
                       inherit: true, // التأكد من التناسق
                     ),
                   ),
@@ -493,7 +493,7 @@ class _BookingWidgetState extends State<BookingWidget> {
                         hintText: " الكميّة ",
                         hintStyle: TextStyle(
                           fontSize: 20,
-                          color: Color(0xFF556B2F),
+                          color: Color.fromRGBO(15, 99, 43, 1),
                           inherit: true, // التأكد من التناسق
                         ),
                       ),
@@ -519,7 +519,7 @@ class _BookingWidgetState extends State<BookingWidget> {
                   hintText: "الثمار",
                   hintStyle: TextStyle(
                     fontSize: 20,
-                    color: Color(0xFF556B2F),
+                    color: Color.fromRGBO(15, 99, 43, 1),
                     inherit: true, // التأكد من التناسق
                   ),
                 ),
@@ -559,8 +559,9 @@ class _BookingWidgetState extends State<BookingWidget> {
                         ),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.white,
-                          foregroundColor: Color(0xFF556B2F),
-                          side: BorderSide(color: Color(0xFF556B2F), width: 2),
+                          foregroundColor: Color.fromRGBO(15, 99, 43, 1),
+                          side: BorderSide(
+                              color: Color.fromRGBO(15, 99, 43, 1), width: 2),
                         ),
                       ),
                     ),
@@ -586,7 +587,7 @@ class _BookingWidgetState extends State<BookingWidget> {
                           ),
                         ),
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Color(0xFF556B2F),
+                          backgroundColor: Color.fromRGBO(15, 99, 43, 1),
                           padding: const EdgeInsets.symmetric(
                               horizontal: 28, vertical: 12),
                         ),
@@ -746,7 +747,7 @@ class _BookingWidgetState extends State<BookingWidget> {
                   confirmBooking();
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xFF556B2F),
+                  backgroundColor: Color.fromRGBO(15, 99, 43, 1),
                   padding:
                       const EdgeInsets.symmetric(horizontal: 28, vertical: 12),
                   textStyle: const TextStyle(
@@ -883,7 +884,7 @@ class _BookingWidgetState extends State<BookingWidget> {
             SizedBox(width: 10),
             Icon(
               Icons.check_circle,
-              color: Color(0xFF556B2F), // أيقونة صح باللون الزيتي
+              color: Color.fromRGBO(15, 99, 43, 1), // أيقونة صح باللون الزيتي
             ),
           ],
         ),
@@ -947,10 +948,12 @@ class _BookingWidgetState extends State<BookingWidget> {
                 ),
               ),
               style: TextButton.styleFrom(
-                backgroundColor: Color(0xFF556B2F), // الخلفية باللون الزيتي
+                backgroundColor:
+                    Color.fromRGBO(15, 99, 43, 1), // الخلفية باللون الزيتي
                 shape: RoundedRectangleBorder(
                   side: BorderSide(
-                      color: Color(0xFF556B2F), width: 2), // الإطار زيتي
+                      color: Color.fromRGBO(15, 99, 43, 1),
+                      width: 2), // الإطار زيتي
                   borderRadius: BorderRadius.circular(5),
                 ),
                 padding:
@@ -991,7 +994,7 @@ class _BookingWidgetState extends State<BookingWidget> {
               style: TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
-                color: Color(0xFF556B2F),
+                color: Color.fromRGBO(15, 99, 43, 1),
               ),
             ),
             if (_startDate != null)
@@ -1022,7 +1025,7 @@ class _BookingWidgetState extends State<BookingWidget> {
                       decoration: BoxDecoration(
                         color: Colors.white,
                         border: Border.all(
-                          color: const Color(0xFF556B2F),
+                          color: const Color.fromRGBO(15, 99, 43, 1),
                           width: 1.5,
                         ),
                         borderRadius: BorderRadius.circular(10),
@@ -1062,7 +1065,7 @@ class _BookingWidgetState extends State<BookingWidget> {
                   style: TextStyle(fontSize: 18, color: Colors.white),
                 ),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF556B2F),
+                  backgroundColor: const Color.fromRGBO(15, 99, 43, 1),
                   padding:
                       const EdgeInsets.symmetric(horizontal: 30, vertical: 12),
                   shape: RoundedRectangleBorder(
@@ -1085,7 +1088,7 @@ class _BookingWidgetState extends State<BookingWidget> {
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
-                  color: Color(0xFF556B2F),
+                  color: Color.fromRGBO(15, 99, 43, 1),
                 ),
               ),
             ),

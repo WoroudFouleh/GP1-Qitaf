@@ -38,7 +38,7 @@ class _SigninScreenState extends State<SigninScreen> {
 
   // State to control the notification visibility
   String _notificationMessage = '';
-  Color _notificationColor = Colors.green;
+  Color _notificationColor = Color.fromRGBO(15, 99, 43, 1);
   bool _showNotification = false;
 
   @override
@@ -65,7 +65,7 @@ class _SigninScreenState extends State<SigninScreen> {
   }
 
   void showNotification(String message,
-      {Color backgroundColor = Colors.green}) {
+      {Color backgroundColor = const Color.fromRGBO(15, 99, 43, 1)}) {
     setState(() {
       _notificationMessage = message;
       _notificationColor = backgroundColor;
@@ -338,7 +338,7 @@ class _SigninScreenState extends State<SigninScreen> {
                         _handleAccountSelection('customer', myToken, myToken2);
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color.fromARGB(255, 52, 125, 54),
+                        backgroundColor: const Color.fromRGBO(15, 99, 43, 1),
                         foregroundColor: Colors.white,
                         fixedSize:
                             const Size.fromHeight(50), // Ensures equal height
@@ -356,7 +356,7 @@ class _SigninScreenState extends State<SigninScreen> {
                             'delivery', deliveryToken, myToken2);
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color.fromARGB(255, 52, 125, 54),
+                        backgroundColor: const Color.fromRGBO(15, 99, 43, 1),
                         foregroundColor: Colors.white,
                         fixedSize:
                             const Size.fromHeight(50), // Ensures equal height
@@ -425,7 +425,7 @@ class _SigninScreenState extends State<SigninScreen> {
                             style: TextStyle(
                               fontSize: 30.0,
                               fontWeight: FontWeight.w900,
-                              color: Color.fromARGB(255, 21, 80, 13),
+                              color: Color.fromRGBO(15, 99, 43, 1),
                             ),
                             textAlign: TextAlign.right,
                           ),
@@ -561,7 +561,7 @@ class _SigninScreenState extends State<SigninScreen> {
                                   'هل نسيت كلمة السر؟',
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
-                                    color: Color.fromARGB(255, 23, 98, 29),
+                                    color: Color.fromRGBO(15, 99, 43, 1),
                                   ),
                                   textAlign: TextAlign.right,
                                 ),
@@ -591,7 +591,7 @@ class _SigninScreenState extends State<SigninScreen> {
                               },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor:
-                                    const Color.fromARGB(255, 26, 83, 25),
+                                    const Color.fromRGBO(15, 99, 43, 1),
                                 foregroundColor: Colors.white,
                                 padding:
                                     const EdgeInsets.symmetric(vertical: 18.0),
@@ -620,7 +620,7 @@ class _SigninScreenState extends State<SigninScreen> {
                                   'إنشاء حساب',
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
-                                    color: Color.fromARGB(255, 14, 80, 34),
+                                    color: Color.fromRGBO(15, 99, 43, 1),
                                   ),
                                   textAlign: TextAlign.right,
                                 ),

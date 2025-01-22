@@ -10,6 +10,7 @@ import 'package:login_page/screens/ProfilePage.dart';
 import 'package:login_page/screens/owner_profile.dart';
 import 'package:login_page/screens/CartPage.dart';
 import 'package:login_page/screens/previousOrders.dart';
+import 'package:login_page/screens/welcome_screen.dart';
 
 class CustomDrawer2 extends StatefulWidget {
   final String token;
@@ -156,12 +157,15 @@ class _CustomDrawer2State extends State<CustomDrawer2> {
           ),
           const SizedBox(height: 28.0),
           const SizedBox(height: 28.0),
-          const ListTile(
+          ListTile(
             trailing: Icon(Icons.logout),
             title: Align(
               alignment: Alignment.centerRight,
               child: Text("تسجيل الخروج"),
             ),
+            onTap: () {
+              _showLogoutConfirmationDialog();
+            },
           ),
           const ListTile(
             trailing: Icon(Icons.settings),
@@ -172,6 +176,69 @@ class _CustomDrawer2State extends State<CustomDrawer2> {
           ),
         ],
       ),
+    );
+  }
+
+  void _showLogoutConfirmationDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Directionality(
+          textDirection: TextDirection.rtl,
+          child: AlertDialog(
+            title: const Text(
+              'تأكيد تسجيل الخروج',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF556B2F),
+              ),
+            ),
+            content: const Text(
+              'هل أنت متأكد أنك تريد تسجيل الخروج؟',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+              ),
+            ),
+            actions: [
+              TextButton.icon(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                icon: const Icon(Icons.cancel,
+                    color: Color.fromARGB(255, 255, 0, 0)),
+                label: const Text(
+                  'لا',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                ),
+              ),
+              TextButton.icon(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => WelcomeScreen()),
+                  );
+                },
+                icon: const Icon(Icons.check, color: Color(0xFF556B2F)),
+                label: const Text(
+                  'نعم',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF556B2F),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }

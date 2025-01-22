@@ -71,7 +71,7 @@ class Prevorder extends StatelessWidget {
                       child: Text(
                         finalStatus,
                         style: const TextStyle(
-                          fontSize: 16,
+                          fontSize: 14,
                         ),
                       ),
                     ),
@@ -86,7 +86,7 @@ class Prevorder extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        "السعر: ₪${price.toStringAsFixed(2)}",
+                        "السعر: ₪${price.toStringAsFixed(1)}",
                         style: const TextStyle(
                           fontSize: 18,
                         ),
@@ -144,7 +144,7 @@ class Prevorder extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    "تاريخ الطلب: ${orderDate.toString().substring(0, 10)}   ",
+                    "تاريخ الطلب:${orderDate.toString().substring(0, 10)}",
                     style: const TextStyle(
                       fontSize: 18,
                     ),

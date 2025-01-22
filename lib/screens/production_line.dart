@@ -136,10 +136,10 @@ class _ProductionLinesPageState extends State<ProductionLinesPage> {
         appBar: AppBar(
           backgroundColor: Colors.white,
           iconTheme: const IconThemeData(
-            color: Color(0xFF556B2F), // Olive green text color
+            color: Color.fromRGBO(15, 99, 43, 1), // Olive green text color
           ),
           titleTextStyle: const TextStyle(
-              color: Color(0xFF556B2F), // Olive green text color
+              color: Color.fromRGBO(15, 99, 43, 1), // Olive green text color
               fontWeight: FontWeight.bold, // جعل النص بولد
               fontSize: 24, // زيادة حجم النص
               fontFamily: 'CustomArabicFont'),
@@ -255,7 +255,8 @@ class _ProductionLinesPageState extends State<ProductionLinesPage> {
                   style: TextStyle(
                     fontSize: 20, // حجم النص كما هو
                     fontWeight: FontWeight.bold, // جعل النص بولد
-                    color: Color(0xFF556B2F), // Olive green text color
+                    color:
+                        Color.fromRGBO(15, 99, 43, 1), // Olive green text color
                   ),
                 ),
               ),

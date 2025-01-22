@@ -230,7 +230,7 @@ class _PostCardState extends State<PostCard> {
                     children: [
                       Icon(
                         Icons.image,
-                        color: Colors.green,
+                        color: Color.fromRGBO(15, 99, 43, 1),
                         size: 35,
                       ),
                       SizedBox(height: 5),
@@ -255,7 +255,7 @@ class _PostCardState extends State<PostCard> {
                     children: [
                       Icon(
                         Icons.camera,
-                        color: Colors.green,
+                        color: Color.fromRGBO(15, 99, 43, 1),
                         size: 35,
                       ),
                       SizedBox(height: 5),
@@ -390,9 +390,11 @@ class _PostCardState extends State<PostCard> {
                   },
                   child: Row(
                     children: [
-                      Icon(Icons.save, color: Colors.green),
+                      Icon(Icons.save, color: Color.fromRGBO(15, 99, 43, 1)),
                       SizedBox(width: 5),
-                      Text('حفظ', style: TextStyle(color: Colors.green)),
+                      Text('حفظ',
+                          style:
+                              TextStyle(color: Color.fromRGBO(15, 99, 43, 1))),
                     ],
                   ),
                 ),
@@ -462,7 +464,7 @@ class _PostCardState extends State<PostCard> {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15),
           border: Border.all(
-            color: const Color.fromARGB(255, 120, 181, 42).withOpacity(0.7),
+            color: const Color.fromRGBO(15, 99, 43, 1).withOpacity(0.7),
             width: 2,
           ),
           boxShadow: [

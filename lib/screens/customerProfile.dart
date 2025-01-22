@@ -144,7 +144,7 @@ class _customerprofileState extends State<Customerprofile> {
                                     Text(
                                       '$firstName $lastName',
                                       style: const TextStyle(
-                                        color: Color.fromRGBO(52, 121, 40, 1),
+                                        color: Color.fromRGBO(15, 99, 43, 1),
                                         fontSize: 30,
                                       ),
                                     ),
@@ -217,7 +217,7 @@ class _customerprofileState extends State<Customerprofile> {
                                                   const Icon(
                                                     AntDesign.message1,
                                                     color: Color.fromRGBO(
-                                                        52, 121, 40, 1),
+                                                        15, 99, 43, 1),
                                                     size: 25,
                                                   ),
                                                 ],
@@ -273,7 +273,7 @@ class _customerprofileState extends State<Customerprofile> {
                           const Text(
                             'معلومات المالك',
                             style: TextStyle(
-                              color: Color.fromRGBO(52, 121, 40, 1),
+                              color: Color.fromRGBO(15, 99, 43, 1),
                               fontSize: 27,
                             ),
                           ),

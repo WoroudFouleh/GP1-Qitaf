@@ -108,7 +108,7 @@ class _NewPasswordScreenState extends State<NewPassword> {
                         style: TextStyle(
                           fontSize: 25.0,
                           fontWeight: FontWeight.bold,
-                          color: Color.fromARGB(255, 21, 80, 13),
+                          color: Color.fromRGBO(15, 99, 43, 1),
                         ),
                         textAlign: TextAlign.right,
                       ),
@@ -197,7 +197,7 @@ class _NewPasswordScreenState extends State<NewPassword> {
                                 },
                           style: ElevatedButton.styleFrom(
                             backgroundColor:
-                                const Color.fromARGB(255, 17, 118, 21),
+                                const Color.fromRGBO(15, 99, 43, 1),
                             foregroundColor: Colors.white,
                             padding: const EdgeInsets.symmetric(vertical: 18.0),
                             textStyle: const TextStyle(
@@ -229,7 +229,7 @@ class _NewPasswordScreenState extends State<NewPassword> {
                               'تسجيل دخول',
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
-                                color: Color.fromARGB(255, 18, 87, 38),
+                                color: Color.fromRGBO(15, 99, 43, 1),
                               ),
                             ),
                           ),

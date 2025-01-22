@@ -175,7 +175,7 @@ class _MapScreenState extends State<MapScreen> {
               points: decodedPoints
                   .map((point) => LatLng(point.latitude, point.longitude))
                   .toList(),
-              color: const Color.fromARGB(255, 101, 147, 16),
+              color: const Color.fromRGBO(15, 99, 43, 1),
               width: 5,
             ),
           );
@@ -203,8 +203,8 @@ class _MapScreenState extends State<MapScreen> {
                     Row(
                       children: [
                         Icon(Icons.access_time,
-                            color: const Color.fromARGB(
-                                255, 83, 128, 27)), // أيقونة الوقت
+                            color:
+                                Color.fromRGBO(15, 99, 43, 1)), // أيقونة الوقت
                         SizedBox(width: 8),
                         Text(
                           'الوقت المقدر للوصول: $duration',
@@ -219,8 +219,8 @@ class _MapScreenState extends State<MapScreen> {
                     Row(
                       children: [
                         Icon(Icons.map_outlined,
-                            color: const Color.fromARGB(
-                                255, 75, 113, 24)), // أيقونة المسافة
+                            color: const Color.fromRGBO(
+                                15, 99, 43, 1)), // أيقونة المسافة
                         SizedBox(width: 8),
                         Text(
                           'المسافة: $distance',
@@ -241,8 +241,8 @@ class _MapScreenState extends State<MapScreen> {
                         Navigator.of(context).pop();
                       },
                       style: TextButton.styleFrom(
-                        backgroundColor: const Color.fromARGB(
-                            255, 85, 133, 14), // خلفية زيتي
+                        backgroundColor:
+                            const Color.fromRGBO(15, 99, 43, 1), // خلفية زيتي
                         padding:
                             EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                         shape: RoundedRectangleBorder(
@@ -290,7 +290,7 @@ class _MapScreenState extends State<MapScreen> {
           child: AlertDialog(
             title: Row(
               children: [
-                Icon(Icons.location_on, color: Colors.green),
+                Icon(Icons.location_on, color: Color.fromRGBO(15, 99, 43, 1)),
                 SizedBox(width: 8),
                 Text('إضافة موقع جديد'),
               ],
@@ -309,7 +309,7 @@ class _MapScreenState extends State<MapScreen> {
                       'إلغاء',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        color: Colors.green.shade700,
+                        color: Color.fromRGBO(15, 99, 43, 1),
                       ),
                     ),
                   ),
@@ -321,7 +321,7 @@ class _MapScreenState extends State<MapScreen> {
                       'حفظ',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        color: Colors.green.shade700,
+                        color: Color.fromRGBO(15, 99, 43, 1),
                       ),
                     ),
                   ),
@@ -365,7 +365,7 @@ class _MapScreenState extends State<MapScreen> {
             },
           ),
         ],
-        backgroundColor: Color(0xFF556B2F),
+        backgroundColor: Color.fromRGBO(15, 99, 43, 1),
       ),
       body: Stack(
         children: [

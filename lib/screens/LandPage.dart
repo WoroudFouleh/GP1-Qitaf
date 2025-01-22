@@ -1,16 +1,16 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:login_page/screens/map2.dart';
 import 'package:login_page/screens/profile2.dart';
-import 'package:login_page/widgets/ItemAppBar.dart';
-import 'package:login_page/widgets/ItemBottonBar.dart';
+
 import 'package:login_page/widgets/LandAppBar.dart';
 import 'package:login_page/widgets/LandBottonBar.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert'; // To handle JSON decoding
 import 'config.dart';
-import 'package:jwt_decoder/jwt_decoder.dart';
 
 class LandPage extends StatefulWidget {
   final String userId;
@@ -29,27 +29,29 @@ class LandPage extends StatefulWidget {
   final String startTime;
   final String endTime;
   final String token;
+
   final Map<String, double> coordinates;
 
-  const LandPage(
-      {super.key,
-      required this.city,
-      required this.landName,
-      required this.landSpace,
-      required this.location,
-      required this.startDate,
-      required this.startTime,
-      required this.endDate,
-      required this.endTime,
-      required this.username,
-      required this.cropType,
-      required this.image,
-      required this.numOfWorkers,
-      required this.workerWages,
-      required this.token,
-      required this.landId,
-      required this.coordinates,
-      required this.userId});
+  const LandPage({
+    super.key,
+    required this.city,
+    required this.landName,
+    required this.landSpace,
+    required this.location,
+    required this.startDate,
+    required this.startTime,
+    required this.endDate,
+    required this.endTime,
+    required this.username,
+    required this.cropType,
+    required this.image,
+    required this.numOfWorkers,
+    required this.workerWages,
+    required this.token,
+    required this.landId,
+    required this.coordinates,
+    required this.userId,
+  });
 
   @override
   State<LandPage> createState() => _LandPageState();
@@ -68,16 +70,72 @@ class _LandPageState extends State<LandPage> {
   late String city = "";
   late String location = "";
   late int postsCount = 0;
+  late String gender = "";
+  late String ownerFCM = "";
+  late String ownerID = "";
+  late double rate;
+  ////////////////
+  late String workerfirstName = "";
+  late String workerlastName = "";
+  late String workeruserProfileImage = "";
+  late String workerphoneNum = "";
+  late String workercode = "";
+  late String workeremail = "";
+  late String workercity = "";
+  late String workerlocation = "";
+  late String workerusername;
+  late String workergender = "";
+
+  late double workerrate;
   @override
   void initState() {
     super.initState();
-    print("userid ${widget.userId}");
+    fetchFcmOwner();
+    Map<String, dynamic> jwtDecoderToken = JwtDecoder.decode(widget.token);
+    workercode = jwtDecoderToken['phoneCode'];
+    workerphoneNum = jwtDecoderToken['phoneNumber'];
+    workerfirstName = jwtDecoderToken['firstName'];
+    workerlastName = jwtDecoderToken['lastName'];
+    workercity = jwtDecoderToken['city'];
+    workerlocation = jwtDecoderToken['street'];
+    workeremail = jwtDecoderToken['email'];
+    workerrate = jwtDecoderToken['rate'];
+    workergender = jwtDecoderToken['gender'];
+    workerusername = jwtDecoderToken['username'];
+    workeruserProfileImage =
+        jwtDecoderToken['profilePhoto']; // Get the base64 image string
 
-    print("image ${widget.image}");
     fetchUser();
   }
 
+  Future<void> fetchFcmOwner() async {
+    try {
+      print("on fetch");
+      // Query Firestore for a user with the same email as the owner
+      final querySnapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .where('email', isEqualTo: email)
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        final userDoc = querySnapshot.docs.first;
+        setState(() {
+          ownerFCM = userDoc['fcmToken'] ?? "";
+          ownerID = userDoc.id; // Get the FCM token
+        });
+        print("Customer's FCM token: $ownerFCM");
+        print("Customer's document ID: $ownerID");
+        // Send the notification
+      } else {
+        print("No user found with the email: $email");
+      }
+    } catch (e) {
+      print("Error fetching FCM token: $e");
+    }
+  }
+
   void fetchUser() async {
+    //////////owner
     try {
       final response = await http.get(
         Uri.parse('$getUser/${widget.username}'),
@@ -99,6 +157,8 @@ class _LandPageState extends State<LandPage> {
               city = userInfo['city'];
               location = userInfo['street'];
               postsCount = userInfo['postNumber'];
+              gender = userInfo['gender'];
+              rate = userInfo['rate'];
             });
           }
         }
@@ -188,13 +248,14 @@ class _LandPageState extends State<LandPage> {
                                 style: const TextStyle(
                                   fontSize: 20, // تكبير الخط
                                   fontWeight: FontWeight.bold, // خط عريض
-                                  color: Color(0xFF556B2F), // لون زيتي
+                                  color:
+                                      Color.fromRGBO(15, 99, 43, 1), // لون زيتي
                                   shadows: [
                                     Shadow(
                                       offset: Offset(0, 2),
                                       blurRadius: 3,
-                                      color: Color.fromARGB(
-                                          255, 120, 183, 72), // لون اللمعان
+                                      color: Color.fromRGBO(
+                                          15, 99, 43, 1), // لون اللمعان
                                     ),
                                   ],
                                 ),
@@ -252,7 +313,8 @@ class _LandPageState extends State<LandPage> {
                                 style: const TextStyle(
                                   fontSize: 20, // تكبير الخط
                                   fontWeight: FontWeight.bold, // خط عريض
-                                  color: Color(0xFF556B2F), // لون زيتي
+                                  color:
+                                      Color.fromRGBO(15, 99, 43, 1), // لون زيتي
                                   shadows: [
                                     Shadow(
                                       offset: Offset(0, 2),
@@ -323,7 +385,7 @@ class _LandPageState extends State<LandPage> {
                             ),
                             const SizedBox(width: 5),
                             const Icon(Icons.location_on,
-                                color: Color(0xFF556B2F)),
+                                color: Color.fromRGBO(15, 99, 43, 1)),
                           ],
                         ),
                         Row(
@@ -336,7 +398,8 @@ class _LandPageState extends State<LandPage> {
                                   color: Colors.black),
                             ),
                             const SizedBox(width: 10),
-                            const Icon(Icons.apple, color: Color(0xFF556B2F)),
+                            const Icon(Icons.apple,
+                                color: Color.fromRGBO(15, 99, 43, 1)),
                           ],
                         ),
                       ],
@@ -366,7 +429,8 @@ class _LandPageState extends State<LandPage> {
                                   color: Colors.black),
                             ),
                             const SizedBox(width: 10),
-                            const Icon(Icons.group, color: Color(0xFF556B2F)),
+                            const Icon(Icons.group,
+                                color: Color.fromRGBO(15, 99, 43, 1)),
                           ],
                         ),
                         Row(
@@ -394,7 +458,7 @@ class _LandPageState extends State<LandPage> {
                             ),
                             const SizedBox(width: 5),
                             const Icon(Icons.landscape,
-                                color: Color(0xFF556B2F)),
+                                color: Color.fromRGBO(15, 99, 43, 1)),
                           ],
                         ),
                       ],
@@ -417,7 +481,7 @@ class _LandPageState extends State<LandPage> {
                             ),
                             const SizedBox(width: 5),
                             const Icon(Icons.calendar_today,
-                                color: Color(0xFF556B2F)),
+                                color: Color.fromRGBO(15, 99, 43, 1)),
                           ],
                         ),
                       ],
@@ -440,7 +504,7 @@ class _LandPageState extends State<LandPage> {
                             ),
                             const SizedBox(width: 10),
                             const Icon(Icons.access_time,
-                                color: Color(0xFF556B2F)),
+                                color: Color.fromRGBO(15, 99, 43, 1)),
                           ],
                         ),
                       ],
@@ -460,6 +524,15 @@ class _LandPageState extends State<LandPage> {
             landLocation: widget.city,
             landName: widget.landName,
             landId: widget.landId,
+            workerFirstname: workerfirstName,
+            workerLastname: workerlastName,
+            workerCity: workercity,
+            workerGender: workergender,
+            workerProfileImage: workeruserProfileImage,
+            workerUserName: workerusername,
+            ownerFcmToken: ownerFCM,
+            ownerId: ownerID,
+            userRate: workerrate,
           ),
         ],
       ),

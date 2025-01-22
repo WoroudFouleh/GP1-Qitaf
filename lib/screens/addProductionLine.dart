@@ -149,7 +149,7 @@ class _AddProductionLineState extends State<AddProductionLine> {
           showCustomDialog(
             context: context,
             icon: Icons.check,
-            iconColor: Colors.green,
+            iconColor: Color.fromRGBO(15, 99, 43, 1),
             title: "تمّ بنجاح",
             message: "تمّ إضافة المنتج بنجاح!",
             buttonText: "حسناً",
@@ -249,7 +249,7 @@ class _AddProductionLineState extends State<AddProductionLine> {
         backgroundColor: Colors.white,
         iconTheme: const IconThemeData(color: Color.fromARGB(255, 11, 108, 45)),
         titleTextStyle: const TextStyle(
-          color: Color.fromARGB(255, 11, 110, 29),
+          color: Color.fromRGBO(15, 99, 43, 1),
           fontWeight: FontWeight.bold,
           fontSize: 20,
           fontFamily: 'CustomArabicFont',
@@ -292,7 +292,7 @@ class _AddProductionLineState extends State<AddProductionLine> {
                 style: ElevatedButton.styleFrom(
                   padding:
                       const EdgeInsets.symmetric(vertical: 10, horizontal: 50),
-                  backgroundColor: const Color.fromARGB(255, 18, 116, 22),
+                  backgroundColor: const Color.fromRGBO(15, 99, 43, 1),
                 ),
                 child: const Text('إضافة صورة',
                     style: TextStyle(
@@ -365,7 +365,7 @@ class _AddProductionLineState extends State<AddProductionLine> {
                   IconButton(
                     icon: const Icon(
                       Icons.add_location_alt, // أيقونة لإضافة الموقع
-                      color: Color.fromARGB(255, 11, 108, 45),
+                      color: Color.fromRGBO(15, 99, 43, 1),
                       size: 30,
                     ),
                     onPressed: () {
@@ -594,7 +594,7 @@ class _AddProductionLineState extends State<AddProductionLine> {
                 style: ElevatedButton.styleFrom(
                   padding:
                       const EdgeInsets.symmetric(vertical: 10, horizontal: 50),
-                  backgroundColor: const Color.fromARGB(255, 18, 116, 22),
+                  backgroundColor: const Color.fromRGBO(15, 99, 43, 1),
                 ),
                 child: const Text('إضافة',
                     style: TextStyle(
@@ -627,7 +627,8 @@ class _AddProductionLineState extends State<AddProductionLine> {
                   child: const Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.image, color: Colors.green, size: 35),
+                      Icon(Icons.image,
+                          color: Color.fromRGBO(15, 99, 43, 1), size: 35),
                       SizedBox(height: 5),
                       Text('من المعرض',
                           style: TextStyle(
@@ -644,7 +645,8 @@ class _AddProductionLineState extends State<AddProductionLine> {
                   child: const Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.camera, color: Colors.green, size: 35),
+                      Icon(Icons.camera,
+                          color: Color.fromRGBO(15, 99, 43, 1), size: 35),
                       SizedBox(height: 5),
                       Text('من الكاميرا',
                           style: TextStyle(

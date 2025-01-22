@@ -327,7 +327,7 @@ class _AcceptedOrdersPageState extends State<AcceptedOrdersPage> {
                       style: const TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.bold,
-                        color: Colors.green,
+                        color: Color.fromRGBO(15, 99, 43, 1),
                       ),
                       textAlign: TextAlign.center,
                     ),
@@ -468,7 +468,7 @@ class _AcceptedOrdersPageState extends State<AcceptedOrdersPage> {
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
                                 border: Border.all(
-                                  color: const Color.fromARGB(255, 38, 95, 10),
+                                  color: const Color.fromRGBO(15, 99, 43, 1),
                                   width: 2,
                                 ),
                                 boxShadow: [
@@ -565,7 +565,7 @@ class _AcceptedOrdersPageState extends State<AcceptedOrdersPage> {
                               'الملف الشخصي للزبون',
                               style: TextStyle(
                                 fontSize: 14.0,
-                                color: const Color.fromARGB(255, 26, 105, 1),
+                                color: const Color.fromRGBO(15, 99, 43, 1),
                                 decoration: TextDecoration.underline,
                               ),
                             ),
@@ -592,9 +592,10 @@ class _AcceptedOrdersPageState extends State<AcceptedOrdersPage> {
                                 },
                                 child: Text('تم الاستلام'),
                                 style: OutlinedButton.styleFrom(
-                                  foregroundColor: Colors.green,
+                                  foregroundColor:
+                                      Color.fromRGBO(15, 99, 43, 1),
                                   side: BorderSide(
-                                      color: Colors.green,
+                                      color: Color.fromRGBO(15, 99, 43, 1),
                                       width: 2), // Border color and width
                                   padding: EdgeInsets.symmetric(
                                       vertical: 8.0,
@@ -703,7 +704,7 @@ class _AcceptedOrdersPageState extends State<AcceptedOrdersPage> {
                 child: const Icon(
                   Icons.person,
                   size: 40,
-                  color: Colors.green,
+                  color: Color.fromRGBO(15, 99, 43, 1),
                 ),
               ),
             ),
@@ -748,9 +749,9 @@ class _AcceptedOrdersPageState extends State<AcceptedOrdersPage> {
                   },
                   child: Text('تم الاستلام'),
                   style: OutlinedButton.styleFrom(
-                    foregroundColor: Colors.green,
+                    foregroundColor: Color.fromRGBO(15, 99, 43, 1),
                     side: BorderSide(
-                        color: Colors.green,
+                        color: Color.fromRGBO(15, 99, 43, 1),
                         width: 2), // Border color and width
                     padding: EdgeInsets.symmetric(
                         vertical: 8.0,

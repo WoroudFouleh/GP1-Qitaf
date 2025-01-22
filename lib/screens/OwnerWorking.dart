@@ -251,7 +251,7 @@ class _OwnerWorkingPageState extends State<OwnerWorkingPage> {
                       Icon(
                         Icons.event, // أيقونة تدل على الحجز
                         size: 30,
-                        color: Color(0xFF556B2F), // لون زيتي
+                        color: Color.fromRGBO(15, 99, 43, 1), // لون زيتي
                       ),
                       SizedBox(width: 8),
                       Text(
@@ -259,7 +259,7 @@ class _OwnerWorkingPageState extends State<OwnerWorkingPage> {
                         style: TextStyle(
                           fontSize: 23,
                           fontWeight: FontWeight.bold,
-                          color: Color(0xFF556B2F), // لون زيتي
+                          color: Color.fromRGBO(15, 99, 43, 1), // لون زيتي
                         ),
                       ),
                     ],
@@ -271,7 +271,7 @@ class _OwnerWorkingPageState extends State<OwnerWorkingPage> {
                     child: const Icon(
                       Icons.arrow_forward, // سهم يتجه لليسار ليكون ع الشمال
                       size: 30,
-                      color: Color(0xFF556B2F), // لون زيتي
+                      color: Color.fromRGBO(15, 99, 43, 1), // لون زيتي
                     ),
                   ),
                 ],
@@ -294,7 +294,7 @@ class _OwnerWorkingPageState extends State<OwnerWorkingPage> {
                         borderRadius: BorderRadius.circular(10),
                         boxShadow: [
                           BoxShadow(
-                            color: const Color.fromARGB(255, 113, 134, 25)
+                            color: const Color.fromRGBO(15, 99, 43, 1)
                                 .withOpacity(0.6), // تأثير إضاءة زيتي
                             spreadRadius: 2,
                             blurRadius: 6,
@@ -332,7 +332,8 @@ class _OwnerWorkingPageState extends State<OwnerWorkingPage> {
                                           decoration: BoxDecoration(
                                             shape: BoxShape.circle,
                                             border: Border.all(
-                                              color: Color(0xFF556B2F),
+                                              color:
+                                                  Color.fromRGBO(15, 99, 43, 1),
                                               width: 2, // زيتي إطار
                                             ),
                                             image: DecorationImage(
@@ -359,8 +360,8 @@ class _OwnerWorkingPageState extends State<OwnerWorkingPage> {
                                               style: TextStyle(
                                                 fontSize: 20,
                                                 fontWeight: FontWeight.bold,
-                                                color: Color(
-                                                    0xFF556B2F), // زيتي لون
+                                                color: Color.fromRGBO(
+                                                    15, 99, 43, 1), // زيتي لون
                                               ),
                                             ),
                                             SizedBox(height: 5),
@@ -432,7 +433,7 @@ class _OwnerWorkingPageState extends State<OwnerWorkingPage> {
                                 children: [
                                   Icon(
                                     Icons.pin,
-                                    color: Color(0xFF556B2F),
+                                    color: Color.fromRGBO(15, 99, 43, 1),
                                     size: 20,
                                   ),
                                   SizedBox(width: 5),
@@ -451,7 +452,7 @@ class _OwnerWorkingPageState extends State<OwnerWorkingPage> {
                                 children: [
                                   Icon(
                                     Icons.people,
-                                    color: Color(0xFF556B2F),
+                                    color: Color.fromRGBO(15, 99, 43, 1),
                                     size: 20,
                                   ),
                                   SizedBox(width: 5),
@@ -470,7 +471,7 @@ class _OwnerWorkingPageState extends State<OwnerWorkingPage> {
                                 children: [
                                   Icon(
                                     Icons.money_outlined,
-                                    color: Color(0xFF556B2F),
+                                    color: Color.fromRGBO(15, 99, 43, 1),
                                     size: 20,
                                   ),
                                   SizedBox(width: 5),
@@ -489,7 +490,7 @@ class _OwnerWorkingPageState extends State<OwnerWorkingPage> {
                                 children: [
                                   Icon(
                                     Icons.location_on,
-                                    color: Color(0xFF556B2F),
+                                    color: Color.fromRGBO(15, 99, 43, 1),
                                     size: 20,
                                   ),
                                   SizedBox(width: 5),
@@ -508,7 +509,7 @@ class _OwnerWorkingPageState extends State<OwnerWorkingPage> {
                                 children: [
                                   Icon(
                                     Icons.calendar_month,
-                                    color: Color(0xFF556B2F),
+                                    color: Color.fromRGBO(15, 99, 43, 1),
                                     size: 20,
                                   ),
                                   SizedBox(width: 5),
@@ -544,13 +545,15 @@ class _OwnerWorkingPageState extends State<OwnerWorkingPage> {
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: Colors.white,
                                     side: BorderSide(
-                                        color: Colors.green, width: 2),
+                                        color: Color.fromRGBO(15, 99, 43, 1),
+                                        width: 2),
                                     padding: EdgeInsets.symmetric(vertical: 10),
                                   ),
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      Icon(Icons.check, color: Colors.green),
+                                      Icon(Icons.check,
+                                          color: Color.fromRGBO(15, 99, 43, 1)),
                                       SizedBox(width: 5),
                                       Text(
                                         "قبول",

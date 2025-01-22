@@ -129,7 +129,6 @@ class _ItemPageState extends State<ItemPage> {
 
   @override
   Widget build(BuildContext context) {
-    // double ratee = widget.productRate.toDouble();
     return Scaffold(
       backgroundColor: Colors.white,
       body: ListView(
@@ -149,7 +148,7 @@ class _ItemPageState extends State<ItemPage> {
               color: Colors.white,
               boxShadow: [
                 BoxShadow(
-                  color: const Color.fromARGB(255, 23, 57, 28).withOpacity(0.5),
+                  color: const Color.fromRGBO(15, 99, 43, 1).withOpacity(0.5),
                   spreadRadius: 5,
                   blurRadius: 10,
                   offset: const Offset(0, 3),
@@ -204,14 +203,7 @@ class _ItemPageState extends State<ItemPage> {
                                 fit: BoxFit.cover,
                                 width: 40.0,
                                 height: 40.0,
-                              )
-                                  // : Image.asset(
-                                  //     'assets/images/profile.png',
-                                  //     fit: BoxFit.cover,
-                                  //     width: 50.0,
-                                  //     height: 50.0,
-                                  //   ),
-                                  ),
+                              )),
                             ],
                           ),
                         ),
@@ -241,7 +233,7 @@ class _ItemPageState extends State<ItemPage> {
                           style: TextStyle(
                             fontSize: 23,
                             fontWeight: FontWeight.bold,
-                            color: const Color.fromARGB(255, 21, 80, 13),
+                            color: const Color.fromRGBO(15, 99, 43, 1),
                             shadows: [
                               Shadow(
                                 blurRadius: 5.0,
@@ -255,10 +247,40 @@ class _ItemPageState extends State<ItemPage> {
                       ],
                     ),
                   ),
+                  // Rating bar in a separate row
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    child: Directionality(
+                      textDirection: TextDirection.rtl,
+                      child: RatingBar.builder(
+                        initialRating: widget.productRate,
+                        minRating: 1,
+                        direction: Axis.horizontal,
+                        itemCount: 5,
+                        itemPadding: const EdgeInsets.symmetric(horizontal: 2),
+                        itemSize: 30,
+                        allowHalfRating: false,
+                        ignoreGestures: true,
+                        itemBuilder: (context, _) => Icon(
+                          Icons.star,
+                          color: const Color(0xFFFFD700),
+                          shadows: [
+                            Shadow(
+                              blurRadius: 15.0,
+                              color: Colors.yellowAccent.withOpacity(0.8),
+                              offset: const Offset(0, 0),
+                            ),
+                          ],
+                        ),
+                        onRatingUpdate: (index) {},
+                      ),
+                    ),
+                  ),
+                  // Add and minus buttons row
                   Padding(
                     padding: const EdgeInsets.only(top: 5, bottom: 10),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Row(
@@ -281,7 +303,7 @@ class _ItemPageState extends State<ItemPage> {
                               child: IconButton(
                                 icon:
                                     const Icon(CupertinoIcons.minus, size: 20),
-                                color: const Color.fromARGB(255, 21, 80, 13),
+                                color: const Color.fromRGBO(15, 99, 43, 1),
                                 onPressed: () {
                                   setState(() {
                                     if (quantity > 1) {
@@ -292,7 +314,7 @@ class _ItemPageState extends State<ItemPage> {
                                 },
                               ),
                             ),
-                            // Quantity display with dynamic color
+                            // Quantity display
                             Container(
                               margin:
                                   const EdgeInsets.symmetric(horizontal: 10),
@@ -338,7 +360,7 @@ class _ItemPageState extends State<ItemPage> {
                               ),
                               child: IconButton(
                                 icon: const Icon(CupertinoIcons.plus, size: 20),
-                                color: const Color.fromARGB(255, 21, 80, 13),
+                                color: const Color.fromRGBO(15, 99, 43, 1),
                                 onPressed: () {
                                   setState(() {
                                     if (quantity < widget.quantityAvailable) {
@@ -352,32 +374,6 @@ class _ItemPageState extends State<ItemPage> {
                               ),
                             ),
                           ],
-                        ),
-                        Directionality(
-                          textDirection: TextDirection.rtl,
-                          child: RatingBar.builder(
-                            initialRating: widget.productRate,
-                            minRating: 1,
-                            direction: Axis.horizontal,
-                            itemCount: 5,
-                            itemPadding:
-                                const EdgeInsets.symmetric(horizontal: 2),
-                            itemSize: 30,
-                            allowHalfRating: false, // Disable half-star ratings
-                            ignoreGestures: true,
-                            itemBuilder: (context, _) => Icon(
-                              Icons.star,
-                              color: const Color(0xFFFFD700),
-                              shadows: [
-                                Shadow(
-                                  blurRadius: 15.0,
-                                  color: Colors.yellowAccent.withOpacity(0.8),
-                                  offset: const Offset(0, 0),
-                                ),
-                              ],
-                            ),
-                            onRatingUpdate: (index) {},
-                          ),
                         ),
                       ],
                     ),
@@ -396,7 +392,7 @@ class _ItemPageState extends State<ItemPage> {
                       children: [
                         const Icon(
                           Icons.access_time,
-                          color: Color.fromARGB(255, 21, 80, 13),
+                          color: Color.fromRGBO(15, 99, 43, 1),
                           size: 33,
                         ),
                         const SizedBox(width: 8),
@@ -407,7 +403,7 @@ class _ItemPageState extends State<ItemPage> {
                               "  ${widget.preparationTime} ${widget.preparationUnit}",
                               style: const TextStyle(
                                 fontSize: 20,
-                                color: Color.fromARGB(255, 21, 80, 13),
+                                color: Color.fromRGBO(15, 99, 43, 1),
                                 fontWeight: FontWeight.bold,
                               ),
                             ),

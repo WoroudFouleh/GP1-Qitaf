@@ -380,7 +380,7 @@ class _OwnerBookingPageState extends State<OwnerBookingPage> {
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(),
                   style: TextButton.styleFrom(
-                    backgroundColor: Colors.green,
+                    backgroundColor: Color.fromRGBO(15, 99, 43, 1),
                   ),
                   child: const Text(
                     'إلغاء',
@@ -439,7 +439,7 @@ class _OwnerBookingPageState extends State<OwnerBookingPage> {
                       Icon(
                         Icons.event, // أيقونة تدل على الحجز
                         size: 30,
-                        color: Color(0xFF556B2F), // لون زيتي
+                        color: Color.fromRGBO(15, 99, 43, 1), // لون زيتي
                       ),
                       SizedBox(width: 8),
                       Text(
@@ -447,7 +447,7 @@ class _OwnerBookingPageState extends State<OwnerBookingPage> {
                         style: TextStyle(
                           fontSize: 23,
                           fontWeight: FontWeight.bold,
-                          color: Color(0xFF556B2F), // لون زيتي
+                          color: Color.fromRGBO(15, 99, 43, 1), // لون زيتي
                         ),
                       ),
                     ],
@@ -459,7 +459,7 @@ class _OwnerBookingPageState extends State<OwnerBookingPage> {
                     child: const Icon(
                       Icons.arrow_forward, // سهم يتجه لليسار ليكون ع الشمال
                       size: 30,
-                      color: Color(0xFF556B2F), // لون زيتي
+                      color: Color.fromRGBO(15, 99, 43, 1), // لون زيتي
                     ),
                   ),
                 ],
@@ -484,7 +484,7 @@ class _OwnerBookingPageState extends State<OwnerBookingPage> {
                             borderRadius: BorderRadius.circular(10),
                             boxShadow: [
                               BoxShadow(
-                                color: const Color.fromARGB(255, 113, 134, 25)
+                                color: const Color.fromRGBO(15, 99, 43, 1)
                                     .withOpacity(0.6), // تأثير إضاءة زيتي
                                 spreadRadius: 2,
                                 blurRadius: 6,
@@ -521,7 +521,8 @@ class _OwnerBookingPageState extends State<OwnerBookingPage> {
                                           decoration: BoxDecoration(
                                             shape: BoxShape.circle,
                                             border: Border.all(
-                                              color: Color(0xFF556B2F),
+                                              color:
+                                                  Color.fromRGBO(15, 99, 43, 1),
                                               width: 2, // زيتي إطار
                                             ),
                                             image: DecorationImage(
@@ -546,8 +547,8 @@ class _OwnerBookingPageState extends State<OwnerBookingPage> {
                                               style: TextStyle(
                                                 fontSize: 20,
                                                 fontWeight: FontWeight.bold,
-                                                color: Color(
-                                                    0xFF556B2F), // زيتي لون
+                                                color: Color.fromRGBO(
+                                                    15, 99, 43, 1), // زيتي لون
                                               ),
                                             ),
                                             SizedBox(height: 5),
@@ -596,7 +597,7 @@ class _OwnerBookingPageState extends State<OwnerBookingPage> {
                                     children: [
                                       Icon(
                                         Icons.factory,
-                                        color: Color(0xFF556B2F),
+                                        color: Color.fromRGBO(15, 99, 43, 1),
                                         size: 20,
                                       ),
                                       SizedBox(width: 5),
@@ -615,7 +616,7 @@ class _OwnerBookingPageState extends State<OwnerBookingPage> {
                                     children: [
                                       Icon(
                                         Icons.date_range,
-                                        color: Color(0xFF556B2F),
+                                        color: Color.fromRGBO(15, 99, 43, 1),
                                         size: 20,
                                       ),
                                       SizedBox(width: 5),
@@ -634,7 +635,7 @@ class _OwnerBookingPageState extends State<OwnerBookingPage> {
                                     children: [
                                       Icon(
                                         Icons.time_to_leave,
-                                        color: Color(0xFF556B2F),
+                                        color: Color.fromRGBO(15, 99, 43, 1),
                                         size: 20,
                                       ),
                                       SizedBox(width: 5),
@@ -653,7 +654,7 @@ class _OwnerBookingPageState extends State<OwnerBookingPage> {
                                     children: [
                                       Icon(
                                         Icons.local_florist,
-                                        color: Color(0xFF556B2F),
+                                        color: Color.fromRGBO(15, 99, 43, 1),
                                         size: 20,
                                       ),
                                       SizedBox(width: 5),
@@ -672,7 +673,7 @@ class _OwnerBookingPageState extends State<OwnerBookingPage> {
                                     children: [
                                       const Icon(
                                         Icons.scale,
-                                        color: Color(0xFF556B2F),
+                                        color: Color.fromRGBO(15, 99, 43, 1),
                                         size: 20,
                                       ),
                                       SizedBox(width: 5),
@@ -691,7 +692,7 @@ class _OwnerBookingPageState extends State<OwnerBookingPage> {
                                     children: [
                                       Icon(
                                         Icons.attach_money,
-                                        color: Color(0xFF556B2F),
+                                        color: Color.fromRGBO(15, 99, 43, 1),
                                         size: 20,
                                       ),
                                       SizedBox(width: 5),
@@ -710,7 +711,7 @@ class _OwnerBookingPageState extends State<OwnerBookingPage> {
                                     children: [
                                       Icon(
                                         Icons.calendar_month,
-                                        color: Color(0xFF556B2F),
+                                        color: Color.fromRGBO(15, 99, 43, 1),
                                         size: 20,
                                       ),
                                       SizedBox(width: 5),

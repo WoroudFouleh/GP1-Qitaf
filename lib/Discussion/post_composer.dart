@@ -140,8 +140,7 @@ class _PostComposerState extends State<PostComposer> {
         borderRadius: BorderRadius.circular(15),
       ),
       elevation: 5,
-      shadowColor:
-          const Color.fromARGB(255, 113, 149, 48), // اللون الأخضر للتوهج
+      shadowColor: const Color.fromRGBO(15, 99, 43, 1), // اللون الأخضر للتوهج
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15),
@@ -182,7 +181,8 @@ class _PostComposerState extends State<PostComposer> {
                     ),
                   ),
                   IconButton(
-                    icon: Icon(Icons.image, color: Colors.green[800]),
+                    icon:
+                        Icon(Icons.image, color: Color.fromRGBO(15, 99, 43, 1)),
                     onPressed: _pickImage,
                   ),
                 ],
@@ -198,7 +198,7 @@ class _PostComposerState extends State<PostComposer> {
               ElevatedButton(
                 onPressed: registerPost,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.green[800],
+                  backgroundColor: Color.fromRGBO(15, 99, 43, 1),
                   minimumSize: Size(double.infinity, 45), // عرض الزر بالكامل
                 ),
                 child: Text(
