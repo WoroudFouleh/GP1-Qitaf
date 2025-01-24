@@ -380,16 +380,12 @@ class _DeliveryOrdersPageState extends State<DeliveryOrdersPage> {
                     borderRadius: BorderRadius.circular(8.0),
                   ),
                 ),
-                icon: const Icon(
-                  Icons.map,
-                  color: Colors.white,
-                ),
                 label: const Text(
-                  'اختر موقع الانطلاق',
+                  ' موقع الانطلاق',
                   style: TextStyle(color: Colors.white),
                 ),
               ),
-              const SizedBox(width: 10),
+              const SizedBox(width: 5),
               ElevatedButton.icon(
                 onPressed:
                     locationCoordinates == null ? null : _showOrderTypeDialog,
@@ -914,7 +910,7 @@ class _DeliveryOrdersPageState extends State<DeliveryOrdersPage> {
       style: ElevatedButton.styleFrom(
         foregroundColor: isSelected ? Colors.white : Colors.black,
         backgroundColor: isSelected ? color : Colors.grey.shade300,
-        padding: const EdgeInsets.symmetric(vertical: 14.0, horizontal: 30.0),
+        padding: const EdgeInsets.symmetric(vertical: 14.0, horizontal: 15.0),
         minimumSize: Size(100, 50),
       ),
       child: Text(status),

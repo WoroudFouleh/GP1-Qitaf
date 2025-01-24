@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:login_page/Customers/customerBar.dart';
 import 'package:login_page/screens/changepass.dart';
 import 'package:login_page/screens/config.dart';
 import 'package:login_page/screens/owner_home.dart';
@@ -13,7 +14,9 @@ import 'package:http/http.dart' as http;
 class CustomerProfile extends StatefulWidget {
   final token;
   final userId;
-  const CustomerProfile({@required this.token, Key? key, this.userId})
+  final token2;
+  const CustomerProfile(
+      {@required this.token, Key? key, this.userId, this.token2})
       : super(key: key);
 
   @override
@@ -68,7 +71,7 @@ class _CustomerProfileState extends State<CustomerProfile> {
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = jsonDecode(response.body);
         final newToken = responseData['token'];
-        print(newToken);
+        //print(newToken);
         // Success - show success message
 
         ScaffoldMessenger.of(context).showSnackBar(
@@ -77,8 +80,10 @@ class _CustomerProfileState extends State<CustomerProfile> {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) =>
-                OwnerHome(token: newToken, userId: widget.userId),
+            builder: (context) => CustomerBar(
+              token: newToken,
+              token2: widget.token2,
+            ),
           ),
         );
       } else {
@@ -98,6 +103,7 @@ class _CustomerProfileState extends State<CustomerProfile> {
   @override
   void initState() {
     super.initState();
+    print("tokenn2: ${widget.token2}");
     Map<String, dynamic> jwtDecoderToken = JwtDecoder.decode(widget.token);
     String code = jwtDecoderToken['phoneCode'];
     String phone = jwtDecoderToken['phoneNumber'];
@@ -285,7 +291,10 @@ class _CustomerProfileState extends State<CustomerProfile> {
                         context,
                         MaterialPageRoute(
                           builder: (context) => Changepass(
-                              token: widget.token, userId: widget.userId),
+                            token: widget.token,
+                            userId: widget.userId,
+                            token2: widget.token2,
+                          ),
                         ),
                       );
                     },

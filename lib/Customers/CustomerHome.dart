@@ -13,7 +13,12 @@ import 'package:login_page/screens/qataf.dart';
 class CustomerHome extends StatefulWidget {
   final String token;
   final String userId;
-  const CustomerHome({required this.token, Key? key, required this.userId})
+  final String token2;
+  const CustomerHome(
+      {required this.token,
+      Key? key,
+      required this.userId,
+      required this.token2})
       : super(key: key);
 
   @override
@@ -39,7 +44,7 @@ class _CustomerHomeState extends State<CustomerHome> {
         'Content-Type': 'application/json',
       },
     );
-    print("response: ${response.body}");
+    // print("response: ${response.body}");
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
       if (data['status'] == true) {
@@ -82,8 +87,10 @@ class _CustomerHomeState extends State<CustomerHome> {
           ),
         ),
         endDrawer: CustomDrawer2(
-            token: widget.token,
-            userId: widget.userId), // استخدام الـ CustomDrawer هنا
+          token: widget.token,
+          userId: widget.userId,
+          token2: widget.token2,
+        ), // استخدام الـ CustomDrawer هنا
 
         body: Padding(
           padding: const EdgeInsets.all(16.0),

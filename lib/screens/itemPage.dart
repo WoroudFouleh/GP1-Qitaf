@@ -393,22 +393,22 @@ class _ItemPageState extends State<ItemPage> {
                         const Icon(
                           Icons.access_time,
                           color: Color.fromRGBO(15, 99, 43, 1),
-                          size: 33,
+                          size: 20,
                         ),
                         const SizedBox(width: 8),
                         Row(
                           children: [
                             Text(
                               textDirection: TextDirection.rtl,
-                              "  ${widget.preparationTime} ${widget.preparationUnit}",
+                              "${widget.preparationTime} ${widget.preparationUnit}",
                               style: const TextStyle(
-                                fontSize: 20,
+                                fontSize: 17,
                                 color: Color.fromRGBO(15, 99, 43, 1),
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
                             Text(
-                              " :المدة الزمنية لتحضير الطلب",
+                              ":المدة الزمنية لتحضير الطلب",
                               style: TextStyle(
                                 fontSize: 17,
                                 color: Colors.grey.shade700,

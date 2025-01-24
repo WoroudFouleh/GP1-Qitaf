@@ -10,7 +10,9 @@ import 'config.dart';
 class Changepass extends StatefulWidget {
   final String token;
   final userId;
-  const Changepass({required this.token, Key? key, this.userId})
+  final String token2;
+  const Changepass(
+      {required this.token, Key? key, this.userId, required this.token2})
       : super(key: key);
 
   @override
@@ -62,6 +64,7 @@ class _ChangepassState extends State<Changepass> {
           builder: (context) => Changepass2(
             token: widget.token,
             userId: widget.userId,
+            token2: widget.token2,
           ),
         ),
       );

@@ -34,7 +34,7 @@ class _TabbedInboxScreenState extends State<TabbedInboxScreen> {
           backgroundColor: Colors.white,
           elevation: 0,
           leading: Padding(
-            padding: const EdgeInsets.only(left: 10.0),
+            padding: const EdgeInsets.only(left: 2.0),
             child: IconButton(
               icon: const Icon(Icons.arrow_back,
                   color: Color.fromRGBO(15, 99, 43, 1)),
@@ -43,7 +43,7 @@ class _TabbedInboxScreenState extends State<TabbedInboxScreen> {
           ),
           actions: [
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10.0),
+              padding: const EdgeInsets.symmetric(horizontal: 3.0),
               child: IconButton(
                 icon: const Icon(
                   Icons.group_add,

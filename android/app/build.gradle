@@ -54,7 +54,7 @@ dependencies {
 
     // مكتبة Firebase Firestore
     implementation 'com.google.firebase:firebase-firestore'
-
+    implementation 'com.stripe:stripe-android:20.23.0'
     // مكتبة Firebase Realtime Database (اختياري)
     // implementation 'com.google.firebase:firebase-database'
 }

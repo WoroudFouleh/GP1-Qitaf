@@ -15,9 +15,9 @@ import 'package:login_page/screens/owner_notify.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 
 class CustomerBar extends StatefulWidget {
-  final token;
-  final token2;
-  const CustomerBar({@required this.token, Key? key, this.token2})
+  final String token;
+  final String token2;
+  const CustomerBar({required this.token, Key? key, required this.token2})
       : super(key: key);
 
   @override
@@ -31,6 +31,7 @@ class _CustomerBarState extends State<CustomerBar> {
   @override
   void initState() {
     super.initState();
+    print("token2:${widget.token2}");
     Map<String, dynamic> jwtDecoderToken = JwtDecoder.decode(widget.token);
     String uid = JwtDecoder.decode(widget.token2)['user_id'];
     // Initialize the pages here because widget.token is needed
@@ -39,6 +40,7 @@ class _CustomerBarState extends State<CustomerBar> {
       CustomerHome(
         token: widget.token,
         userId: uid,
+        token2: widget.token2,
       ), // Pass the token correctly without const
       TabbedInboxScreen(userId: uid),
 

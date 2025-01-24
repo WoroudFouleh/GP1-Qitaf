@@ -112,6 +112,7 @@ class _MyBookingPageState extends State<MyBookingPage> {
           //   userRate = jsonResponse['product']
           //       ['rate']; // Access the rate from the response
           // });
+          addWorkerPoints(username, 2);
         } else {
           print('Error rating product: ${jsonResponse['message']}');
         }
@@ -122,6 +123,127 @@ class _MyBookingPageState extends State<MyBookingPage> {
     } catch (e) {
       print('An error occurred: $e');
     }
+  }
+
+  Future<void> addWorkerPoints(String username, int points) async {
+    try {
+      // Prepare the request body for adding points
+      var reqBody = {
+        'username': username,
+        "points": points,
+      };
+
+      // Make the POST request to add points
+      var response = await http.post(
+        Uri.parse(addPoints), // Replace with your "add points" API URL
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: jsonEncode(reqBody),
+      );
+
+      if (response.statusCode == 200) {
+        var jsonResponse = jsonDecode(response.body);
+        if (jsonResponse['status']) {
+          print('Points added successfully');
+          showCongratsDialog(2);
+        } else {
+          print('Error adding points: ${jsonResponse['message']}');
+        }
+      } else {
+        var errorResponse = jsonDecode(response.body);
+        print('Error: ${errorResponse['message'] ?? response.statusCode}');
+      }
+    } catch (e) {
+      print('An error occurred while adding points: $e');
+    }
+  }
+
+  void showCongratsDialog(int points) {
+    showCustomDialog(
+      context: context,
+      icon: Icons.star,
+      iconColor: Colors.amber,
+      title: "تهانينا!",
+      message: "لقد حصلت على $points نقطة جديدة. استمر في التقييم !",
+      buttonText: "شكراً",
+    );
+  }
+
+  void showCustomDialog({
+    required BuildContext context,
+    required IconData icon,
+    required Color iconColor,
+    required String title,
+    required String message,
+    required String buttonText,
+  }) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16.0),
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  color: iconColor,
+                  shape: BoxShape.circle,
+                ),
+                padding: const EdgeInsets.all(16.0),
+                child: Icon(
+                  icon,
+                  color: Colors.white,
+                  size: 48.0,
+                ),
+              ),
+              const SizedBox(height: 16.0),
+              Text(
+                title,
+                style: const TextStyle(
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 8.0),
+              Text(
+                message,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 16.0,
+                  color: Colors.grey[700],
+                ),
+              ),
+              const SizedBox(height: 16.0),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).pop(); // Close the dialog
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: iconColor,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 32.0, vertical: 12.0),
+                ),
+                child: Text(
+                  buttonText,
+                  style: const TextStyle(
+                    fontSize: 16.0,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 
   void showRatingDialog(BuildContext context, String lineId, String lineName) {

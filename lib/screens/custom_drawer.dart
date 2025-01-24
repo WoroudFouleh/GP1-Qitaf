@@ -15,7 +15,8 @@ import 'package:login_page/screens/welcome_screen.dart';
 class CustomDrawer extends StatefulWidget {
   final token;
   final userId;
-  const CustomDrawer({required this.token, Key? key, this.userId})
+  final token2;
+  const CustomDrawer({required this.token, Key? key, this.userId, this.token2})
       : super(key: key);
 
   @override
@@ -89,7 +90,9 @@ class _CustomDrawerState extends State<CustomDrawer> {
                 context,
                 MaterialPageRoute(
                     builder: (context) => ProfilePage(
-                        token: widget.token, userId: widget.userId)),
+                        token: widget.token,
+                        userId: widget.userId,
+                        token2: widget.token2)),
               );
             },
           ),
@@ -105,22 +108,6 @@ class _CustomDrawerState extends State<CustomDrawer> {
                 MaterialPageRoute(
                   builder: (context) =>
                       MyBookingPage(token: widget.token, userId: widget.userId),
-                ),
-              );
-            },
-          ),
-          ListTile(
-            trailing: const Icon(Icons.work),
-            title: const Align(
-              alignment: Alignment.centerRight,
-              child: Text("طلبات العمل"),
-            ),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => CustomerWorkPage(
-                      token: widget.token, userId: widget.userId),
                 ),
               );
             },

@@ -15,8 +15,12 @@ import 'package:login_page/screens/welcome_screen.dart';
 class CustomDrawer2 extends StatefulWidget {
   final String token;
   final String userId;
-
-  const CustomDrawer2({required this.token, Key? key, required this.userId})
+  final String token2;
+  const CustomDrawer2(
+      {required this.token,
+      Key? key,
+      required this.userId,
+      required this.token2})
       : super(key: key);
 
   @override
@@ -35,7 +39,7 @@ class _CustomDrawer2State extends State<CustomDrawer2> {
 
     // Decode the token using jwt_decoder and extract necessary fields
     Map<String, dynamic> jwtDecoderToken = JwtDecoder.decode(widget.token);
-    print(jwtDecoderToken);
+    // print(jwtDecoderToken);
     firstName = jwtDecoderToken['firstName'] ?? 'No First Name';
     lastName = jwtDecoderToken['lastName'] ?? 'No Last Name';
     email = jwtDecoderToken['email'] ?? 'No Email';
@@ -90,7 +94,10 @@ class _CustomDrawer2State extends State<CustomDrawer2> {
                 context,
                 MaterialPageRoute(
                     builder: (context) => CustomerProfile(
-                        token: widget.token, userId: widget.userId)),
+                          token: widget.token,
+                          userId: widget.userId,
+                          token2: widget.token2,
+                        )),
               );
             },
           ),

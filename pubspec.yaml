@@ -43,7 +43,7 @@ dependencies:
   flutter_local_notifications: ^17.2.3
   async: ^2.10.0
   firebase_app_check: ^0.3.2
-
+  flutter_stripe: ^9.4.0
 
     
   # flutter_bcrypt: ^1.0.8  # Use the latest version 

@@ -334,7 +334,7 @@ class RecipeCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 22, vertical: 10),
+      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       width: MediaQuery.of(context).size.width,
       height: 180,
       decoration: BoxDecoration(
@@ -400,7 +400,7 @@ class RecipeCard extends StatelessWidget {
                         color: Colors.yellow,
                         size: 18,
                       ),
-                      const SizedBox(width: 7),
+                      const SizedBox(width: 5),
                       Text(
                         city,
                         style: const TextStyle(
@@ -427,7 +427,7 @@ class RecipeCard extends StatelessWidget {
                         color: Colors.yellow,
                         size: 18,
                       ),
-                      const SizedBox(width: 7),
+                      const SizedBox(width: 5),
                       Text(
                         workernum,
                         style: const TextStyle(
@@ -454,7 +454,7 @@ class RecipeCard extends StatelessWidget {
                         color: Colors.yellow,
                         size: 16,
                       ),
-                      const SizedBox(width: 7),
+                      const SizedBox(width: 5),
                       Text(
                         crops,
                         style: const TextStyle(

@@ -60,7 +60,7 @@ class LandPage extends StatefulWidget {
 class _LandPageState extends State<LandPage> {
   int quantity = 1; // الكمية الحالية، جعلها 1 كما طلبت
   bool isFavorite = false;
-
+  bool isLoading = true;
   late String firstName = "";
   late String lastName = "";
   late String userProfileImage = "";
@@ -90,22 +90,27 @@ class _LandPageState extends State<LandPage> {
   @override
   void initState() {
     super.initState();
-    fetchFcmOwner();
-    Map<String, dynamic> jwtDecoderToken = JwtDecoder.decode(widget.token);
-    workercode = jwtDecoderToken['phoneCode'];
-    workerphoneNum = jwtDecoderToken['phoneNumber'];
-    workerfirstName = jwtDecoderToken['firstName'];
-    workerlastName = jwtDecoderToken['lastName'];
-    workercity = jwtDecoderToken['city'];
-    workerlocation = jwtDecoderToken['street'];
-    workeremail = jwtDecoderToken['email'];
-    workerrate = jwtDecoderToken['rate'];
-    workergender = jwtDecoderToken['gender'];
-    workerusername = jwtDecoderToken['username'];
-    workeruserProfileImage =
-        jwtDecoderToken['profilePhoto']; // Get the base64 image string
+    fetchUserData();
+  }
 
-    fetchUser();
+  Future<void> fetchUserData() async {
+    await fetchUser(); // Fetch user details
+    await fetchFcmOwner(); // Fetch FCM owner
+    Map<String, dynamic> jwtDecoderToken = JwtDecoder.decode(widget.token);
+    setState(() {
+      workercode = jwtDecoderToken['phoneCode'];
+      workerphoneNum = jwtDecoderToken['phoneNumber'];
+      workerfirstName = jwtDecoderToken['firstName'];
+      workerlastName = jwtDecoderToken['lastName'];
+      workercity = jwtDecoderToken['city'];
+      workerlocation = jwtDecoderToken['street'];
+      workeremail = jwtDecoderToken['email'];
+      workerrate = jwtDecoderToken['rate'];
+      workergender = jwtDecoderToken['gender'];
+      workerusername = jwtDecoderToken['username'];
+      workeruserProfileImage = jwtDecoderToken['profilePhoto'];
+      isLoading = false; // Data fetching is complete
+    });
   }
 
   Future<void> fetchFcmOwner() async {
@@ -134,7 +139,21 @@ class _LandPageState extends State<LandPage> {
     }
   }
 
-  void fetchUser() async {
+  bool _isValidBase64(String base64String) {
+    try {
+      // Decode the string to check if it's valid Base64
+      final decodedBytes = base64Decode(base64String);
+
+      // Additional check: Ensure the decoded bytes are not empty
+      return decodedBytes.isNotEmpty;
+    } catch (e) {
+      // If decoding fails, the Base64 string is invalid
+      print("Invalid Base64 data: $e");
+      return false;
+    }
+  }
+
+  Future<void> fetchUser() async {
     //////////owner
     try {
       final response = await http.get(
@@ -146,21 +165,20 @@ class _LandPageState extends State<LandPage> {
         final data = json.decode(response.body);
         if (data['status'] == true) {
           final userInfo = data['data'];
-          if (mounted) {
-            setState(() {
-              firstName = userInfo['firstName'];
-              lastName = userInfo['lastName'];
-              userProfileImage = userInfo['profilePhoto'];
-              phoneNum = userInfo['phoneNumber'];
-              email = userInfo['email'];
-              code = userInfo['phoneCode'];
-              city = userInfo['city'];
-              location = userInfo['street'];
-              postsCount = userInfo['postNumber'];
-              gender = userInfo['gender'];
-              rate = userInfo['rate'];
-            });
-          }
+
+          setState(() {
+            firstName = userInfo['firstName'];
+            lastName = userInfo['lastName'];
+            userProfileImage = userInfo['profilePhoto'];
+            phoneNum = userInfo['phoneNumber'];
+            email = userInfo['email'];
+            code = userInfo['phoneCode'];
+            city = userInfo['city'];
+            location = userInfo['street'];
+            postsCount = userInfo['postNumber'];
+            gender = userInfo['gender'];
+            rate = userInfo['rate'];
+          });
         }
       }
     } catch (e) {
@@ -200,6 +218,11 @@ class _LandPageState extends State<LandPage> {
 
   @override
   Widget build(BuildContext context) {
+    if (isLoading) {
+      return Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
     return Scaffold(
       backgroundColor: Colors.white, // لون الخلفية أبيض
       body: ListView(
@@ -294,12 +317,20 @@ class _LandPageState extends State<LandPage> {
                             );
                           },
                           child: ClipOval(
-                              child: Image.memory(
-                            base64Decode(userProfileImage),
-                            fit: BoxFit.cover,
-                            width: 50.0,
-                            height: 50.0,
-                          )),
+                            child: _isValidBase64(userProfileImage)
+                                ? Image.memory(
+                                    base64Decode(userProfileImage),
+                                    fit: BoxFit.cover,
+                                    width: 50.0,
+                                    height: 50.0,
+                                  )
+                                : Image.asset(
+                                    'assets/images/profile.png', // Replace with your default profile image path
+                                    fit: BoxFit.cover,
+                                    width: 50.0,
+                                    height: 50.0,
+                                  ),
+                          ),
                         ),
                         const Spacer(),
                         Column(

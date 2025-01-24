@@ -65,8 +65,8 @@ class _CartPageState extends State<CartPage> {
     int total = 0;
     for (var item in items) {
       int price = item['price'] ?? 0;
-      int quantity = item['quantity'] ?? 0;
-      total += price * quantity;
+      //int quantity = item['quantity'] ?? 0;
+      total += price;
     }
     return total;
   }

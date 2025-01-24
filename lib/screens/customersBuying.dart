@@ -365,6 +365,8 @@ class _CustomersBuyingState extends State<CustomersBuying> {
       switch (item['itemStatus']) {
         case 'delivered':
           return Colors.green;
+        case 'pending':
+          return Colors.amber;
         case 'undelivered':
           return Colors.red;
 
@@ -382,7 +384,8 @@ class _CustomersBuyingState extends State<CustomersBuying> {
       switch (item['itemStatus']) {
         case 'delivered':
           return "تم الاستلام";
-
+        case 'pending':
+          return "لم يتم التوصيل بعد";
         case 'undelivered':
           return "الزبون لم يستلم الطلب!";
         default:

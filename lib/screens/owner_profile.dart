@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:login_page/screens/first_screen.dart';
 import 'package:login_page/screens/owner_home.dart';
 import 'custom_drawer.dart';
 import 'changepass.dart';
@@ -14,7 +15,8 @@ import 'config.dart';
 class OwnerProfile extends StatefulWidget {
   final token;
   final userId;
-  const OwnerProfile({@required this.token, Key? key, this.userId})
+  final token2;
+  const OwnerProfile({@required this.token, Key? key, this.userId, this.token2})
       : super(key: key);
 
   @override
@@ -78,7 +80,7 @@ class _OwnerProfileState extends State<OwnerProfile> {
           context,
           MaterialPageRoute(
             builder: (context) =>
-                OwnerHome(token: newToken, userId: widget.userId),
+                HomePage(token: newToken, token2: widget.token2),
           ),
         );
       } else {
@@ -242,7 +244,10 @@ class _OwnerProfileState extends State<OwnerProfile> {
                         context,
                         MaterialPageRoute(
                           builder: (context) => Changepass(
-                              token: widget.token, userId: widget.userId),
+                            token: widget.token,
+                            userId: widget.userId,
+                            token2: widget.token2,
+                          ),
                         ),
                       );
                     },

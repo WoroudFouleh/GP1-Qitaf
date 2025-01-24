@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:login_page/Auth/test.dart';
 import 'package:login_page/screens/LandPage.dart';
 
@@ -26,6 +27,9 @@ void main() async {
   await Firebase.initializeApp();
   await NotificationService.instance.initialize();
   await initializeDateFormatting('ar', null);
+  Stripe.publishableKey =
+      "pk_test_51QihNcGAbo0iKHg8nTka1VaIaKqOjguxn3Of1QniZs7HZMYmSvOQU8pWjFhoM9kqmHDgeL9dRS010NFq9fngT4le007rCtuht1";
+
   //FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   runApp(const MyApp());
 }

@@ -36,7 +36,7 @@ class _CustomerAdvertisementState extends State<CustomerAdvertisement> {
         'Content-Type': 'application/json',
       },
     );
-    print("response: ${response.body}");
+    // print("response: ${response.body}");
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
       if (data['status'] == true) {

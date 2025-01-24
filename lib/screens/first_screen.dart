@@ -36,7 +36,8 @@ class _HomePageState extends State<HomePage> {
     _pages = [
       OwnerHome(
           token: widget.token,
-          userId: uid), // Pass the token correctly without const
+          userId: uid,
+          token2: widget.token2), // Pass the token correctly without const
       TabbedInboxScreen(userId: uid),
       OwnerAdd(token: widget.token),
       NotificationsPage(

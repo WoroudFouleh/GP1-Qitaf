@@ -3,10 +3,11 @@ import 'package:login_page/Auth/signin_screen.dart';
 import 'package:login_page/widgets/custom_scaffold.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert'; // Import JSON decoding
+import 'package:firebase_auth/firebase_auth.dart'; // Firebase Authentication
 import 'config.dart';
 
 class NewPassword extends StatefulWidget {
-  final String username; // Add email as a parameter to send with the request
+  final String username; // Username passed to identify the user
 
   const NewPassword({super.key, required this.username});
 
@@ -22,6 +23,7 @@ class _NewPasswordScreenState extends State<NewPassword> {
   bool _isObscured = true;
   bool _isConfirmObscured = true;
   bool _isLoading = false; // To manage the loading state
+  String? email;
 
   @override
   void dispose() {
@@ -30,16 +32,42 @@ class _NewPasswordScreenState extends State<NewPassword> {
     super.dispose();
   }
 
+  @override
+  void initState() {
+    super.initState();
+
+    print("username: ${widget.username}");
+  }
+
+  // Fetch user email based on username
+
+  // Function to reset the user's password
   void resetPassword() async {
+    if (widget.username == null || widget.username!.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('تعذر العثور على البريد الإلكتروني')),
+      );
+      return;
+    }
+
     setState(() {
       _isLoading = true;
     });
 
-    // Make a request to reset the password
     try {
-      var response = await http.patch(
+      // 1. Update password in Firebase Auth
+      final user = FirebaseAuth.instance.currentUser;
+      if (user == null) {
+        throw "No authenticated user found in Firebase.";
+      }
+
+      await user.updatePassword(_passwordController.text);
+      print("Password updated in Firebase Authentication.");
+
+      // 2. Update password in the backend database
+      final response = await http.patch(
         Uri.parse(
-            '$updatePassword/${widget.username}'), // Replace with your backend URL
+            '$updatePassword/${widget.username}'), // API to update password
         headers: {"Content-Type": "application/json"},
         body: jsonEncode({
           "password": _passwordController.text,
@@ -47,27 +75,23 @@ class _NewPasswordScreenState extends State<NewPassword> {
       );
 
       if (response.statusCode == 200) {
-        // Show success message
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('! تم تعديل كلمة السر الخاصة بك بنجاح')),
+          const SnackBar(content: Text('! تم تعديل كلمة السر بنجاح')),
         );
 
-        // Navigate to the main screen (or home screen)
+        // Navigate to the sign-in page
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) =>
-                const SigninScreen(), // Replace with your main screen
+            builder: (context) => const SigninScreen(),
           ),
         );
       } else {
-        // Handle errors from the server
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('خطأ في الخادم: ${response.statusCode}')),
         );
       }
     } catch (e) {
-      // Handle network or other errors
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('حدث خطأ: $e')),
       );
@@ -188,11 +212,11 @@ class _NewPasswordScreenState extends State<NewPassword> {
                         width: double.infinity,
                         child: ElevatedButton(
                           onPressed: _isLoading
-                              ? null // Disable button when loading
+                              ? null
                               : () {
                                   if (_formNewPasswordKey.currentState!
                                       .validate()) {
-                                    resetPassword(); // Call the reset password function
+                                    resetPassword();
                                   }
                                 },
                           style: ElevatedButton.styleFrom(
@@ -207,9 +231,9 @@ class _NewPasswordScreenState extends State<NewPassword> {
                           ),
                           child: _isLoading
                               ? const CircularProgressIndicator(
-                                  color: Colors.white)
-                              : const Text(
-                                  'تعديل كلمة السر'), // Show loading spinner when verifying
+                                  color: Colors.white,
+                                )
+                              : const Text('تعديل كلمة السر'),
                         ),
                       ),
                       const SizedBox(height: 25.0),

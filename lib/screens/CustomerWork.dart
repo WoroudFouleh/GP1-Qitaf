@@ -246,7 +246,7 @@ class _CustomerWorkPageState extends State<CustomerWorkPage> {
                                                 ),
                                               ),
                                               SizedBox(
-                                                width: 150,
+                                                width: 100,
                                               ),
                                               SizedBox(height: 5),
                                               IconButton(

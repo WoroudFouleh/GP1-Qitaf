@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:login_page/screens/config.dart';
@@ -219,9 +220,10 @@ class _OrderWidgetState extends State<OrderWidget> {
     return itemPrice + deliveryPrice;
   }
 
+  //import 'package:flutter_stripe/flutter_stripe.dart';
+
   void makeOrder() async {
     if (addressController.text.isEmpty || phoneController.text.isEmpty) {
-      //
       showCustomDialog(
         context: context,
         icon: Icons.warning,
@@ -234,7 +236,7 @@ class _OrderWidgetState extends State<OrderWidget> {
     }
 
     try {
-      // Prepare the order details
+      // 1. Prepare the order details
       final orderDetails = {
         'username': username,
         'recepientCity': selectedCity,
@@ -249,21 +251,53 @@ class _OrderWidgetState extends State<OrderWidget> {
         "deliveryType": selectedDeliveryMethod
       };
 
-      // Send the request to your backend API
-      final response = await http.post(
+      // 2. Create a Payment Intent (backend API call)
+      if (selectedPaymentMethod == 'visa') {
+        final paymentResponse = await http.post(
+          Uri.parse(createPayment), // Your backend endpoint for Payment Intent
+          headers: {'Content-Type': 'application/json'},
+          body: json.encode({
+            'amount': (finalPrice * 100).toInt(),
+            'currency': 'ils'
+          }), // Amount in cents
+        );
+
+        if (paymentResponse.statusCode != 200) {
+          throw Exception('Failed to create payment intent.');
+        }
+
+        final paymentData = json.decode(paymentResponse.body);
+        final clientSecret =
+            paymentData['clientSecret']; // Received from your backend
+
+        // 3. Confirm the payment using Stripe
+        await Stripe.instance.initPaymentSheet(
+            paymentSheetParameters: SetupPaymentSheetParameters(
+          paymentIntentClientSecret: clientSecret,
+          merchantDisplayName: 'Your App Name',
+          customerId:
+              paymentData['customerId'], // Optional if you handle customer IDs
+          customerEphemeralKeySecret: paymentData['ephemeralKey'], // Optional
+        ));
+
+        // 4. Display the Payment Sheet
+        await Stripe.instance.presentPaymentSheet();
+
+        // Payment Successful
+        print('Payment completed successfully.');
+      }
+
+      // 5. Place the Order (API call to register the order)
+      final orderResponse = await http.post(
         Uri.parse(registerOrder), // Replace with your API URL
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: {'Content-Type': 'application/json'},
         body: json.encode(orderDetails),
       );
-      print("Response status: ${response.statusCode}");
-      print("Response body: ${response.body}");
 
-      if (response.statusCode == 201) {
-        // ScaffoldMessenger.of(context).showSnackBar(
-        //   const SnackBar(content: Text("تم تسجيل الطلب بنجاح")),
-        // );
+      print("Response status: ${orderResponse.statusCode}");
+      print("Response body: ${orderResponse.body}");
+
+      if (orderResponse.statusCode == 201) {
         showCustomDialog(
           context: context,
           icon: Icons.check,
@@ -273,7 +307,7 @@ class _OrderWidgetState extends State<OrderWidget> {
           buttonText: "حسناً",
         );
         updateQuantity();
-        final data = json.decode(response.body);
+        final data = json.decode(orderResponse.body);
         print(data['ownerEmails']);
         final List<dynamic> ownerEmails = data['ownerEmails'] ?? [];
         for (String ownerEmail in ownerEmails) {
@@ -284,7 +318,13 @@ class _OrderWidgetState extends State<OrderWidget> {
           const SnackBar(content: Text("حدث خطأ أثناء تسجيل الطلب")),
         );
       }
+    } on StripeException catch (e) {
+      print('Stripe payment error: ${e.error.localizedMessage}');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("فشل الدفع: ${e.error.localizedMessage}")),
+      );
     } catch (e) {
+      print('Error: $e');
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("فشل الاتصال بالخادم")),
       );
@@ -320,7 +360,7 @@ class _OrderWidgetState extends State<OrderWidget> {
           await NotificationService.instance.saveNotificationToFirebase(
             ownerFcmToken,
             'طلب شراء جديد',
-            '،اضغط لرؤية التفاصيل وتحضير الطلب. تم تسجيل طلبية شراء لأحد منتجاتك',
+            'اضغط لرؤية التفاصيل وتحضير الطلب. تم تسجيل طلبية شراء لأحد منتجاتك',
             ownerId,
             'orderNotification',
           );
@@ -545,7 +585,7 @@ class _OrderWidgetState extends State<OrderWidget> {
           paymentOptionContainer(
             context,
             imagePath: 'assets/images/visa.png',
-            title: "فيزا ** ** ** 2187",
+            title: "فيزا ",
             value: 'visa',
           ),
         // Show only visa if delivery is slow
@@ -797,9 +837,9 @@ class _OrderWidgetState extends State<OrderWidget> {
           onChanged: (value) {
             setState(() {
               selectedPaymentMethod = value!;
-              if (selectedPaymentMethod == 'visa') {
-                _showCardDetailsBottomSheet(context);
-              }
+              // if (selectedPaymentMethod == 'visa') {
+              //   //_showCardDetailsBottomSheet(context);
+              // }
             });
           },
           activeColor: const Color.fromRGBO(15, 99, 43, 1),

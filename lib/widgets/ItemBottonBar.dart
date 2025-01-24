@@ -104,7 +104,7 @@ class ItemBottonBar extends StatelessWidget {
                 const Color.fromRGBO(15, 99, 43, 1), // لون كبسة زيتي
               ),
               padding: WidgetStateProperty.all(
-                const EdgeInsets.symmetric(vertical: 13, horizontal: 13),
+                const EdgeInsets.symmetric(vertical: 13, horizontal: 7),
               ),
               shape: WidgetStateProperty.all<RoundedRectangleBorder>(
                 RoundedRectangleBorder(
@@ -136,7 +136,7 @@ class ItemBottonBar extends StatelessWidget {
                   color: Color(0xFF7C7C7C), // لون أقل شدة
                 ),
               ),
-              const SizedBox(width: 5), // إضافة مسافة بين السلاش و"كغم"
+              // إضافة مسافة بين السلاش و"كغم"
               const Text(
                 "/", // السلاش
                 style: TextStyle(
@@ -149,7 +149,7 @@ class ItemBottonBar extends StatelessWidget {
               Text(
                 productPrice.toString(), // الرقم فقط
                 style: const TextStyle(
-                  fontSize: 25,
+                  fontSize: 20,
                   fontWeight: FontWeight.bold,
                   color: Color.fromRGBO(15, 99, 43, 1), // لون الرقم زيتي
                 ),

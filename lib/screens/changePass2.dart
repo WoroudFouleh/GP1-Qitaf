@@ -10,7 +10,12 @@ import 'package:jwt_decoder/jwt_decoder.dart';
 class Changepass2 extends StatefulWidget {
   final String token;
   final String userId;
-  const Changepass2({required this.token, Key? key, required this.userId})
+  final String token2;
+  const Changepass2(
+      {required this.token,
+      Key? key,
+      required this.userId,
+      required this.token2})
       : super(key: key);
 
   @override
@@ -59,8 +64,10 @@ class _Changepass2State extends State<Changepass2> {
           context,
           MaterialPageRoute(
             builder: (context) => OwnerHome(
-                token: newToken,
-                userId: widget.userId), // Replace with your main screen
+              token: newToken,
+              userId: widget.userId,
+              token2: widget.token2,
+            ), // Replace with your main screen
           ),
         );
       } else {

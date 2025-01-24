@@ -11,7 +11,12 @@ import 'package:login_page/screens/config.dart';
 class OwnerHome extends StatefulWidget {
   final String token;
   final String userId;
-  const OwnerHome({required this.token, Key? key, required this.userId})
+  final String token2;
+  const OwnerHome(
+      {required this.token,
+      Key? key,
+      required this.userId,
+      required this.token2})
       : super(key: key);
 
   @override
@@ -80,8 +85,10 @@ class _OwnerHomeState extends State<OwnerHome> {
           ),
         ),
         endDrawer: CustomDrawer(
-            token: widget.token,
-            userId: widget.userId), // استخدام الـ CustomDrawer هنا
+          token: widget.token,
+          userId: widget.userId,
+          token2: widget.token2,
+        ), // استخدام الـ CustomDrawer هنا
 
         body: Padding(
           padding: const EdgeInsets.all(16.0),

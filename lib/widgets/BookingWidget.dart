@@ -681,14 +681,6 @@ class _BookingWidgetState extends State<BookingWidget> {
                           ),
                         ],
                       ),
-                      Text(
-                        ":ربح للمنصة(5%)",
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFF475269),
-                        ),
-                      ),
                     ],
                   ),
                   Divider(

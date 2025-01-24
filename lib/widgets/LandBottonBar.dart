@@ -109,6 +109,15 @@ class _LandBottonBarState extends State<LandBottonBar> {
               'طلب عمل جديد في "${widget.landName}". اضغط لمراجعة الطلب',
               widget.ownerId,
               'workRequest');
+
+          showCustomDialog(
+            context: context,
+            icon: Icons.check,
+            iconColor: Color.fromRGBO(15, 99, 43, 1),
+            title: "تمّ بنجاح",
+            message: "!تمّ إرسال طلب العمل بنجاح",
+            buttonText: "حسناً",
+          );
         } else {
           print('Error sending request: ${jsonResponse['message']}');
         }
@@ -119,6 +128,82 @@ class _LandBottonBarState extends State<LandBottonBar> {
     } catch (e) {
       print('An error occurred: $e');
     }
+  }
+
+  void showCustomDialog({
+    required BuildContext context,
+    required IconData icon,
+    required Color iconColor,
+    required String title,
+    required String message,
+    required String buttonText,
+  }) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16.0),
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  color: iconColor,
+                  shape: BoxShape.circle,
+                ),
+                padding: const EdgeInsets.all(16.0),
+                child: Icon(
+                  icon,
+                  color: Colors.white,
+                  size: 48.0,
+                ),
+              ),
+              const SizedBox(height: 16.0),
+              Text(
+                title,
+                style: const TextStyle(
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 8.0),
+              Text(
+                message,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 16.0,
+                  color: Colors.grey[700],
+                ),
+              ),
+              const SizedBox(height: 16.0),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).pop(); // Close the dialog
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: iconColor,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 32.0, vertical: 12.0),
+                ),
+                child: Text(
+                  buttonText,
+                  style: const TextStyle(
+                    fontSize: 16.0,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 
   @override
@@ -191,7 +276,7 @@ class _LandBottonBarState extends State<LandBottonBar> {
               Text(
                 widget.workersWages.toString(),
                 style: const TextStyle(
-                  fontSize: 25,
+                  fontSize: 20,
                   fontWeight: FontWeight.bold,
                   color: Color.fromRGBO(15, 99, 43, 1),
                 ),
