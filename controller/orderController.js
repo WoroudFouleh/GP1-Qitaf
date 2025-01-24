@@ -307,7 +307,7 @@ exports.getNormalDeliveryGroups = async (req, res) => {
     // Fetch all undelivered items in normal delivery orders
     const normalOrders = await Order.find({
       'deliveryType': 'slow',
-      'items.itemStatus': 'undelivered', // Assuming items have an isDelivered field
+      'items.itemStatus': 'pending', // Assuming items have an isDelivered field
     });
 
     if (!normalOrders.length) {
@@ -320,7 +320,7 @@ exports.getNormalDeliveryGroups = async (req, res) => {
 
     normalOrders.forEach((order) => {
       order.items.forEach((item) => {
-        if (item.itemStatus == 'undelivered' && item.itemPreparation == 'ready' && item.itemTaken != 'taken' && item.productCity === deliveryManCity) {
+        if (item.itemStatus == 'pending' && item.itemPreparation == 'ready' && item.itemTaken != 'taken' && item.productCity === deliveryManCity) {
           itemsInDeliveryManCity.push({
             orderId: order._id,
             itemId: item._id,

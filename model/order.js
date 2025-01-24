@@ -73,7 +73,7 @@ default: false
           },
           itemStatus:{
             type: String,
-            default: "undelivered"
+            default: "pending"
           },
           itemPreparation:{
             type: String,

@@ -162,7 +162,7 @@ exports.forgotPassword = async (req, res, next) => {
     
     // 1: Find the user by email
     const email=req.body.email;
-    const user = await User.findOne({ username: req.body.username });
+    const user = await User.findOne({ email: req.body.username });
     if (!user) {
         return res.status(404).json({ status: 'fail', message: 'User not found with this email' });
     }
@@ -211,7 +211,7 @@ exports.verifyCode = async (req, res, next) => {
 
         // Find user by email and matching token that hasn't expired
         const user = await User.findOne({ 
-            username: username, 
+            email: username, 
             passwordResetToken: hashedCode, 
             passwordResetTokenExpires: { $gt: Date.now() } 
         });
@@ -236,7 +236,7 @@ exports.updatePassword = async (req, res, next) => {
         const username = req.params.username; // Get the email from the URL parameters
 
         // Find the user by email
-        const user = await User.findOne({ username: username });
+        const user = await User.findOne({ email: username });
 
         if (!user) {
             console.log("No user found with this email.");
@@ -278,7 +278,7 @@ exports.updatePassword = async (req, res, next) => {
 exports.updateUser = async (req, res, next) => {
     try {
         const username = req.params.username; // Get the username from the URL params
-
+console.log("in update");
         // Find the user by username
         const user = await User.findOne({ username: username });
 
@@ -322,16 +322,26 @@ exports.updateUser = async (req, res, next) => {
         console.log("User updated successfully:", user);
 
         let tokenData = {
+            _id: user._id,
             username: user.username,
-            firstName: user.firstName,
-            lastName: user.lastName,
             email: user.email,
+            dayOfBirth: user.dayOfBirth,
+            monthOfBirth: user.monthOfBirth,
+            yearOfBirth: user.yearOfBirth,
             phoneCode: user.phoneCode,
             phoneNumber: user.phoneNumber,
-            city: user.city,
             street: user.street,
+            city: user.city,
             profilePhoto: user.profilePhoto,
-            password: user.password
+            userType: user.userType,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            gender: user.gender,
+            password: user.password,
+            rate: user.rate,
+            points: user.points,
+            postsCount: user.postsCount
+
         };
         const token = await UserServices.generateToken(tokenData, "secretKey", '1h');
 

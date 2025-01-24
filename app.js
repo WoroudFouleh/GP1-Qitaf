@@ -19,6 +19,7 @@ const productAdsRoute = require('./routers/prodAdRouter');
 const customerAdsRoute = require('./routers/customerAdRouter');
 const deliveryWorkRoute = require('./routers/deliveryWorkRouter');
 const deliveryManRoute = require('./routers/deliveryManRouter');
+const paymentRoute = require('./routers/paymentRouter');
 const app = express();
 app.use(bodyParser.json({ limit: '10mb' })); // You can increase '10mb' to whatever size you need
 app.use(bodyParser.urlencoded({ limit: '10mb', extended: true }));
@@ -40,10 +41,11 @@ app.use('/api/productAds', productAdsRoute);
 app.use('/api/customerAds', customerAdsRoute);
 app.use('/api/deliveryWorks', deliveryWorkRoute);
 app.use('/api/deliveryMens', deliveryManRoute);
+app.use('/api/payments', paymentRoute);
 app.use('/uploads/', express.static(path.join(__dirname, 'uploads')));
 
 const port = 3000;
-const host = '192.168.88.5';  // Your machine's IP address
+const host = '192.168.88.4';  // Your machine's IP address
 
 const server = app.listen(port, host, () => {
     console.log(`App listening at http://${host}:${port}/`);
