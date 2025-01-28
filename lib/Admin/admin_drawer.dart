@@ -33,7 +33,7 @@ class AdminDrawer extends StatelessWidget {
               ),
             ),
             decoration: const BoxDecoration(
-              color: const Color.fromRGBO(15, 99, 43, 1),
+              color: Color.fromRGBO(15, 99, 43, 1),
               image: DecorationImage(
                 image: AssetImage('assets/images/cover.jpg'),
                 fit: BoxFit.cover,

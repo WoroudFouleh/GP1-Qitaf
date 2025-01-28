@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:login_page/Admin/Delivery.dart';
 import 'package:login_page/Admin/Posts.dart';
 import 'package:login_page/Admin/Statistics.dart';
+import 'package:login_page/Admin/adminNotifications.dart';
 import 'package:login_page/Admin/admin_drawer.dart';
+import 'package:login_page/screens/welcome_screen.dart';
 
 class AdminPage extends StatefulWidget {
   @override
@@ -36,7 +38,7 @@ class _AdminPageState extends State<AdminPage> {
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
-                color: const Color.fromRGBO(15, 99, 43, 1),
+                color: Color.fromRGBO(15, 99, 43, 1),
               ),
             ),
             content: const Text(
@@ -65,17 +67,19 @@ class _AdminPageState extends State<AdminPage> {
               ),
               TextButton.icon(
                 onPressed: () {
-                  Navigator.of(context).pop();
-                  print('تم تسجيل الخروج');
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => WelcomeScreen()),
+                  );
                 },
                 icon: const Icon(Icons.check,
-                    color: const Color.fromRGBO(15, 99, 43, 1)),
+                    color: Color.fromRGBO(15, 99, 43, 1)),
                 label: const Text(
                   'نعم',
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
-                    color: const Color.fromRGBO(15, 99, 43, 1),
+                    color: Color.fromRGBO(15, 99, 43, 1),
                   ),
                 ),
               ),
@@ -106,7 +110,11 @@ class _AdminPageState extends State<AdminPage> {
           actions: [
             IconButton(
               onPressed: () {
-                print('تم فتح الإشعارات');
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => AdminNotificationsPage()),
+                );
               },
               icon: const Icon(Icons.notifications, color: Colors.white),
             ),

@@ -15,7 +15,10 @@ import 'package:login_page/screens/animition_notification_bar.dart';
 
 class AddProduct extends StatefulWidget {
   final String token;
-  const AddProduct({required this.token, Key? key}) : super(key: key);
+  final String token2;
+
+  const AddProduct({required this.token, Key? key, required this.token2})
+      : super(key: key);
 
   @override
   State<AddProduct> createState() => _AddProductState();
@@ -300,6 +303,7 @@ class _AddProductState extends State<AddProduct> {
       ),
       endDrawer: CustomDrawer(
         token: widget.token,
+        token2: widget.token2,
       ),
       body: SingleChildScrollView(
         child: Center(

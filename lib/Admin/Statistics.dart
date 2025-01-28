@@ -412,7 +412,8 @@ class _StatisticsPageState extends State<StatisticsPage> {
                     padding: const EdgeInsets.all(12.0),
                     child: Column(
                       children: [
-                        Icon(stat['icon'], color: Colors.green, size: 40),
+                        Icon(stat['icon'],
+                            color: Color.fromRGBO(15, 99, 43, 1), size: 40),
                         SizedBox(height: 8),
                         Text(
                           stat['title'],

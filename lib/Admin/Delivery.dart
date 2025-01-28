@@ -141,7 +141,7 @@ class _ManageDeliveryScreenState extends State<ManageDeliveryScreen> {
             ],
           ),
           content: const Text(
-            'هل أنت متأكد أنك تريد حذف هذا الموصل؟',
+            'هل أنت متأكد أنك تريد حذف عامل التوصيل؟',
             textAlign: TextAlign.right,
           ),
           actions: [
@@ -163,10 +163,8 @@ class _ManageDeliveryScreenState extends State<ManageDeliveryScreen> {
                 Navigator.of(context).pop();
                 _showSuccessDialog();
               },
-              icon: const Icon(
-                Icons.check,
-                color: const Color.fromRGBO(15, 99, 43, 1),
-              ),
+              icon:
+                  const Icon(Icons.check, color: Color.fromRGBO(15, 99, 43, 1)),
               label: const Text(
                 'نعم',
                 style: TextStyle(fontWeight: FontWeight.bold),
@@ -187,19 +185,19 @@ class _ManageDeliveryScreenState extends State<ManageDeliveryScreen> {
             mainAxisAlignment: MainAxisAlignment.end,
             children: const [
               Text(
-                'تم حذف الموصل بنجاح!',
+                'تم حذف عامل التوصيل بنجاح!',
                 style: TextStyle(fontWeight: FontWeight.bold),
                 textAlign: TextAlign.right,
               ),
               Icon(Icons.check_circle,
-                  color: const Color.fromRGBO(15, 99, 43, 1), size: 40),
+                  color: Color.fromRGBO(15, 99, 43, 1), size: 40),
             ],
           ),
           actions: [
             TextButton.icon(
               onPressed: () => Navigator.of(context).pop(),
-              icon: const Icon(Icons.done,
-                  color: const Color.fromRGBO(15, 99, 43, 1)),
+              icon:
+                  const Icon(Icons.done, color: Color.fromRGBO(15, 99, 43, 1)),
               label: const Text(
                 'تم',
                 style: TextStyle(fontWeight: FontWeight.bold),
@@ -271,7 +269,7 @@ class _ManageDeliveryScreenState extends State<ManageDeliveryScreen> {
                   margin: const EdgeInsets.symmetric(vertical: 8),
                   child: ListTile(
                     leading: CircleAvatar(
-                      backgroundColor: const Color.fromRGBO(15, 99, 43, 1),
+                      backgroundColor: Colors.green,
                       backgroundImage: deliveryMan['profileImage'] != null
                           ? NetworkImage(deliveryMan['profileImage']!)
                           : null,

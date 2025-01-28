@@ -9,7 +9,7 @@ class Prevorder extends StatelessWidget {
   final String imagePath;
   final List<dynamic> items;
   final int num;
-
+  final String username;
   const Prevorder({
     Key? key,
     required this.orderId,
@@ -18,11 +18,21 @@ class Prevorder extends StatelessWidget {
     required this.orderDate,
     required this.items,
     required this.num,
-    this.imagePath = 'assets/images/vegBag.png', // Default image
+    this.imagePath = 'assets/images/vegBag.png',
+    required this.username, // Default image
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    // Determine the final status
+    String finalStatus = status;
+    if (status == 'غير مستلم') {
+      // Check if all items have itemStatus == 'delivered'
+      bool allDelivered =
+          items.every((item) => item['itemStatus'] == 'delivered');
+      finalStatus = allDelivered ? 'مستلم' : 'غير مستلم';
+    }
+
     final String formattedDate = orderDate.split(" ")[0];
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
@@ -59,9 +69,9 @@ class Prevorder extends StatelessWidget {
                     child: Padding(
                       padding: const EdgeInsets.all(15.0),
                       child: Text(
-                        status,
+                        finalStatus,
                         style: const TextStyle(
-                          fontSize: 16,
+                          fontSize: 14,
                         ),
                       ),
                     ),
@@ -76,7 +86,7 @@ class Prevorder extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        "السعر: ₪${price.toStringAsFixed(2)}",
+                        "السعر: ₪${price.toStringAsFixed(1)}",
                         style: const TextStyle(
                           fontSize: 18,
                         ),
@@ -108,11 +118,11 @@ class Prevorder extends StatelessWidget {
                         context,
                         MaterialPageRoute(
                           builder: (context) => Orderdetails(
-                            price: price,
-                            status: status,
-                            date: orderDate,
-                            items: items,
-                          ),
+                              price: price,
+                              status: finalStatus,
+                              date: orderDate,
+                              items: items,
+                              username: username),
                         ),
                       );
                     },
@@ -134,7 +144,7 @@ class Prevorder extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    "تاريخ الطلب: ${orderDate.toString().substring(0, 10)}   ",
+                    "تاريخ الطلب:${orderDate.toString().substring(0, 10)}",
                     style: const TextStyle(
                       fontSize: 18,
                     ),

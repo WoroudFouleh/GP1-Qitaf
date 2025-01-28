@@ -8,7 +8,9 @@ import 'package:login_page/screens/config.dart';
 
 class CustomerAdvertisement extends StatefulWidget {
   final token;
-  const CustomerAdvertisement({@required this.token, Key? key})
+  final token2;
+
+  const CustomerAdvertisement({@required this.token, Key? key, this.token2})
       : super(key: key);
 
   @override

@@ -13,7 +13,13 @@ import 'package:login_page/screens/qataf.dart';
 class CustomerHome extends StatefulWidget {
   final String token;
   final String userId;
-  const CustomerHome({required this.token, Key? key, required this.userId})
+  final String token2;
+
+  const CustomerHome(
+      {required this.token,
+      Key? key,
+      required this.userId,
+      required this.token2})
       : super(key: key);
 
   @override
@@ -170,7 +176,10 @@ class _CustomerHomeState extends State<CustomerHome> {
                       context,
                       MaterialPageRoute(
                         builder: (context) => ProductsPage(
-                            token: widget.token, userId: widget.userId),
+                          token: widget.token,
+                          userId: widget.userId,
+                          token2: widget.token2,
+                        ),
                       ),
                     );
                   },

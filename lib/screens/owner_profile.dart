@@ -14,7 +14,8 @@ import 'config.dart';
 class OwnerProfile extends StatefulWidget {
   final token;
   final userId;
-  const OwnerProfile({@required this.token, Key? key, this.userId})
+  final token2;
+  const OwnerProfile({@required this.token, Key? key, this.userId, this.token2})
       : super(key: key);
 
   @override
@@ -77,8 +78,8 @@ class _OwnerProfileState extends State<OwnerProfile> {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) =>
-                OwnerHome(token: newToken, userId: widget.userId),
+            builder: (context) => OwnerHome(
+                token: newToken, userId: widget.userId, token2: widget.token2),
           ),
         );
       } else {
@@ -241,7 +242,9 @@ class _OwnerProfileState extends State<OwnerProfile> {
                         context,
                         MaterialPageRoute(
                           builder: (context) => Changepass(
-                              token: widget.token, userId: widget.userId),
+                              token: widget.token,
+                              userId: widget.userId,
+                              token2: widget.token2),
                         ),
                       );
                     },

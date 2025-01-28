@@ -1,8 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:login_page/screens/config.dart';
+import 'package:login_page/services/notification_service.dart';
 import 'package:mime/mime.dart';
 import 'package:http_parser/http_parser.dart';
 
@@ -28,7 +30,8 @@ class _RequestDeliveryState extends State<RequestDelivery> {
   String? _selectedYear;
   PlatformFile? _selectedLicenseFile;
   String? username;
-
+  late String adminFCM;
+  late String adminID;
   final List<String> cities = [
     'القدس',
     'رام الله',
@@ -62,6 +65,37 @@ class _RequestDeliveryState extends State<RequestDelivery> {
   ];
   final List<String> years =
       List.generate(100, (index) => (2024 - index).toString());
+  Future<void> fetchAdminFcmToken() async {
+    try {
+      print("on fetch");
+      // Query Firestore for a user with the same email as the owner
+      final querySnapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .where('email', isEqualTo: 'qitaf2025@gmail.com')
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        final userDoc = querySnapshot.docs.first;
+        setState(() {
+          adminFCM = userDoc['fcmToken'] ?? "";
+          adminID = userDoc.id; // Get the FCM token
+        });
+        print("Owner's FCM token: $adminFCM");
+        print("Owner's document ID: $adminID");
+
+        await NotificationService.instance.saveNotificationToFirebase(
+            adminFCM,
+            'طلب عامل توصيل جديد',
+            'لقد تلقيت طلب عمل جديد كعامل توصيل في قطاف. اضغط لمراجعة الطلب',
+            adminID,
+            'delivery');
+      } else {
+        print("failed");
+      }
+    } catch (e) {
+      print("Error fetching FCM token: $e");
+    }
+  }
 
   Future<void> _pickFile() async {
     final result = await FilePicker.platform.pickFiles(
@@ -114,15 +148,25 @@ class _RequestDeliveryState extends State<RequestDelivery> {
 
         final response = await request.send();
 
+        final responseData = await response.stream.bytesToString();
+
         if (response.statusCode == 201) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('تم إرسال الطلب بنجاح')),
-          );
+          final data = jsonDecode(responseData);
+          final expirationDate = data['expirationDate'];
+          _showResultDialog(
+              context,
+              'تم التأكد من صلاحية الرخصة، يرجى انتظار رد من مالكي التطبيق للتأكيد على قبولك',
+              'تاريخ انتهاء الرخصة: $expirationDate',
+              isSuccess: true);
+          fetchAdminFcmToken();
         } else {
-          final responseData = await response.stream.bytesToString();
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('فشل الإرسال: $responseData')),
-          );
+          final data = jsonDecode(responseData);
+          final expirationDate = data['expirationDate'];
+          _showResultDialog(
+              context,
+              'لم يتم قبول الطلب بسبب عدم صلاحبية تاريخ الرخصة',
+              'تاريخ انتهاء الرخصة (إن وجد): ${expirationDate ?? "غير متوفر"}',
+              isSuccess: false);
         }
       } catch (error) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -130,6 +174,68 @@ class _RequestDeliveryState extends State<RequestDelivery> {
         );
       }
     }
+  }
+
+  void _showResultDialog(BuildContext context, String title, String content,
+      {bool isSuccess = true}) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15.0), // Rounded corners
+        ),
+        titlePadding: EdgeInsets.zero, // Remove default padding
+        contentPadding: EdgeInsets.symmetric(horizontal: 24.0, vertical: 20.0),
+        backgroundColor: Colors.white,
+        title: Column(
+          children: [
+            // Success or Error Icon
+            CircleAvatar(
+              radius: 30,
+              backgroundColor: isSuccess ? Colors.green : Colors.red,
+              child: Icon(
+                isSuccess ? Icons.check_circle : Icons.error,
+                color: Colors.white,
+                size: 40,
+              ),
+            ),
+            SizedBox(height: 16),
+            Text(
+              title,
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: isSuccess
+                    ? const Color.fromARGB(255, 0, 0, 0)
+                    : Colors.black,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+        content: Text(
+          content,
+          style: TextStyle(fontSize: 16, color: Colors.grey[800]),
+          textAlign: TextAlign.center,
+        ),
+        actionsAlignment: MainAxisAlignment.center,
+        actions: [
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: isSuccess ? Colors.green : Colors.red,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
+            onPressed: () => Navigator.pop(context),
+            child: Text(
+              'حسناً',
+              style: TextStyle(color: Colors.white, fontSize: 16),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -154,8 +260,8 @@ class _RequestDeliveryState extends State<RequestDelivery> {
               // الصورة المربعة
               Center(
                 child: Container(
-                  width: 500,
-                  height: 300,
+                  width: 450,
+                  height: 200,
                   decoration: BoxDecoration(
                     shape: BoxShape.rectangle,
                     borderRadius: BorderRadius.circular(10),
@@ -516,36 +622,32 @@ class _RequestDeliveryState extends State<RequestDelivery> {
                           }
                         }
                       },
-                      // Submit Button
-                      child: Center(
-                        child: ElevatedButton(
-                          onPressed: () {
-                            _submitForm();
-                            // handle form submission
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor:
-                                const Color.fromRGBO(15, 99, 43, 1),
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 12.0), // تقليل المسافة داخل الزر
-                            shape: RoundedRectangleBorder(
-                              borderRadius:
-                                  BorderRadius.circular(10), // زوايا مستديرة
-                            ),
-                            textStyle: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold), // النص بولد
-                            minimumSize: const Size(400, 50), // تقليل حجم الزر
+                      child: ElevatedButton(
+                        onPressed: () {
+                          _submitForm();
+                          // handle form submission
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color.fromRGBO(15, 99, 43, 1),
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 12.0), // تقليل المسافة داخل الزر
+                          shape: RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.circular(10), // زوايا مستديرة
                           ),
-                          child: const Text(
-                            '  إرسال الطلب ',
-                            style: TextStyle(
-                              color: Colors.white,
-                            ),
+                          textStyle: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold), // النص بولد
+                          minimumSize: const Size(400, 50), // تقليل حجم الزر
+                        ),
+                        child: const Text(
+                          '  إرسال الطلب ',
+                          style: TextStyle(
+                            color: Colors.white,
                           ),
                         ),
                       ),
-                    ),
+                    )
                   ],
                 ),
               ),

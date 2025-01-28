@@ -15,7 +15,10 @@ import 'package:jwt_decoder/jwt_decoder.dart';
 
 class AddProductionLine extends StatefulWidget {
   final String token;
-  const AddProductionLine({required this.token, super.key});
+  final String token2;
+
+  const AddProductionLine(
+      {required this.token, super.key, required this.token2});
 
   @override
   State<AddProductionLine> createState() => _AddProductionLineState();
@@ -266,6 +269,7 @@ class _AddProductionLineState extends State<AddProductionLine> {
       ),
       endDrawer: CustomDrawer(
         token: widget.token,
+        token2: widget.token2,
       ),
       body: SingleChildScrollView(
         child: Center(

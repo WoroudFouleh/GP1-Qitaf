@@ -5,8 +5,11 @@ import 'package:login_page/screens/addProductionLine.dart';
 import 'package:login_page/screens/custom_drawer.dart';
 
 class OwnerAdd extends StatefulWidget {
-  final token;
-  const OwnerAdd({@required this.token, Key? key}) : super(key: key);
+  final String token;
+  final String token2;
+
+  const OwnerAdd({required this.token, Key? key, required this.token2})
+      : super(key: key);
 
   @override
   State<OwnerAdd> createState() => _OwnerAddState();
@@ -37,6 +40,7 @@ class _OwnerAddState extends State<OwnerAdd> {
       ),
       endDrawer: CustomDrawer(
         token: widget.token,
+        token2: widget.token2,
       ), // استخدام الـ CustomDrawer هنا
 
       body: Stack(
@@ -66,7 +70,8 @@ class _OwnerAddState extends State<OwnerAdd> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => AddLand(token: widget.token)),
+                            builder: (context) => AddLand(
+                                token: widget.token, token2: widget.token2)),
                       );
                     },
                     style: ElevatedButton.styleFrom(
@@ -109,8 +114,8 @@ class _OwnerAddState extends State<OwnerAdd> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) =>
-                                AddProduct(token: widget.token)),
+                            builder: (context) => AddProduct(
+                                token: widget.token, token2: widget.token2)),
                       );
                     },
                     style: ElevatedButton.styleFrom(
@@ -152,8 +157,8 @@ class _OwnerAddState extends State<OwnerAdd> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) =>
-                                AddProductionLine(token: widget.token)),
+                            builder: (context) => AddProductionLine(
+                                token: widget.token, token2: widget.token2)),
                       );
                     },
                     style: ElevatedButton.styleFrom(

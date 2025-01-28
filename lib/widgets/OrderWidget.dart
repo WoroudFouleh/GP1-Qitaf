@@ -266,7 +266,7 @@ class _OrderWidgetState extends State<OrderWidget> {
         showCustomDialog(
           context: context,
           icon: Icons.check,
-          iconColor: const Color.fromRGBO(15, 99, 43, 1),
+          iconColor: Colors.green,
           title: "تمّ بنجاح",
           message: "!تمّ  تسجيل طلبك بنجاح",
           buttonText: "حسناً",
@@ -407,7 +407,7 @@ class _OrderWidgetState extends State<OrderWidget> {
         style: const TextStyle(
           fontSize: 22,
           fontWeight: FontWeight.bold,
-          color: const Color.fromRGBO(15, 99, 43, 1),
+          color: Color.fromRGBO(15, 99, 43, 1),
         ),
         textAlign: TextAlign.right, // Align text to the right for Arabic
         textDirection:
@@ -490,10 +490,7 @@ class _OrderWidgetState extends State<OrderWidget> {
           ),
           if (icon != null)
             IconButton(
-              icon: Icon(
-                icon,
-                color: const Color.fromRGBO(15, 99, 43, 1),
-              ),
+              icon: Icon(icon, color: Color.fromRGBO(15, 99, 43, 1)),
               onPressed: onIconPressed,
             ),
         ],
@@ -644,7 +641,7 @@ class _OrderWidgetState extends State<OrderWidget> {
         margin: const EdgeInsets.symmetric(horizontal: 20),
         decoration: BoxDecoration(
           gradient: const LinearGradient(
-            colors: [const Color.fromRGBO(15, 99, 43, 1), Colors.teal],
+            colors: [Color.fromRGBO(15, 99, 43, 1), Colors.teal],
           ),
           borderRadius: BorderRadius.circular(10),
         ),
@@ -673,7 +670,7 @@ class _OrderWidgetState extends State<OrderWidget> {
             children: [
               Icon(
                 Icons.celebration,
-                color: Colors.green,
+                color: Color.fromRGBO(15, 99, 43, 1),
                 size: 50,
               ),
               const SizedBox(height: 10),
@@ -681,7 +678,7 @@ class _OrderWidgetState extends State<OrderWidget> {
                 "مبروك!",
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  color: const Color.fromRGBO(15, 99, 43, 1),
+                  color: Color.fromRGBO(15, 99, 43, 1),
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
                 ),
@@ -725,7 +722,7 @@ class _OrderWidgetState extends State<OrderWidget> {
                 applyDiscountAndOrder(discountPercentage); // Apply the discount
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color.fromRGBO(15, 99, 43, 1),
+                backgroundColor: Color.fromRGBO(15, 99, 43, 1),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
                 ),
@@ -765,7 +762,7 @@ class _OrderWidgetState extends State<OrderWidget> {
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: const Color.fromRGBO(15, 99, 43, 1).withOpacity(0.2),
+            color: const Color(0xFF355E3B).withOpacity(0.2),
             spreadRadius: 3,
             blurRadius: 5,
           ),
@@ -777,7 +774,7 @@ class _OrderWidgetState extends State<OrderWidget> {
           textAlign: TextAlign.right,
           style: const TextStyle(
             fontSize: 18,
-            color: const Color.fromRGBO(15, 99, 43, 1),
+            color: Color(0xFF355E3B),
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -826,7 +823,7 @@ class _OrderWidgetState extends State<OrderWidget> {
           textAlign: TextAlign.right,
           style: const TextStyle(
             fontSize: 18,
-            color: const Color.fromRGBO(15, 99, 43, 1),
+            color: Color.fromRGBO(15, 99, 43, 1),
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -916,8 +913,7 @@ class _OrderWidgetState extends State<OrderWidget> {
         contentPadding:
             const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
         hintText: hint,
-        hintStyle: const TextStyle(
-            fontSize: 18, color: const Color.fromRGBO(15, 99, 43, 1)),
+        hintStyle: const TextStyle(fontSize: 18, color: Color(0xFF355E3B)),
         filled: true,
         fillColor: const Color(0xFFF1F1F1),
         border: OutlineInputBorder(

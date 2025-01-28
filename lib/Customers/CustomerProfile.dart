@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:login_page/Customers/customerBar.dart';
 import 'package:login_page/screens/changepass.dart';
 import 'package:login_page/screens/config.dart';
 import 'package:login_page/screens/owner_home.dart';
@@ -13,7 +14,10 @@ import 'package:http/http.dart' as http;
 class CustomerProfile extends StatefulWidget {
   final token;
   final userId;
-  const CustomerProfile({@required this.token, Key? key, this.userId})
+  final token2;
+
+  const CustomerProfile(
+      {@required this.token, Key? key, this.userId, this.token2})
       : super(key: key);
 
   @override
@@ -32,7 +36,8 @@ class _CustomerProfileState extends State<CustomerProfile> {
   Uint8List? _image;
   File? selectedImage;
   late String username;
-
+  late int points;
+  late double rate;
   void userUpdate() async {
     try {
       // Convert image to base64 if an image is selected
@@ -76,8 +81,10 @@ class _CustomerProfileState extends State<CustomerProfile> {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) =>
-                OwnerHome(token: newToken, userId: widget.userId),
+            builder: (context) => CustomerBar(
+              token: newToken,
+              token2: widget.token2,
+            ),
           ),
         );
       } else {
@@ -108,7 +115,8 @@ class _CustomerProfileState extends State<CustomerProfile> {
     username = jwtDecoderToken['username'];
     String? base64Image =
         jwtDecoderToken['profilePhoto']; // Get the base64 image string
-
+    rate = jwtDecoderToken['rate'];
+    points = jwtDecoderToken['points'];
     // Split full name into first and last name
     // List<String> nameParts = fullName.split(' ');
     _firstNameController.text = firstName; // First name
@@ -195,8 +203,8 @@ class _CustomerProfileState extends State<CustomerProfile> {
                       ),
                     ),
                     const SizedBox(width: 5),
-                    const Text(
-                      '4.5  ',
+                    Text(
+                      rate.toString(),
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
@@ -213,8 +221,8 @@ class _CustomerProfileState extends State<CustomerProfile> {
                       ),
                     ),
                     const SizedBox(width: 5),
-                    const Text(
-                      '120  ',
+                    Text(
+                      points.toString(),
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
@@ -282,7 +290,9 @@ class _CustomerProfileState extends State<CustomerProfile> {
                         context,
                         MaterialPageRoute(
                           builder: (context) => Changepass(
-                              token: widget.token, userId: widget.userId),
+                              token: widget.token,
+                              userId: widget.userId,
+                              token2: widget.token2),
                         ),
                       );
                     },

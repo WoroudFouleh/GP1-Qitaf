@@ -359,7 +359,9 @@ class _CustomersBuyingState extends State<CustomersBuying> {
     } else if (item['itemPreparation'] == 'ready') {
       switch (item['itemStatus']) {
         case 'delivered':
-          return const Color.fromRGBO(15, 99, 43, 1);
+          return Colors.green;
+        case 'pending':
+          return Colors.amber;
         case 'undelivered':
           return Colors.red;
 
@@ -377,7 +379,8 @@ class _CustomersBuyingState extends State<CustomersBuying> {
       switch (item['itemStatus']) {
         case 'delivered':
           return "تم الاستلام";
-
+        case 'pending':
+          return "لم يتم التوصيل بعد";
         case 'undelivered':
           return "الزبون لم يستلم الطلب!";
         default:

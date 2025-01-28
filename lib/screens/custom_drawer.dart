@@ -7,7 +7,6 @@ import 'package:login_page/screens/OwnerBooking.dart';
 import 'package:login_page/screens/OwnerWorking.dart';
 import 'package:login_page/screens/ProfilePage.dart';
 import 'package:login_page/screens/customersBuying.dart';
-import 'package:login_page/screens/owner_profile.dart';
 import 'package:login_page/screens/CartPage.dart';
 import 'package:login_page/screens/previousOrders.dart';
 import 'package:login_page/screens/welcome_screen.dart';
@@ -15,7 +14,10 @@ import 'package:login_page/screens/welcome_screen.dart';
 class CustomDrawer extends StatefulWidget {
   final token;
   final userId;
-  const CustomDrawer({required this.token, Key? key, this.userId})
+  final String token2;
+
+  const CustomDrawer(
+      {required this.token, Key? key, this.userId, required this.token2})
       : super(key: key);
 
   @override
@@ -89,7 +91,9 @@ class _CustomDrawerState extends State<CustomDrawer> {
                 context,
                 MaterialPageRoute(
                     builder: (context) => ProfilePage(
-                        token: widget.token, userId: widget.userId)),
+                        token: widget.token,
+                        userId: widget.userId,
+                        token2: widget.token2)),
               );
             },
           ),

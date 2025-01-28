@@ -3,7 +3,10 @@ import 'package:login_page/screens/custom_drawer.dart'; // تأكد من است�
 
 class CartPage extends StatelessWidget {
   final String token;
-  const CartPage({required this.token, Key? key}) : super(key: key);
+  final String token2;
+
+  const CartPage({required this.token, Key? key, required this.token2})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -12,7 +15,10 @@ class CartPage extends StatelessWidget {
         preferredSize: Size.fromHeight(80),
         child: CartAppBar(),
       ),
-      endDrawer: CustomDrawer(token: token), // إضافة CustomDrawer هنا
+      endDrawer: CustomDrawer(
+        token: token,
+        token2: token2,
+      ), // إضافة CustomDrawer هنا
       body: const Center(
         child: Text(
           'محتويات عربة التسوق',

@@ -14,8 +14,10 @@ import 'package:login_page/screens/welcome_screen.dart';
 
 class CustomDrawer2 extends StatefulWidget {
   final token;
+  final token2;
 
-  const CustomDrawer2({required this.token, Key? key}) : super(key: key);
+  const CustomDrawer2({required this.token, Key? key, this.token2})
+      : super(key: key);
 
   @override
   _CustomDrawer2State createState() => _CustomDrawer2State();

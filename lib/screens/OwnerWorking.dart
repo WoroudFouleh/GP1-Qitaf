@@ -1,8 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:login_page/screens/config.dart';
 import 'package:http/http.dart' as http;
 import 'package:login_page/screens/workerProfile.dart';
+import 'package:login_page/services/notification_service.dart';
 import 'dart:convert'; // To handle JSON decoding
 import 'config.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
@@ -21,6 +23,11 @@ class _OwnerWorkingPageState extends State<OwnerWorkingPage> {
   int quantity = 1; // الكمية الحالية
   List<dynamic> requests = [];
   late String username;
+  late String userfirstName = "";
+  late String userlastName = "";
+  late String userFcmToken = "";
+  late String workerId = "";
+  late String useremail = "";
   @override
   void initState() {
     super.initState();
@@ -31,8 +38,68 @@ class _OwnerWorkingPageState extends State<OwnerWorkingPage> {
     fetchRequests(); // Call the fetch function when the page is loaded
   }
 
-  void requestDecision(String requestId, String status, String landId) async {
+//////TO GET THE WORKER
+  void fetchUser(String workerUsername) async {
     try {
+      final response = await http.get(
+        Uri.parse('$getUser/${workerUsername}'),
+        headers: {'Content-Type': 'application/json'},
+      );
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        if (data['status'] == true) {
+          final userInfo = data['data'];
+          setState(() {
+            userfirstName = userInfo['firstName'] ?? "";
+            userlastName = userInfo['lastName'] ?? "";
+            useremail = userInfo['email'] ?? "";
+          });
+
+          // Fetch owner FCM token after updating owneremail
+          fetchWorkerFcmToken();
+        } else {
+          print("Error fetching user: ${data['message']}");
+        }
+      } else {
+        print("Failed to load user: ${response.statusCode}");
+      }
+    } catch (e) {
+      print("An error occurred: $e");
+    }
+  }
+
+  void initializeNotificationService() async {}
+
+  Future<void> fetchWorkerFcmToken() async {
+    try {
+      print("on fetch");
+      // Query Firestore for a user with the same email as the owner
+      final querySnapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .where('email', isEqualTo: useremail)
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        final userDoc = querySnapshot.docs.first;
+        setState(() {
+          userFcmToken = userDoc['fcmToken'] ?? "";
+          workerId = userDoc.id; // Get the FCM token
+        });
+        print("Owner's FCM token: $userFcmToken");
+        print("Owner's document ID: $workerId");
+      } else {
+        print("No user found with the email: $useremail");
+      }
+    } catch (e) {
+      print("Error fetching FCM token: $e");
+    }
+  }
+
+  void requestDecision(String requestId, String status, String landId,
+      String workerUsername, String landName) async {
+    try {
+      fetchUser(workerUsername);
       print('Request ID: $requestId, Status: $status');
       // Convert image to base64 if an image is selected
       //String? base64Image = _image != null ? base64Encode(_image!) : null;
@@ -65,6 +132,22 @@ class _OwnerWorkingPageState extends State<OwnerWorkingPage> {
         );
         if (status == "accepted") {
           updateWorkersNum(landId);
+
+          await NotificationService.instance.saveNotificationToFirebase(
+              userFcmToken,
+              'قبول طلب العمل في أرض ',
+              'لقد وافق مالك أرض  "$landName "على طلبك للعمل فيها. اضغط لرؤية التفاصيل ',
+              workerId,
+              'workDecision');
+        } else if (status == "rejected") {
+          // updateWorkersNum(landId);
+
+          await NotificationService.instance.saveNotificationToFirebase(
+              userFcmToken,
+              'رفض طلب العمل في أرض ',
+              'لقد رفض مالك أرض  "$landName " طلبك للعمل فيها. اضغط لرؤية التفاصيل ',
+              workerId,
+              'workDecision');
         }
       } else {
         // Server error - handle accordingly
@@ -158,7 +241,7 @@ class _OwnerWorkingPageState extends State<OwnerWorkingPage> {
                       Icon(
                         Icons.event, // أيقونة تدل على الحجز
                         size: 30,
-                        color: const Color.fromRGBO(15, 99, 43, 1), // لون زيتي
+                        color: Color.fromRGBO(15, 99, 43, 1), // لون زيتي
                       ),
                       SizedBox(width: 8),
                       Text(
@@ -166,8 +249,7 @@ class _OwnerWorkingPageState extends State<OwnerWorkingPage> {
                         style: TextStyle(
                           fontSize: 23,
                           fontWeight: FontWeight.bold,
-                          color:
-                              const Color.fromRGBO(15, 99, 43, 1), // لون زيتي
+                          color: Color.fromRGBO(15, 99, 43, 1), // لون زيتي
                         ),
                       ),
                     ],
@@ -179,7 +261,7 @@ class _OwnerWorkingPageState extends State<OwnerWorkingPage> {
                     child: const Icon(
                       Icons.arrow_forward, // سهم يتجه لليسار ليكون ع الشمال
                       size: 30,
-                      color: const Color.fromRGBO(15, 99, 43, 1), // لون زيتي
+                      color: Color.fromRGBO(15, 99, 43, 1), // لون زيتي
                     ),
                   ),
                 ],
@@ -240,8 +322,8 @@ class _OwnerWorkingPageState extends State<OwnerWorkingPage> {
                                           decoration: BoxDecoration(
                                             shape: BoxShape.circle,
                                             border: Border.all(
-                                              color: const Color.fromRGBO(
-                                                  15, 99, 43, 1),
+                                              color:
+                                                  Color.fromRGBO(15, 99, 43, 1),
                                               width: 2, // زيتي إطار
                                             ),
                                             image: DecorationImage(
@@ -268,7 +350,7 @@ class _OwnerWorkingPageState extends State<OwnerWorkingPage> {
                                               style: TextStyle(
                                                 fontSize: 20,
                                                 fontWeight: FontWeight.bold,
-                                                color: const Color.fromRGBO(
+                                                color: Color.fromRGBO(
                                                     15, 99, 43, 1), // زيتي لون
                                               ),
                                             ),
@@ -341,7 +423,7 @@ class _OwnerWorkingPageState extends State<OwnerWorkingPage> {
                                 children: [
                                   Icon(
                                     Icons.pin,
-                                    color: const Color.fromRGBO(15, 99, 43, 1),
+                                    color: Color.fromRGBO(15, 99, 43, 1),
                                     size: 20,
                                   ),
                                   SizedBox(width: 5),
@@ -360,7 +442,7 @@ class _OwnerWorkingPageState extends State<OwnerWorkingPage> {
                                 children: [
                                   Icon(
                                     Icons.people,
-                                    color: const Color.fromRGBO(15, 99, 43, 1),
+                                    color: Color.fromRGBO(15, 99, 43, 1),
                                     size: 20,
                                   ),
                                   SizedBox(width: 5),
@@ -379,7 +461,7 @@ class _OwnerWorkingPageState extends State<OwnerWorkingPage> {
                                 children: [
                                   Icon(
                                     Icons.money_outlined,
-                                    color: const Color.fromRGBO(15, 99, 43, 1),
+                                    color: Color.fromRGBO(15, 99, 43, 1),
                                     size: 20,
                                   ),
                                   SizedBox(width: 5),
@@ -398,7 +480,7 @@ class _OwnerWorkingPageState extends State<OwnerWorkingPage> {
                                 children: [
                                   Icon(
                                     Icons.location_on,
-                                    color: const Color.fromRGBO(15, 99, 43, 1),
+                                    color: Color.fromRGBO(15, 99, 43, 1),
                                     size: 20,
                                   ),
                                   SizedBox(width: 5),
@@ -417,7 +499,7 @@ class _OwnerWorkingPageState extends State<OwnerWorkingPage> {
                                 children: [
                                   Icon(
                                     Icons.calendar_month,
-                                    color: const Color.fromRGBO(15, 99, 43, 1),
+                                    color: Color.fromRGBO(15, 99, 43, 1),
                                     size: 20,
                                   ),
                                   SizedBox(width: 5),
@@ -442,25 +524,26 @@ class _OwnerWorkingPageState extends State<OwnerWorkingPage> {
                               Expanded(
                                 child: ElevatedButton(
                                   onPressed: () {
-                                    requestDecision(request['_id'], "accepted",
-                                        request['landId']);
+                                    //fetchUser(request['workerUsername']);
+                                    requestDecision(
+                                        request['_id'],
+                                        "accepted",
+                                        request['landId'],
+                                        request['workerUsername'],
+                                        request['landName']);
                                   },
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: Colors.white,
                                     side: BorderSide(
-                                        color:
-                                            const Color.fromRGBO(15, 99, 43, 1),
+                                        color: Color.fromRGBO(15, 99, 43, 1),
                                         width: 2),
                                     padding: EdgeInsets.symmetric(vertical: 10),
                                   ),
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      Icon(
-                                        Icons.check,
-                                        color:
-                                            const Color.fromRGBO(15, 99, 43, 1),
-                                      ),
+                                      Icon(Icons.check,
+                                          color: Color.fromRGBO(15, 99, 43, 1)),
                                       SizedBox(width: 5),
                                       Text(
                                         "قبول",
@@ -477,8 +560,12 @@ class _OwnerWorkingPageState extends State<OwnerWorkingPage> {
                               Expanded(
                                 child: ElevatedButton(
                                   onPressed: () {
-                                    requestDecision(request['_id'], "rejected",
-                                        request['landId']);
+                                    requestDecision(
+                                        request['_id'],
+                                        "rejected",
+                                        request['landId'],
+                                        request['workerUsername'],
+                                        request['landName']);
                                   },
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: Colors.white,

@@ -1,10 +1,10 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:login_page/Customers/CustomerAdvertisements.dart';
 import 'package:login_page/Discussion/Home.dart';
 import 'package:login_page/screens/allInbox.dart';
 import 'package:login_page/screens/mainMap.dart';
 import 'package:login_page/screens/map_screen.dart';
+import 'package:login_page/screens/notificationsMainPage.dart';
 import 'package:login_page/screens/owner_home.dart';
 import 'package:login_page/screens/owner_add.dart';
 import 'package:login_page/screens/owner_chat.dart';
@@ -35,13 +35,20 @@ class _HomePageState extends State<HomePage> {
     // Initialize the pages here because widget.token is needed
     _pages = [
       OwnerHome(
-          token: widget.token,
-          userId: uid), // Pass the token correctly without const
+        token: widget.token,
+        userId: uid,
+        token2: widget.token2,
+      ), // Pass the token correctly without const
       TabbedInboxScreen(userId: uid),
-      OwnerAdd(token: widget.token),
-      OwnerNotify(token: widget.token),
+      OwnerAdd(
+        token: widget.token,
+        token2: widget.token2,
+      ),
+      NotificationsPage(
+        currentUserId: uid,
+        token: widget.token,
+      ),
       HomeDiscussion(token: widget.token),
-      CustomerAdvertisement(token: widget.token),
     ];
   }
 
@@ -51,18 +58,15 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       bottomNavigationBar: CurvedNavigationBar(
         backgroundColor: Colors.transparent,
-        buttonBackgroundColor: const Color.fromRGBO(15, 99, 43, 1),
+        buttonBackgroundColor: Color.fromRGBO(15, 99, 43, 1),
         color: const Color.fromRGBO(15, 99, 43, 1),
         animationDuration: const Duration(milliseconds: 300),
-        height: 70, // زيادة الارتفاع ليناسب صفحة ويب
         items: const <Widget>[
-          Icon(Icons.home,
-              size: 30, color: Colors.white), // زيادة حجم الأيقونات
-          Icon(Icons.message, size: 30, color: Colors.white),
-          Icon(Icons.add, size: 30, color: Colors.white),
-          Icon(Icons.notifications, size: 30, color: Colors.white),
-          Icon(Icons.dashboard_customize, size: 30, color: Colors.white),
-          Icon(Icons.newspaper, size: 26, color: Colors.white),
+          Icon(Icons.home, size: 26, color: Colors.white),
+          Icon(Icons.message, size: 26, color: Colors.white),
+          Icon(Icons.add, size: 26, color: Colors.white),
+          Icon(Icons.notifications, size: 26, color: Colors.white),
+          Icon(Icons.dashboard_customize, size: 26, color: Colors.white),
         ],
         onTap: (index) {
           setState(() {

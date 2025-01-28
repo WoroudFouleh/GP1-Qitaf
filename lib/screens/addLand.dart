@@ -16,7 +16,10 @@ import 'package:login_page/screens/animition_notification_bar.dart';
 
 class AddLand extends StatefulWidget {
   final String token;
-  const AddLand({required this.token, Key? key}) : super(key: key);
+  final String token2;
+
+  const AddLand({required this.token, Key? key, required this.token2})
+      : super(key: key);
 
   @override
   State<AddLand> createState() => _AddLandState();
@@ -301,6 +304,7 @@ class _AddLandState extends State<AddLand> {
       ),
       endDrawer: CustomDrawer(
         token: widget.token,
+        token2: widget.token2,
       ),
       body: SingleChildScrollView(
         // إضافة SingleChildScrollView

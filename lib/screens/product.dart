@@ -13,7 +13,13 @@ import 'package:jwt_decoder/jwt_decoder.dart';
 class ProductsPage extends StatefulWidget {
   final String token;
   final String userId;
-  const ProductsPage({required this.token, Key? key, required this.userId})
+  final String token2;
+
+  const ProductsPage(
+      {required this.token,
+      Key? key,
+      required this.userId,
+      required this.token2})
       : super(key: key);
 
   @override
@@ -220,7 +226,10 @@ class _ProductsPageState extends State<ProductsPage> {
               ),
             ),
           ),
-          endDrawer: CustomDrawer(token: widget.token),
+          endDrawer: CustomDrawer(
+            token: widget.token,
+            token2: widget.token2,
+          ),
           body: Column(
             children: [
               const SizedBox(height: 8.0),

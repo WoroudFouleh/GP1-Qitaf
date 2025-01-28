@@ -12,7 +12,8 @@ import 'package:login_page/screens/welcome_screen.dart';
 class ProfilePage extends StatefulWidget {
   final token;
   final userId;
-  const ProfilePage({required this.token, Key? key, this.userId})
+  final token2;
+  const ProfilePage({required this.token, Key? key, this.userId, this.token2})
       : super(key: key);
 
   @override
@@ -31,19 +32,26 @@ class _ProfilePageState extends State<ProfilePage>
   List<dynamic> lands = [];
   List<dynamic> lines = [];
 
+  late int posts;
+  late int points;
+  late int rate;
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 1, vsync: this);
     Map<String, dynamic> jwtDecoderToken = JwtDecoder.decode(widget.token);
-    print(jwtDecoderToken);
+    // print(jwtDecoderToken);
     firstName = jwtDecoderToken['firstName'] ?? 'No First Name';
     lastName = jwtDecoderToken['lastName'] ?? 'No Last Name';
     email = jwtDecoderToken['email'] ?? 'No Email';
     profilePhotoBase64 = jwtDecoderToken['profilePhoto'];
     username = jwtDecoderToken['username'];
-    fetchLands();
+    points = jwtDecoderToken['points'];
+    posts = jwtDecoderToken['postsCount'];
+    rate = jwtDecoderToken['rate'];
+
     fetchLines();
+    fetchLands();
     fetchProducts();
     // تعديل طول TabController إلى 1
   }
@@ -182,6 +190,7 @@ class _ProfilePageState extends State<ProfilePage>
                             builder: (context) => OwnerProfile(
                                   token: widget.token,
                                   userId: widget.userId,
+                                  token2: widget.token2,
                                 )),
                       );
                     },
@@ -246,8 +255,8 @@ class _ProfilePageState extends State<ProfilePage>
                   ),
                 ),
                 const SizedBox(width: 5),
-                const Text(
-                  '4.5  ',
+                Text(
+                  rate.toString(),
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -264,8 +273,8 @@ class _ProfilePageState extends State<ProfilePage>
                   ),
                 ),
                 const SizedBox(width: 5),
-                const Text(
-                  '120  ',
+                Text(
+                  points.toString(),
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -282,8 +291,8 @@ class _ProfilePageState extends State<ProfilePage>
                   ),
                 ),
                 const SizedBox(width: 5),
-                const Text(
-                  '6  ',
+                Text(
+                  posts.toString(),
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
